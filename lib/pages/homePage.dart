@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/pages/categoriaPage.dart';
+import 'package:to_file/pages/documentoPage.dart';
+import 'package:to_file/pages/newCategoriaPage.dart';
+import 'package:to_file/pages/pesquisaPage.dart';
+import 'package:to_file/pages/sobrePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,19 +19,28 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      backgroundColor: Color(0xffF5F5F5),
+      backgroundColor: const Color(0xffF5F5F5),
       appBar: AppBar(
         backgroundColor: const Color(0xff0C322C),
-        title: Text('LOGO'),
-        // title: Image.asset('assets/images/logo-appbar.png',fit: BoxFit.cover),
-        actions:  const [
+        title: Image.asset(
+          'assets/images/appbar.png',
+          height: 100.0,
+          width: 120.0,
+          fit: BoxFit.cover,
+        ),
+
+        actions:   [
           IconButton(
-            onPressed: null,
-            icon: Icon(
+            onPressed: (){
+              setState(() {
+                pageSobre();
+              });
+            },
+            icon: const Icon(
               Icons.info,
                 color: Color(0xffFE7C3F)),
         ),
-          IconButton(
+          const IconButton(
               onPressed: null,
               icon: Icon(
                 Icons.notifications,
@@ -40,35 +53,52 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Container(
-            margin: const EdgeInsets.all(5),
-            width: 350.0,
-            child:
-            const ElevatedButton(
-              onPressed: null,
-              child: Text('pesquisar'),
+            margin: const EdgeInsets.only(top: 30.0),
+            height: 65,
+            width: 350,
+            // alignment: Alignment.center,
+            padding: const EdgeInsets.all(10),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.white),
+              ),
+              onPressed: (){
+                setState(() {
+                  pageSearch();
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text('pesquisar', style: TextStyle(
+                    color: Color(0xffB9B1B1),
+                  ),),
+                  Icon(Icons.search,color: Color(0xffB9B1B1),
+                  ),
+                ],
+            ),
             ),
           ),
-
           const SizedBox(height: 20),
 
-          GestureDetector(
-            onTap: (){
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => const CategoriaPage()
-              ));
-            },
-            child: Container(
-              height: 500.0,
-              child: GridView.count(
-                crossAxisCount: 3,
-                primary: false,
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                children: [
-                  Container(
+          Container(
+            height: 500.0,
+            child: GridView.count(
+              crossAxisCount: 3,
+              primary: false,
+              padding: const EdgeInsets.all(20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => const CategoriaPage()
+                        ));
+                  },
+                  child: Container(
                     height: 100.0,
                     width: 100.0,
                     padding: const EdgeInsets.all(8),
@@ -87,19 +117,30 @@ class _HomePageState extends State<HomePage> {
 
                     child:
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             IconButton(
                               onPressed: null,
-                              icon: Icon(
-                                Icons.document_scanner,
+                              icon: ImageIcon(
+                                AssetImage('assets/images/recibo.png'),
                                 color: Color(0xffFE7C3F),
+                                size: 40,
                               ),
                             ),
                             Text("Recibo"),
                           ],
                         ),
                   ),
-                  Container(
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => const CategoriaPage()
+                        ));
+                  },
+                  child: Container(
                     height: 100.0,
                     width: 100.0,
                     padding: const EdgeInsets.all(8),
@@ -117,19 +158,30 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child:
                     Column(
-                      children: const [
-                        IconButton(
-                          onPressed: null,
-                          icon: Icon(
-                            Icons.document_scanner,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:  const [
+                         IconButton(
+                          icon: ImageIcon(
+                            AssetImage('assets/images/fatura.png'),
                             color: Color(0xffFE7C3F),
+                            size: 40,
                           ),
+                          onPressed: null,
                         ),
-                        Text("Fatura"),
+                         Text("Fatura"),
                       ],
                     ),
                   ),
-                  Container(
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => const CategoriaPage()
+                        ));
+                  },
+                  child: Container(
                     height: 100.0,
                     width: 100.0,
                     padding: const EdgeInsets.all(8),
@@ -147,19 +199,31 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child:
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         IconButton(
                           onPressed: null,
-                          icon: Icon(
-                            Icons.document_scanner,
+                          icon: ImageIcon(
+                            AssetImage('assets/images/extrato-bancario.png'),
                             color: Color(0xffFE7C3F),
+                            size: 40,
                           ),
                         ),
-                        Text("Extrato Bancário"),
+                        Text("Extrato Bancário",
+                        textAlign: TextAlign.center),
                       ],
                     ),
                   ),
-                  Container(
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => const CategoriaPage()
+                        ));
+                  },
+                  child: Container(
                     height: 100.0,
                     width: 100.0,
                     padding: const EdgeInsets.all(8),
@@ -177,19 +241,30 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child:
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         IconButton(
                           onPressed: null,
-                          icon: Icon(
-                            Icons.document_scanner,
+                          icon: ImageIcon(
+                            AssetImage('assets/images/notaFiscal.png'),
                             color: Color(0xffFE7C3F),
+                            size: 40,
                           ),
                         ),
                         Text("Nota Fiscal"),
                       ],
                     ),
                   ),
-                  Container(
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => const CategoriaPage()
+                        ));
+                  },
+                  child: Container(
                     height: 100.0,
                     width: 100.0,
                     padding: const EdgeInsets.all(8),
@@ -207,19 +282,30 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child:
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         IconButton(
                           onPressed: null,
-                          icon: Icon(
-                            Icons.document_scanner,
+                          icon: ImageIcon(
+                            AssetImage('assets/images/contrato.png'),
                             color: Color(0xffFE7C3F),
+                            size: 40,
                           ),
                         ),
                         Text("Contrato"),
                       ],
                     ),
                   ),
-                  Container(
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => const CategoriaPage()
+                        ));
+                  },
+                  child: Container(
                     height: 100.0,
                     width: 100.0,
                     padding: const EdgeInsets.all(8),
@@ -237,19 +323,30 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child:
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         IconButton(
                           onPressed: null,
-                          icon: Icon(
-                            Icons.document_scanner,
+                          icon: ImageIcon(
+                            AssetImage('assets/images/boleto.png'),
                             color: Color(0xffFE7C3F),
+                            size: 40,
                           ),
                         ),
                         Text("Boleto"),
                       ],
                     ),
                   ),
-                  Container(
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => const CategoriaPage()
+                        ));
+                  },
+                  child: Container(
                     height: 100.0,
                     width: 100.0,
                     padding: const EdgeInsets.all(8),
@@ -267,19 +364,30 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child:
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         IconButton(
                           onPressed: null,
-                          icon: Icon(
-                            Icons.document_scanner,
+                          icon: ImageIcon(
+                            AssetImage('assets/images/pessoal.png'),
                             color: Color(0xffFE7C3F),
+                            size: 40,
                           ),
                         ),
                         Text("Pessoal"),
                       ],
                     ),
                   ),
-                  Container(
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => const NewCategoriaPage()
+                        ));
+                  },
+                  child: Container(
                     height: 100.0,
                     width: 100.0,
                     padding: const EdgeInsets.all(8),
@@ -303,25 +411,53 @@ class _HomePageState extends State<HomePage> {
                           size: 40,
                         )),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
       ),
-      floatingActionButton: const FloatingActionButton(
-        onPressed: null,
-        backgroundColor: Color(0xff30BA78),
-        child: Icon(
+      floatingActionButton:  FloatingActionButton(
+        onPressed: (){
+          setState(() {
+            pageDocument();
+          });
+        },
+        backgroundColor: const Color(0xff30BA78),
+        child: const Icon(
             Icons.add,
             color: Colors.white,
             size: 40,
         ),
       ),
     );
-
-
   }
+
+  void pageSobre() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => const SobrePage()
+        ));
+  }
+
+ void pageDocument() {
+   Navigator.push(
+       context,
+       MaterialPageRoute(
+           builder: (BuildContext context) => const DocumentoPage()
+       ));
+ }
+
+ void pageSearch() {
+   Navigator.push(
+       context,
+       MaterialPageRoute(
+           builder: (BuildContext context) => const PesquisaPage()
+       ));
+ }
+
+
 }
 
 

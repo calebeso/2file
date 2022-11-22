@@ -14,7 +14,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
       backgroundColor: const Color(0xffF5F5F5),
       appBar: AppBar(
         backgroundColor: const Color(0xff0C322C),
-        title: const Text('Adicionar Categoria'),
+        title: const Text('Categoria'),
       ),
     );
   }
