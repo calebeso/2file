@@ -1,7 +1,5 @@
 import 'package:first_app/pages/listview_categoria_page.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
-
 
 main() => runApp(TwoFileApp());
 
@@ -15,9 +13,9 @@ class _TwoFileAppState extends State<TwoFileApp> {
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
 
-
     return MaterialApp(
-      home:CategoriaListPage(),
+      debugShowCheckedModeBanner: false,
+      home: CategoriaListPage(),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: const Color(0xff0C322C),
@@ -27,4 +25,3 @@ class _TwoFileAppState extends State<TwoFileApp> {
     );
   }
 }
-
