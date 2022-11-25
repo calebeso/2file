@@ -1,27 +1,20 @@
 import 'package:first_app/pages/listview_categoria_page.dart';
 import 'package:flutter/material.dart';
+import 'package:to_file/pages/categoriaPage.dart';
+import 'package:to_file/pages/homePage.dart';
 
-main() => runApp(TwoFileApp());
-
-class TwoFileApp extends StatefulWidget {
-  @override
-  State<TwoFileApp> createState() => _TwoFileAppState();
+void main() {
+  runApp(const MyApp());
 }
 
-class _TwoFileAppState extends State<TwoFileApp> {
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final ThemeData tema = ThemeData();
-
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CategoriaListPage(),
-      theme: tema.copyWith(
-        colorScheme: tema.colorScheme.copyWith(
-          primary: const Color(0xff0C322C),
-          secondary: Colors.amber,
-        ),
-      ),
+      home: HomePage()               // tela inicial do App
     );
   }
 }
