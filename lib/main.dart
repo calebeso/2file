@@ -1,3 +1,4 @@
+import 'package:first_app/pages/listview_categoria_page.dart';
 import 'package:flutter/material.dart';
 import 'package:to_file/pages/categoriaPage.dart';
 import 'package:to_file/pages/homePage.dart';
@@ -14,7 +15,6 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage()               // tela inicial do App
-
     );
   }
 }
