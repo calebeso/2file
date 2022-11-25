@@ -1,4 +1,4 @@
-import 'package:first_app/models/categoria.dart';
+//import 'package:first_app/models/categoria.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../components/categoriaList.dart';
@@ -10,7 +10,7 @@ class CategoriaListPage extends StatefulWidget {
 }
 
 class _CategoriaListPageState extends State<CategoriaListPage> {
-  late final List<Documento> _documentosList = [
+  late List<Documento> _documentosList = [
     Documento(
       id: 1,
       nome: 'Carta',
@@ -24,7 +24,7 @@ class _CategoriaListPageState extends State<CategoriaListPage> {
     Documento(id: 7, nome: 'nota fiscal', criadoEm: DateTime.now()),
   ];
 
-  late final Categoria categoria;
+  //late final Categoria categoria;
 
   @override
   Widget build(BuildContext context) {
