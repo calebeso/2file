@@ -1,16 +1,41 @@
-# to_file
+# 2file
 
-A new Flutter project.
+# Projeto 2File- Gerenciador de documentos.
 
-## Getting Started
+Aplicativo para gerenciar documentos através de imagens salvas como documentos. Projeto
+mobile denominado 2File desenvolvido na linguagem de programação DART e com 
+framework FLUTTER.
 
-This project is a starting point for a Flutter application.
+## Desenvolvedores
 
-A few resources to get you started if this is your first Flutter project:
+* Calebe Augusto Santana de Oliveira
+* Angélica da Silva Campos
+* William Ricardo Munaretto
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Como executar o projeto
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Para executar o aplicativo será necessário a instalação das seguintes stacks:
+
+1. Instalação do Dart:
+Para instalação do Dart, seguir os procedimento informados no link:
+<https://dart.dev/get-dart>
+
+2. Instação do Flutter:
+Para instalar o Flutter, seguir os procedimentos informados no link:
+<https://docs.flutter.dev/get-started/install>
+
+3. Instalação do Visual Studio Code (Opcional)
+<https://code.visualstudio.com/>
+
+4. Instalação do Android Studio e execução através AVD Emulator:
+Para que seja possível fazer o deploy, será necessário a instalação do Android 
+Studio.
+ Seguir os procedimentos informados no link:
+<https://developer.android.com/studio/install?hl=pt>
+
+## Observações:
+
+O Visual Studio Code é a IDE mais utilizada para o desenvolvimento, contudo, para 
+executar o aplicativo, poderá ser feito diretamente através da abertura da pasta do p
+projeto dentro do Android Studio e clicando em RUN.
+
