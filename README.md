@@ -30,8 +30,11 @@ Para instalar o Flutter, seguir os procedimentos informados no link:
 4. Instalação do Android Studio e execução através AVD Emulator:
 Para que seja possível fazer o deploy, será necessário a instalação do Android 
 Studio.
- Seguir os procedimentos informados no link:
+ Seguir os procedimentos informados nos links:
 <https://developer.android.com/studio/install?hl=pt>
+
+**video:**
+<https://www.youtube.com/watch?v=t_fLik6Mjc4&ab_channel=EvertonDev>
 
 ## Observações:
 
