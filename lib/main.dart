@@ -1,27 +1,27 @@
-import 'package:first_app/pages/listview_categoria_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:to_file/pages/homePage.dart';
 
-main() => runApp(TwoFileApp());
-
-class TwoFileApp extends StatefulWidget {
-  @override
-  State<TwoFileApp> createState() => _TwoFileAppState();
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const TwoFileApp());
 }
 
-class _TwoFileAppState extends State<TwoFileApp> {
+class TwoFileApp extends StatelessWidget {
+  const TwoFileApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final ThemeData tema = ThemeData();
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CategoriaListPage(),
-      theme: tema.copyWith(
-        colorScheme: tema.colorScheme.copyWith(
-          primary: const Color(0xff0C322C),
-          secondary: Colors.amber,
-        ),
-      ),
-    );
+    return const MaterialApp(
+        localizationsDelegates: [
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale("pt", "BR")
+        ],
+        debugShowCheckedModeBanner: false,
+        home: HomePage() // tela inicial do App
+        );
   }
 }
