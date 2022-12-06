@@ -8,6 +8,7 @@ class CategoriaPage extends StatefulWidget {
 }
 
 class _CategoriaPageState extends State<CategoriaPage> {
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(

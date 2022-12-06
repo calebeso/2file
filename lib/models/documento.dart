@@ -1,5 +1,3 @@
-import 'categoria.dart';
-
 class Documento{
 
   int? id;
@@ -9,5 +7,6 @@ class Documento{
 
   Documento({this.id, this.nome, this.criadoEm});
 
+  static fromMap(Map<String, Object?> e) {}
 
 }
