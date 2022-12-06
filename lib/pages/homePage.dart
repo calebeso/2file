@@ -5,8 +5,7 @@ import 'package:to_file/pages/newCategoriaPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
-import 'categoriaPage.dart';
-import 'categoria_page_2.dart';
+import 'categoria_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
