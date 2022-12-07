@@ -7,9 +7,9 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   static Database? _database;
-  Future<Database> get database async => _database ??= await _initDatabase();
+  Future<Database> get database async => _database ??= await initDatabase();
 
-  Future<Database> _initDatabase() async {
+  Future<Database> initDatabase() async {
     var databasePath = await getDatabasesPath();
     String path = join(databasePath, 'twoFile.db');
 
@@ -23,16 +23,43 @@ class DatabaseHelper {
     await _populateDefaultCategoria(db);
   }
 
-
   Future _populateDefaultCategoria(Database db) async {
     List<dynamic> categorias = [
-      Categoria(id: 0, nome: 'Recibo', nomeIcone: 'recibo.png', criadoEm: DateTime.now()),
-      Categoria(id: 1, nome: 'Fatura', nomeIcone: 'fatura.png', criadoEm: DateTime.now()),
-      Categoria(id: 2, nome: 'Extrato Bancário', nomeIcone: 'extrato-bancario.png', criadoEm: DateTime.now()),
-      Categoria(id: 3, nome: 'Nota Fiscal', nomeIcone: 'notaFiscal.png', criadoEm: DateTime.now()),
-      Categoria(id: 4, nome: 'Contrato', nomeIcone: 'contrato.png', criadoEm: DateTime.now()),
-      Categoria(id: 5, nome: 'Boleto', nomeIcone: 'boleto.png', criadoEm: DateTime.now()),
-      Categoria(id: 6, nome: 'Pessoal', nomeIcone: 'pessoal.png', criadoEm: DateTime.now())
+      Categoria(
+          id: 0,
+          nome: 'Recibo',
+          nomeIcone: 'recibo.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 1,
+          nome: 'Fatura',
+          nomeIcone: 'fatura.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 2,
+          nome: 'Extrato Bancário',
+          nomeIcone: 'extrato-bancario.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 3,
+          nome: 'Nota Fiscal',
+          nomeIcone: 'notaFiscal.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 4,
+          nome: 'Contrato',
+          nomeIcone: 'contrato.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 5,
+          nome: 'Boleto',
+          nomeIcone: 'boleto.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 6,
+          nome: 'Pessoal',
+          nomeIcone: 'pessoal.png',
+          criadoEm: DateTime.now())
     ];
 
     for (var categoria in categorias) {
@@ -40,21 +67,18 @@ class DatabaseHelper {
     }
   }
 
-  String documentos =
-  '''
+  String documentos = '''
     CREATE TABLE documentos(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT
     )''';
 
-  String notificacoes =
-  '''
+  String notificacoes = '''
     CREATE TABLE notificacoes(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
     )''';
 
-  String categoria =
-  '''
+  String categoria = '''
     CREATE TABLE categorias(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT,
@@ -92,7 +116,6 @@ class DatabaseHelper {
   //   return await db.update('documentos', documento.toMap(),
   //       where: 'id = ?', whereArgs: [documento.id]);
   // }
-
 
   // =============== CATEGORIA ==============================================================
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
 import 'package:to_file/pages/documentoPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
+import '../databases/database_helper.dart';
 import '../models/categoria.dart';
-import 'newCategoriaPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController? textController;
 
-  // final DatabaseHelper dbHelper = DatabaseHelper.instance;
+  final DatabaseHelper dbHelper = DatabaseHelper.instance;
 
   List<dynamic> categorias = [
     Categoria(
@@ -124,72 +125,77 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           Container(
             height: 500.0,
-            // child: FutureBuilder<List<Categoria>>(
-            //   future: DatabaseHelper.instance.listCategoriaById(),
-            //   builder: (BuildContext context,
-            //       AsyncSnapshot<List<Categoria>> snapshot) {
-            //     if (snapshot.hasData) {
-            //       return GridView.count(
-            //         crossAxisCount: 3,
-            //         primary: false,
-            //         padding: const EdgeInsets.all(20),
-            //         crossAxisSpacing: 10,
-            //         mainAxisSpacing: 10,
-            //         children:
-            //             //  buscar categorias do banco de dados
-            //             // for (var cat in categorias)...[
-            //             //   CardCategoria(categoria: cat)
-            //             // ],
-            //             snapshot.data!.map((cat) {
-            //           return CardCategoria(categoria: cat);
-            //         }).toList(),
-            //
-            //         // Card ADD NEWCategoriaPage
-            //       );
-            //     } else {}
-            //   },
-            child: GridView.count(
-              crossAxisCount: 3,
-              primary: false,
-              padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              children: [
-                for (var cat in categorias) ...[CardCategoria(categoria: cat)],
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                NewCategoriaPage()));
-                  },
-                  child: Container(
-                    height: 100.0,
-                    width: 100.0,
-                    padding: const EdgeInsets.all(8),
-                    // color: const Color(0xffEAEBD9),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      boxShadow: const <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 3.0,
-                          offset: Offset(0.0, 0.80),
-                        ),
-                      ],
-                    ),
-                    child: const IconButton(
-                        onPressed: null,
-                        icon: Icon(
-                          Icons.add,
-                          color: Color(0xffFE7C3F),
-                          size: 40,
-                        )),
-                  ),
-                ),
-              ],
+            child: FutureBuilder<List<Categoria>>(
+              future: DatabaseHelper.instance.listCategoriaById(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Categoria>> snapshot) {
+                if (snapshot.hasData) {
+                  return GridView.count(
+                      crossAxisCount: 3,
+                      primary: false,
+                      padding: const EdgeInsets.all(20),
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      children: [
+                        for (var cat in snapshot.data!) ...[
+                          CardCategoria(categoria: cat)
+                        ],
+                        const CardAddCategoria()
+                      ]
+                      //     snapshot.data!.map((cat) {
+                      //   return CardCategoria(categoria: cat);
+                      // }).toList(),
+
+                      // Card ADD NEWCategoriaPage
+                      );
+                } else {
+                  return const Center(
+                    child: CardAddCategoria(),
+                  );
+                }
+              },
+              // child: GridView.count(
+              //   crossAxisCount: 3,
+              //   primary: false,
+              //   padding: const EdgeInsets.all(20),
+              //   crossAxisSpacing: 10,
+              //   mainAxisSpacing: 10,
+              //   children: [
+              //     for (var cat in categorias) ...[CardCategoria(categoria: cat)],
+              //     GestureDetector(
+              //       onTap: () {
+              //         Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (BuildContext context) =>
+              //                     NewCategoriaPage()));
+              //       },
+              //       child: Container(
+              //         height: 100.0,
+              //         width: 100.0,
+              //         padding: const EdgeInsets.all(8),
+              //         // color: const Color(0xffEAEBD9),
+              //         decoration: BoxDecoration(
+              //           color: Colors.white,
+              //           borderRadius: BorderRadius.circular(8.0),
+              //           boxShadow: const <BoxShadow>[
+              //             BoxShadow(
+              //               color: Colors.black38,
+              //               blurRadius: 3.0,
+              //               offset: Offset(0.0, 0.80),
+              //             ),
+              //           ],
+              //         ),
+              //         child: const IconButton(
+              //             onPressed: null,
+              //             icon: Icon(
+              //               Icons.add,
+              //               color: Color(0xffFE7C3F),
+              //               size: 40,
+              //             )),
+              //       ),
+              //     ),
+              //   ],
             ),
           ),
         ],
