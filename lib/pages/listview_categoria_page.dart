@@ -1,4 +1,4 @@
-import 'package:first_app/models/categoria.dart';
+import '../models/categoria.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../components/categoriaList.dart';
