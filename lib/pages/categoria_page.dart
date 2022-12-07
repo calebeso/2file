@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../database/database_config.dart';
@@ -12,6 +13,7 @@ class CategoriaPage extends StatefulWidget {
 }
 
 class _CategoriaPageState extends State<CategoriaPage> {
+  int? seletctedId;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +24,10 @@ class _CategoriaPageState extends State<CategoriaPage> {
       body: Center(
         child: FutureBuilder<List<Documento>>(
           future: DatabaseHelper.instance.listDocumentos(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<Documento>> snapshot) {
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<List<Documento>> snapshot,
+          ) {
             return snapshot.data!.isEmpty
                 ? const Center(
                     child: Text('Lista de documentos vazia.'),
@@ -42,7 +46,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                     'assets/images/icon_doc.png',
                                     height: 60),
                                 title: Text(
-                                  document.nome,
+                                  document.nome!,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 24),
@@ -76,43 +80,56 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                     ]),
                                   ),
                                 ),
-                                trailing: GestureDetector(
-                                  child: const Icon(Icons.more_vert),
-                                  onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return SimpleDialog(
-                                            children: [
-                                              SimpleDialogOption(
-                                                onPressed: (() {
-                                                  setState(() {
-                                                    DatabaseHelper.instance
-                                                        .removeDocumento(
-                                                            document.id!);
-                                                  });
+                                trailing: PopupMenuButton(
+                                  itemBuilder: (BuildContext context) => [
+                                    const PopupMenuItem<_ValueDialog>(
+                                      value: _ValueDialog.editar,
+                                      child: Text("Editar"),
+                                    ),
+                                    const PopupMenuItem(
+                                      value: _ValueDialog.excluir,
+                                      child: Text('Excluir'),
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    switch (value) {
+                                      case _ValueDialog.editar:
+                                        //chamar cadastrarDocumento passando o documento
+                                        break;
+                                      case _ValueDialog.excluir:
+                                        print('Excluir');
 
-                                                  Navigator.pop(context);
-                                                }),
-                                                child: const Text('Excluir'),
+                                        showDialog(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            shape: const CircleBorder(),
+                                            elevation: 5.0,
+                                            title: Text(
+                                                "Deseja excluir ${document.nome} definitivamente?"),
+                                            actions: [
+                                              MaterialButton(
+                                                child: const Text("Sim"),
+                                                onPressed: () {
+                                                  // _showMyDialog();
+                                                  print('${document.id}');
+                                                  DatabaseHelper.instance
+                                                      .removeDocumento(
+                                                          document.id!);
+
+                                                  Navigator.pop(ctx);
+                                                },
                                               ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              SimpleDialogOption(
-                                                onPressed: (() {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              const CadastrarDocumentoPage()));
-                                                }),
-                                                child: const Text('Editar'),
-                                              ),
+                                              MaterialButton(
+                                                child: const Text('Não'),
+                                                onPressed: () {},
+                                              )
                                             ],
-                                          );
-                                        });
+                                          ),
+                                          barrierDismissible: false,
+                                        );
+                                        Navigator.pop(context);
+                                        break;
+                                    }
                                   },
                                 ),
                                 isThreeLine: false,
@@ -132,3 +149,40 @@ class _CategoriaPageState extends State<CategoriaPage> {
     );
   }
 }
+
+enum _ValueDialog {
+  editar,
+  excluir,
+}
+
+//  onTap: () {
+//                                         showDialog(
+//                                           context: context,
+//                                           builder: (context) => AlertDialog(
+//                                             shape: const CircleBorder(),
+//                                             elevation: 24.0,
+//                                             title: Text(
+//                                                 "Deseja excluir ${document.nome} definitivamente?"),
+//                                             actions: [
+//                                               MaterialButton(
+//                                                 child: const Text("Sim"),
+//                                                 onPressed: () {
+//                                                   // _showMyDialog();
+//                                                   print('${document.id}');
+//                                                   DatabaseHelper.instance
+//                                                       .removeDocumento(
+//                                                           document.id!);
+
+//                                                   Navigator.pop(context);
+//                                                 },
+//                                               ),
+//                                               MaterialButton(
+//                                                 child: const Text('Não'),
+//                                                 onPressed: () {},
+//                                               )
+//                                             ],
+//                                           ),
+//                                           barrierDismissible: false,
+//                                         );
+//                                         Navigator.pop(context);
+//                                       },
