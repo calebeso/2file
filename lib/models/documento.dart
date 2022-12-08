@@ -1,35 +1,38 @@
+import 'categoria.dart';
+
 class Documento {
   int? id;
-  String nome;
-  // DateTime criadoEm;
-  // DateTime dataCompetencia;
-  // DateTime dataValidade;
-  // Categoria idCategoria;
+  String? nome;
+  DateTime? dataCompetencia;
+  DateTime? dataValidade;
+  DateTime? criadoEm;
+  int? categoria_id;
 
-  Documento({
-    this.id,
-    required this.nome,
-    // required this.criadoEm,
-    // required this.dataCompetencia,
-    // required this.dataValidade,
-    //inserir o this.idCategoria
-  });
+  Documento(
+      {this.id,
+      this.nome,
+      this.dataCompetencia,
+      this.dataValidade,
+      this.criadoEm,
+      this.categoria_id});
 
   factory Documento.fromMap(Map<String, dynamic> json) => Documento(
         id: json['id'],
         nome: json['nome'],
-        // dataCompetencia: DateTime.parse(['data_competencia'].toString()),
-        // dataValidade: DateTime.parse(['data_validade'].toString()),
-        // criadoEm: DateTime.parse(['criado_em'].toString()),
-        // inserir o campo idCategoria
+        dataCompetencia: json['dataCompetencia'],
+        dataValidade: json['dataValidade'],
+        criadoEm: json['criadoEm'],
+        categoria_id: json['categoria_id'],
       );
 
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'nome': nome,
-        // 'data_competencia': dataCompetencia.toString(),
-        // 'data_validade': dataValidade.toString(),
-        // 'criado_em': criadoEm.toString(),
-        //inserir o campo idCategoria
-      };
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nome': nome,
+      'dataCompetencia': dataCompetencia?.microsecondsSinceEpoch,
+      'dataValidade': dataValidade?.microsecondsSinceEpoch,
+      'criadoEm': criadoEm?.microsecondsSinceEpoch,
+      'categoria_id': categoria_id,
+    };
+  }
 }

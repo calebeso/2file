@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../database/database_config.dart';
+import '../models/categoria.dart';
 import '../models/documento.dart';
-import 'Cadastrar_documentoPage.dart';
 
 class CategoriaPage extends StatefulWidget {
-  const CategoriaPage({super.key});
+  const CategoriaPage({super.key, required this.categoria});
+
+  final Categoria categoria;
 
   @override
   State<CategoriaPage> createState() => _CategoriaPageState();
@@ -19,11 +21,13 @@ class _CategoriaPageState extends State<CategoriaPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff0C322C),
-        title: const Text('Nome da Categoria'),
+        title: Text(
+            '${DatabaseHelper.instance.listDocumentosByCategoriaId(widget.categoria.id!)}'),
       ),
       body: Center(
         child: FutureBuilder<List<Documento>>(
-          future: DatabaseHelper.instance.listDocumentos(),
+          future: DatabaseHelper.instance
+              .listDocumentosByCategoriaId(widget.categoria.id!),
           builder: (
             BuildContext context,
             AsyncSnapshot<List<Documento>> snapshot,
@@ -63,7 +67,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                         ),
                                       ),
                                       TextSpan(
-                                        text: ' ${document.nome}.',
+                                        text: ' ${document.dataCompetencia}.',
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -73,7 +77,17 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black)),
                                       TextSpan(
-                                        text: ' ${document.nome}.',
+                                        text: ' ${document.dataValidade}.',
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                      const TextSpan(
+                                          text: '\nCriado em: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black)),
+                                      TextSpan(
+                                        text: ' ${document.criadoEm}.',
                                         style: const TextStyle(
                                             color: Colors.black),
                                       ),
@@ -97,12 +111,9 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                         //chamar cadastrarDocumento passando o documento
                                         break;
                                       case _ValueDialog.excluir:
-                                        print('Excluir');
-
                                         showDialog(
                                           context: context,
-                                          builder: (ctx) => AlertDialog(
-                                            shape: const CircleBorder(),
+                                          builder: (context) => AlertDialog(
                                             elevation: 5.0,
                                             title: Text(
                                                 "Deseja excluir ${document.nome} definitivamente?"),
@@ -110,13 +121,13 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                               MaterialButton(
                                                 child: const Text("Sim"),
                                                 onPressed: () {
-                                                  // _showMyDialog();
-                                                  print('${document.id}');
-                                                  DatabaseHelper.instance
-                                                      .removeDocumento(
-                                                          document.id!);
+                                                  setState(() {
+                                                    DatabaseHelper.instance
+                                                        .removeDocumento(
+                                                            document.id!);
+                                                  });
 
-                                                  Navigator.pop(ctx);
+                                                  Navigator.pop(context);
                                                 },
                                               ),
                                               MaterialButton(
@@ -125,9 +136,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                               )
                                             ],
                                           ),
-                                          barrierDismissible: false,
                                         );
-                                        Navigator.pop(context);
                                         break;
                                     }
                                   },
@@ -154,35 +163,3 @@ enum _ValueDialog {
   editar,
   excluir,
 }
-
-//  onTap: () {
-//                                         showDialog(
-//                                           context: context,
-//                                           builder: (context) => AlertDialog(
-//                                             shape: const CircleBorder(),
-//                                             elevation: 24.0,
-//                                             title: Text(
-//                                                 "Deseja excluir ${document.nome} definitivamente?"),
-//                                             actions: [
-//                                               MaterialButton(
-//                                                 child: const Text("Sim"),
-//                                                 onPressed: () {
-//                                                   // _showMyDialog();
-//                                                   print('${document.id}');
-//                                                   DatabaseHelper.instance
-//                                                       .removeDocumento(
-//                                                           document.id!);
-
-//                                                   Navigator.pop(context);
-//                                                 },
-//                                               ),
-//                                               MaterialButton(
-//                                                 child: const Text('Não'),
-//                                                 onPressed: () {},
-//                                               )
-//                                             ],
-//                                           ),
-//                                           barrierDismissible: false,
-//                                         );
-//                                         Navigator.pop(context);
-//                                       },

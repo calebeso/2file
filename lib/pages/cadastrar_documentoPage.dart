@@ -66,9 +66,10 @@ class _CadastrarDocumentoPageState extends State<CadastrarDocumentoPage> {
           onPressed: () {
             final documento = Documento(
               nome: _controllerNome.text,
-              // dataCompetencia: pickedDataCompetencia!,
-              // dataValidade: pickedDataValidade!,
-              // criadoEm: DateTime.now(),
+              dataCompetencia: pickedDataCompetencia!,
+              dataValidade: pickedDataValidade!,
+              criadoEm: DateTime.now(),
+              categoria_id: 
             );
 
             DatabaseHelper.instance.addDocumento(documento);

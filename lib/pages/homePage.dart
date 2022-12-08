@@ -136,8 +136,8 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                CategoriaPage()));
+                          builder: (BuildContext context) => CategoriaPage(),
+                        ));
                   },
                   child: Container(
                     height: 100.0,

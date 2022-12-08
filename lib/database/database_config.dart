@@ -1,12 +1,9 @@
 import 'dart:io';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:to_file/models/categoria.dart';
-import 'package:to_file/models/notificacao.dart';
+import 'package:path_provider/path_provider.dart';
 
-import '../models/categoria.dart';
 import '../models/documento.dart';
 import '../models/notificacao.dart';
 
@@ -18,10 +15,11 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await _initDatabase();
 
   Future<Database> _initDatabase() async {
-    var databasePath = await getDatabasesPath();
-    String path = join(databasePath, 'twoFile.db');
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    print(documentsDirectory.path);
+    String path = documentsDirectory.path + '/' + 'twofile.db';
 
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(path, version: 2, onCreate: _onCreate);
   }
 
   Future _onCreate(Database db, int version) async {
@@ -33,32 +31,40 @@ class DatabaseHelper {
   String documentos = '''
     CREATE TABLE documentos(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT,
-      data_competencia TEXT,
-      data_validade TEXT,
-      criado_em TEXT
+      nome VARCHAR(255) NOT NULL, 
+      dataCompetencia DATE NULL,
+      dataValidade DATE NULL,
+      criadoEm DATE NULL,
+      categoria_id INT NOT NULL, 
+      FOREIGN KEY (categoria_id) REFERENCES categorias (id)
     )''';
 
   String notificacoes = '''
     CREATE TABLE notificacoes(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      criado_em TEXT
+      id INTEGER PRIMARY KEY AUTOINCREMENT
     )''';
 
   String categorias = '''
     CREATE TABLE categorias(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT,
-      criado_em TEXT
+      nome TEXT
     )''';
 
-  //return
+  //Return Lista de documentos por id categoria
+  Future<List<Documento>> listDocumentosByCategoriaId(int id) async {
+    Database db = await instance.database;
+    var documentos = await db.query('documentos',
+        orderBy: 'nome', where: 'categoria_id = ?', whereArgs: [id]);
+    List<Documento> documentosList = documentos.isNotEmpty
+        ? documentos.map((document) => Documento.fromMap(document)).toList()
+        : [];
+    return documentosList;
+  }
 
   //Return Lista de documentos
   Future<List<Documento>> listDocumentos() async {
     Database db = await instance.database;
     var documentos = await db.query('documentos', orderBy: 'nome');
-    //alterar o orderby para id_categoria
     List<Documento> documentosList = documentos.isNotEmpty
         ? documentos.map((e) => Documento.fromMap(e)).toList()
         : [];
@@ -82,6 +88,15 @@ class DatabaseHelper {
     Database db = await instance.database;
     return await db.update('documentos', documento.toMap(),
         where: 'id = ?', whereArgs: [documento.id]);
+  }
+
+  // Retorna todas as categorias
+  Future<List<Categoria>> todasCategorias() async {
+    Database db = await instance.database;
+    List<Map<String, dynamic>> allRows = await db.query('categorias');
+    List<Categoria> categorias =
+        allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
+    return categorias;
   }
 
   //Return Lista de dcategorias
