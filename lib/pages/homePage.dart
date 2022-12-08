@@ -5,7 +5,7 @@ import 'package:to_file/pages/documentoPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
-import '../databases/database_helper.dart';
+import '../databases/database_config.dart';
 import '../models/categoria.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,45 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController? textController;
 
-  final DatabaseHelper dbHelper = DatabaseHelper.instance;
-
-  List<dynamic> categorias = [
-    Categoria(
-        id: 0,
-        nome: 'Recibo',
-        nomeIcone: 'recibo.png',
-        criadoEm: DateTime.now()),
-    Categoria(
-        id: 1,
-        nome: 'Fatura',
-        nomeIcone: 'fatura.png',
-        criadoEm: DateTime.now()),
-    Categoria(
-        id: 2,
-        nome: 'Extrato Bancário',
-        nomeIcone: 'extrato-bancario.png',
-        criadoEm: DateTime.now()),
-    Categoria(
-        id: 3,
-        nome: 'Nota Fiscal',
-        nomeIcone: 'notaFiscal.png',
-        criadoEm: DateTime.now()),
-    Categoria(
-        id: 4,
-        nome: 'Contrato',
-        nomeIcone: 'contrato.png',
-        criadoEm: DateTime.now()),
-    Categoria(
-        id: 5,
-        nome: 'Boleto',
-        nomeIcone: 'boleto.png',
-        criadoEm: DateTime.now()),
-    Categoria(
-        id: 6,
-        nome: 'Pessoal',
-        nomeIcone: 'pessoal.png',
-        criadoEm: DateTime.now())
-  ];
+  final DatabaseHelper dbConfig = DatabaseHelper.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -141,61 +103,13 @@ class _HomePageState extends State<HomePage> {
                           CardCategoria(categoria: cat)
                         ],
                         const CardAddCategoria()
-                      ]
-                      //     snapshot.data!.map((cat) {
-                      //   return CardCategoria(categoria: cat);
-                      // }).toList(),
-
-                      // Card ADD NEWCategoriaPage
-                      );
+                      ]);
                 } else {
                   return const Center(
                     child: CardAddCategoria(),
                   );
                 }
               },
-              // child: GridView.count(
-              //   crossAxisCount: 3,
-              //   primary: false,
-              //   padding: const EdgeInsets.all(20),
-              //   crossAxisSpacing: 10,
-              //   mainAxisSpacing: 10,
-              //   children: [
-              //     for (var cat in categorias) ...[CardCategoria(categoria: cat)],
-              //     GestureDetector(
-              //       onTap: () {
-              //         Navigator.push(
-              //             context,
-              //             MaterialPageRoute(
-              //                 builder: (BuildContext context) =>
-              //                     NewCategoriaPage()));
-              //       },
-              //       child: Container(
-              //         height: 100.0,
-              //         width: 100.0,
-              //         padding: const EdgeInsets.all(8),
-              //         // color: const Color(0xffEAEBD9),
-              //         decoration: BoxDecoration(
-              //           color: Colors.white,
-              //           borderRadius: BorderRadius.circular(8.0),
-              //           boxShadow: const <BoxShadow>[
-              //             BoxShadow(
-              //               color: Colors.black38,
-              //               blurRadius: 3.0,
-              //               offset: Offset(0.0, 0.80),
-              //             ),
-              //           ],
-              //         ),
-              //         child: const IconButton(
-              //             onPressed: null,
-              //             icon: Icon(
-              //               Icons.add,
-              //               color: Color(0xffFE7C3F),
-              //               size: 40,
-              //             )),
-              //       ),
-              //     ),
-              //   ],
             ),
           ),
         ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:icon_picker/icon_picker.dart';
-import 'package:to_file/databases/database_helper.dart';
 import 'package:to_file/models/icones.dart';
 
+import '../databases/database_config.dart';
 import '../models/categoria.dart';
 
 class NewCategoriaPage extends StatefulWidget {
