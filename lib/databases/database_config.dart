@@ -11,9 +11,9 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   static Database? _database;
-  Future<Database> get database async => _database ??= await _initDatabase();
+  Future<Database> get database async => _database ??= await initDatabase();
 
-  Future<Database> _initDatabase() async {
+  Future<Database> initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     print(documentsDirectory.path);
     String path = documentsDirectory.path + '/' + 'twofile.db';
@@ -25,32 +25,51 @@ class DatabaseHelper {
     await db.execute(documentos);
     await db.execute(notificacoes);
     await db.execute(categorias);
+    await _populateDefaultCategoria(db);
   }
 
-  String documentos = '''
-    CREATE TABLE documentos(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome VARCHAR(255) NOT NULL, 
-      dataCompetencia DATE NULL,
-      dataValidade DATE NULL,
-      criadoEm DATE NULL,
-      categoria_id INT NOT NULL, 
-      FOREIGN KEY (categoria_id) REFERENCES categorias (id)
-    )''';
-  Future<Database> get database async => _database ??= await _initDatabase();
+  Future _populateDefaultCategoria(Database db) async {
+    List<dynamic> categorias = [
+      Categoria(
+          id: 0,
+          nome: 'Recibo',
+          nomeIcone: 'recibo.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 1,
+          nome: 'Fatura',
+          nomeIcone: 'fatura.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 2,
+          nome: 'Extrato Bancário',
+          nomeIcone: 'extrato-bancario.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 3,
+          nome: 'Nota Fiscal',
+          nomeIcone: 'notaFiscal.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 4,
+          nome: 'Contrato',
+          nomeIcone: 'contrato.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 5,
+          nome: 'Boleto',
+          nomeIcone: 'boleto.png',
+          criadoEm: DateTime.now()),
+      Categoria(
+          id: 6,
+          nome: 'Pessoal',
+          nomeIcone: 'pessoal.png',
+          criadoEm: DateTime.now())
+    ];
 
-  Future<Database> _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-
-    String path = documentsDirectory.path + '/' + 'twofile.db';
-
-    return await openDatabase(path, version: 2, onCreate: _onCreate);
-  }
-
-  Future _onCreate(Database db, int version) async {
-    await db.execute(documentos);
-    await db.execute(notificacoes);
-    await db.execute(categorias);
+    for (var categoria in categorias) {
+      addCategoria(categoria);
+    }
   }
 
   String documentos = '''
@@ -88,6 +107,23 @@ class DatabaseHelper {
     return documentosList;
   }
 
+  //remover documento
+  Future<List<Categoria>> getCategoriaById(int id) async {
+    Database db = await instance.database;
+    var categorias = await db.query('categorias',
+        where: 'id = ?', whereArgs: [id], orderBy: 'nome');
+    //alterar o orderby para id_categoria
+    List<Categoria> categoriaList = categorias.isNotEmpty
+        ? categorias.map((e) => Categoria.fromMap(e)).toList()
+        : [];
+    return categoriaList;
+  }
+
+  //Future<Categoria> getCategoriaById(int id) async {
+  //  Database db = await instance.database;
+  //  var categoria = await db.rawQuery(sql)
+  //}
+
   //adicionar Documento
   Future<int> addDocumento(Documento documento) async {
     Database db = await instance.database;
@@ -114,6 +150,17 @@ class DatabaseHelper {
     List<Categoria> categorias =
         allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
     return categorias;
+  }
+
+  //Return Lista de documentos por id categoria
+  Future<List<Documento>> listDocumentosByCategoriaId(int id) async {
+    Database db = await instance.database;
+    var documentos = await db.query('documentos',
+        orderBy: 'nome', where: 'categoria_id = ?', whereArgs: [id]);
+    List<Documento> documentosList = documentos.isNotEmpty
+        ? documentos.map((document) => Documento.fromMap(document)).toList()
+        : [];
+    return documentosList;
   }
 
   //Return Lista de dcategorias

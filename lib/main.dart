@@ -5,6 +5,7 @@ import 'package:to_file/databases/database_config.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  DatabaseHelper.instance.initDatabase();
   runApp(const MyApp());
 }
 
