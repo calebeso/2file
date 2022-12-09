@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/pages/homePage.dart';
-
-import '../databases/database_config.dart';
+import 'package:to_file/databases/database_config.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  DatabaseHelper.instance.initDatabase();
   runApp(const MyApp());
 }
 
