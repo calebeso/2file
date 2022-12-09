@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
-import 'package:to_file/widgets/categoria_dropdown.dart';
+import 'package:to_file/pages/categoria_page.dart';
+import 'package:to_file/pages/homePage.dart';
 
 import '../databases/database_config.dart';
 
@@ -17,10 +19,31 @@ class _DocumentoPageState extends State<DocumentoPage> {
   final _controllerDataCompetencia = TextEditingController();
   final _controllerDataValidade = TextEditingController();
 
+  var _selectedValue;
+  var _categorias = <DropdownMenuItem>[];
+
   DateTime? pickedDataCompetencia;
   DateTime? pickedDataValidade;
   DateTime? dataCompetenciaTimeStamp;
   DateTime? dataValidadeTimeStamp;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategorias();
+  }
+
+  _loadCategorias() async {
+    var categorias = await DatabaseHelper.instance.todasCategorias();
+    categorias.forEach((element) {
+      setState(() {
+        _categorias.add(DropdownMenuItem(
+          child: Text(element.nome),
+          value: element.id,
+        ));
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +69,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
               onTap: () {
                 _pickDateDialogCompetencia();
               }),
+          const SizedBox(height: 24),
           TextField(
               controller: _controllerDataValidade,
               decoration: InputDecoration(
@@ -54,6 +78,16 @@ class _DocumentoPageState extends State<DocumentoPage> {
               readOnly: true,
               onTap: () {
                 _pickDateDialogValidade();
+              }),
+          const SizedBox(height: 24),
+          DropdownButtonFormField(
+              hint: Text('Selecione uma categoria'),
+              value: _selectedValue,
+              items: _categorias,
+              onChanged: (value) {
+                setState(() {
+                  _selectedValue = value;
+                });
               }),
           const SizedBox(height: 32),
           ElevatedButton(
@@ -67,9 +101,23 @@ class _DocumentoPageState extends State<DocumentoPage> {
                     dataValidade: dataValidadeTimeStamp,
                     criadoEm: DateTime.fromMicrosecondsSinceEpoch(
                         now!.microsecondsSinceEpoch),
-                    categoria_id: 1);
+                    categoria_id: _selectedValue);
 
                 await DatabaseHelper.instance.addDocumento(documento);
+                var categoria = await DatabaseHelper.instance
+                    .getCategoriaById(_selectedValue);
+
+                var cat;
+                categoria.forEach((element) {
+                  cat = element;
+                });
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          CategoriaPage(categoria: cat)),
+                );
               }),
         ]));
   }
