@@ -1,9 +1,28 @@
-class Categoria{
+class Categoria {
+  int? id;
+  String nome;
+  String nomeIcone;
+  DateTime criadoEm;
 
-    int? id;
-    String? nome;
-    String? nome_icone;
-    DateTime? timestamp;
+  Categoria(
+      {this.id,
+      required this.nome,
+      required this.nomeIcone,
+      required this.criadoEm});
 
-    Categoria({this.nome, this.nome_icone, this.timestamp});
+  factory Categoria.fromMap(Map<String, dynamic> json) => Categoria(
+        id: json['id'],
+        nome: json['nome'],
+        nomeIcone: json['nomeIcone'],
+        criadoEm: DateTime.parse(json['criadoEm']),
+      );
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nome': nome,
+      'nomeIcone': nomeIcone,
+      'criadoEm': criadoEm.toIso8601String(),
+    };
+  }
 }
