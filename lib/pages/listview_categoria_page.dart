@@ -1,3 +1,4 @@
+import '../models/categoria.dart';
 import 'package:flutter/material.dart';
 import 'package:to_file/models/categoria.dart';
 
