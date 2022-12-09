@@ -1,6 +1,7 @@
 import '../models/categoria.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:to_file/models/categoria.dart';
+
 import '../components/categoriaList.dart';
 import '../models/documento.dart';
 

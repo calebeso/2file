@@ -37,6 +37,32 @@ class DatabaseHelper {
       categoria_id INT NOT NULL, 
       FOREIGN KEY (categoria_id) REFERENCES categorias (id)
     )''';
+  Future<Database> get database async => _database ??= await _initDatabase();
+
+  Future<Database> _initDatabase() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+
+    String path = documentsDirectory.path + '/' + 'twofile.db';
+
+    return await openDatabase(path, version: 2, onCreate: _onCreate);
+  }
+
+  Future _onCreate(Database db, int version) async {
+    await db.execute(documentos);
+    await db.execute(notificacoes);
+    await db.execute(categorias);
+  }
+
+  String documentos = '''
+    CREATE TABLE documentos(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome VARCHAR(255) NOT NULL, 
+      dataCompetencia DATE NULL,
+      dataValidade DATE NULL,
+      criadoEm DATE NULL,
+      categoria_id INT NOT NULL, 
+      FOREIGN KEY (categoria_id) REFERENCES categorias (id)
+    )''';
 
   String notificacoes = '''
     CREATE TABLE notificacoes(
@@ -46,7 +72,9 @@ class DatabaseHelper {
   String categorias = '''
     CREATE TABLE categorias(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT
+      nome VARCHAR(255) NOT NULL, 
+      nomeIcone VARCHAR(255) NOT NULL, 
+      criadoEm DATE NULL
     )''';
 
   //Return Lista de documentos

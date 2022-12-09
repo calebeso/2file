@@ -1,5 +1,3 @@
-import 'categoria.dart';
-
 class Documento {
   int? id;
   String? nome;
