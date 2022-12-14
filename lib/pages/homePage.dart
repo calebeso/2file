@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 20),
           Container(
-            height: 500.0,
+            height: 400.0,
             child: FutureBuilder<List<Categoria>>(
               future: DatabaseHelper.instance.listCategoriaById(),
               builder: (BuildContext context,

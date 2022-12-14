@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_file/models/icones.dart';
 
 import '../models/categoria.dart';
-import '../pages/categoriaPage.dart';
+import '../pages/categoria_page.dart';
 
 class CardCategoria extends StatelessWidget {
   final Categoria categoria;
@@ -16,7 +16,8 @@ class CardCategoria extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => const CategoriaPage()));
+                builder: (BuildContext context) =>
+                    CategoriaPage(id: categoria.id!)));
       },
       child: Container(
         height: 100.0,

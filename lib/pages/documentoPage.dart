@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/pages/categoria_page.dart';
@@ -56,13 +55,13 @@ class _DocumentoPageState extends State<DocumentoPage> {
         body: ListView(padding: EdgeInsets.all(16), children: <Widget>[
           TextField(
             controller: _controllerNome,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 border: OutlineInputBorder(), labelText: 'Nome do Documento'),
           ),
           const SizedBox(height: 24),
           TextField(
               controller: _controllerDataCompetencia,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   icon: Icon(Icons.calendar_today),
                   labelText: "Data de Competência"),
               readOnly: true,
@@ -72,7 +71,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
           const SizedBox(height: 24),
           TextField(
               controller: _controllerDataValidade,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   icon: Icon(Icons.calendar_today),
                   labelText: "Data de Validade"),
               readOnly: true,
@@ -81,7 +80,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
               }),
           const SizedBox(height: 24),
           DropdownButtonFormField(
-              hint: Text('Selecione uma categoria'),
+              hint: const Text('Selecione uma categoria'),
               value: _selectedValue,
               items: _categorias,
               onChanged: (value) {
@@ -91,7 +90,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
               }),
           const SizedBox(height: 32),
           ElevatedButton(
-              child: Text('Salvar'),
+              child: const Text('Salvar'),
               onPressed: () async {
                 var now = DateTime.now();
 
@@ -100,24 +99,28 @@ class _DocumentoPageState extends State<DocumentoPage> {
                     dataCompetencia: dataCompetenciaTimeStamp,
                     dataValidade: dataValidadeTimeStamp,
                     criadoEm: DateTime.fromMicrosecondsSinceEpoch(
-                        now!.microsecondsSinceEpoch),
+                        now.microsecondsSinceEpoch),
                     categoria_id: _selectedValue);
 
-                await DatabaseHelper.instance.addDocumento(documento);
-                var categoria = await DatabaseHelper.instance
+                setState(() {
+                  DatabaseHelper.instance.addDocumento(documento);
+                });
+
+                List<Categoria> categoria = await DatabaseHelper.instance
                     .getCategoriaById(_selectedValue);
 
+                print(_selectedValue);
                 var cat;
                 categoria.forEach((element) {
                   cat = element;
                 });
 
+                // ignore: use_build_context_synchronously
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          CategoriaPage(categoria: cat)),
-                );
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            CategoriaPage(id: _selectedValue)));
               }),
         ]));
   }
@@ -128,7 +131,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2023),
-      locale: Locale("pt", "BR"),
+      locale: const Locale("pt", "BR"),
     );
 
     if (pickedDataCompetencia != null) {
