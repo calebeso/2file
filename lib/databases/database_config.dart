@@ -32,44 +32,35 @@ class DatabaseHelper {
   Future _populateDefaultCategoria(Database db) async {
     List<dynamic> categorias = [
       Categoria(
-          id: 0,
-          nome: 'Recibo',
-          nomeIcone: 'recibo.png',
-          criadoEm: DateTime.now()),
+          nome: 'Recibo', nomeIcone: 'recibo.png', criadoEm: DateTime.now()),
       Categoria(
-          id: 1,
-          nome: 'Fatura',
-          nomeIcone: 'fatura.png',
-          criadoEm: DateTime.now()),
+          nome: 'Fatura', nomeIcone: 'fatura.png', criadoEm: DateTime.now()),
       Categoria(
-          id: 2,
           nome: 'Extrato Bancário',
           nomeIcone: 'extrato-bancario.png',
           criadoEm: DateTime.now()),
       Categoria(
-          id: 3,
           nome: 'Nota Fiscal',
           nomeIcone: 'notaFiscal.png',
           criadoEm: DateTime.now()),
       Categoria(
-          id: 4,
           nome: 'Contrato',
           nomeIcone: 'contrato.png',
           criadoEm: DateTime.now()),
       Categoria(
-          id: 5,
-          nome: 'Boleto',
-          nomeIcone: 'boleto.png',
-          criadoEm: DateTime.now()),
+          nome: 'Boleto', nomeIcone: 'boleto.png', criadoEm: DateTime.now()),
       Categoria(
-          id: 6,
-          nome: 'Pessoal',
-          nomeIcone: 'pessoal.png',
-          criadoEm: DateTime.now())
+          nome: 'Pessoal', nomeIcone: 'pessoal.png', criadoEm: DateTime.now())
     ];
 
     for (var categoria in categorias) {
-      addCategoria(categoria);
+      await db.rawInsert('''
+        INSERT INTO categorias (nome,nomeIcone,criadoEm)
+        VALUES (?, ?, ?)''', [
+        categoria.nome,
+        categoria.nomeIcone,
+        categoria.criadoEm.toIso8601String()
+      ]);
     }
   }
 

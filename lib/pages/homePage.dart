@@ -18,7 +18,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController? textController;
 
+  List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    atualizarListaCategorias();
+  }
+
+  atualizarListaCategorias() async {
+    List<Categoria> cat = await dbConfig.listCategoriaById();
+    setState(() {
+      _categorias = cat;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,30 +101,42 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           Container(
             height: 500.0,
-            child: FutureBuilder<List<Categoria>>(
-              future: DatabaseHelper.instance.listCategoriaById(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<Categoria>> snapshot) {
-                if (snapshot.hasData) {
-                  return GridView.count(
-                      crossAxisCount: 3,
-                      primary: false,
-                      padding: const EdgeInsets.all(20),
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      children: [
-                        for (var cat in snapshot.data!) ...[
-                          CardCategoria(categoria: cat)
-                        ],
-                        const CardAddCategoria()
-                      ]);
-                } else {
-                  return const Center(
-                    child: CardAddCategoria(),
-                  );
-                }
-              },
-            ),
+            child: GridView.count(
+                crossAxisCount: 3,
+                primary: false,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                children: [
+                  CardAddCategoria(
+                      atualizarListaCategorias: atualizarListaCategorias()),
+                  for (var cat in _categorias) ...[
+                    CardCategoria(categoria: cat)
+                  ],
+                ]),
+
+            // child: FutureBuilder<List<Categoria>>(
+            //   future: DatabaseHelper.instance.listCategoriaById(),
+            //   builder: (BuildContext context,
+            //       AsyncSnapshot<List<Categoria>> snapshot) {
+            //     if (snapshot.hasData) {
+            //       return GridView.count(
+            //           crossAxisCount: 3,
+            //           primary: false,
+            //           padding: const EdgeInsets.all(20),
+            //           crossAxisSpacing: 10,
+            //           mainAxisSpacing: 10,
+            //           children: [
+            //             const CardAddCategoria(),
+            //             for (var cat in snapshot.data!) ...[
+            //               CardCategoria(categoria: cat)
+            //             ],
+            //           ]);
+            //     } else {
+            //       return const Text("");
+            //     }
+            //   },
+            // ),
           ),
         ],
       ),

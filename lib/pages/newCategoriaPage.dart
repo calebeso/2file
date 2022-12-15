@@ -6,7 +6,9 @@ import '../databases/database_config.dart';
 import '../models/categoria.dart';
 
 class NewCategoriaPage extends StatefulWidget {
-  NewCategoriaPage({Key? key}) : super(key: key);
+  NewCategoriaPage({this.atualizarListaCategorias});
+
+  final atualizarListaCategorias;
 
   @override
   State<NewCategoriaPage> createState() => _NewCategoriaPageState();
@@ -61,6 +63,7 @@ class _NewCategoriaPageState extends State<NewCategoriaPage> {
                 onPressed: () {
                   setState(() {
                     inserirCategoria();
+                    Navigator.pop(context);
                   });
                 },
                 style: ButtonStyle(
@@ -100,6 +103,7 @@ class _NewCategoriaPageState extends State<NewCategoriaPage> {
         nomeIcone: iconeCategoriaController.text,
         criadoEm: DateTime.now());
     await DatabaseHelper.instance.addCategoria(categoria);
+    await this.widget.atualizarListaCategorias();
     nomeCategoriaController.clear();
     iconeCategoriaController.clear();
   }
