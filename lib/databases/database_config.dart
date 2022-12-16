@@ -27,51 +27,44 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute(documentos);
     await db.execute(notificacoes);
-    await db.execute(categorias);
+
+    await db.execute(categoria);
+
     await _populateDefaultCategoria(db);
   }
 
   Future _populateDefaultCategoria(Database db) async {
     List<dynamic> categorias = [
       Categoria(
-          id: 0,
-          nome: 'Recibo',
-          nomeIcone: 'recibo.png',
-          criadoEm: DateTime.now()),
+          nome: 'Recibo', nomeIcone: 'recibo.png', criadoEm: DateTime.now()),
       Categoria(
-          id: 1,
-          nome: 'Fatura',
-          nomeIcone: 'fatura.png',
-          criadoEm: DateTime.now()),
+          nome: 'Fatura', nomeIcone: 'fatura.png', criadoEm: DateTime.now()),
       Categoria(
-          id: 2,
           nome: 'Extrato Bancário',
           nomeIcone: 'extrato-bancario.png',
           criadoEm: DateTime.now()),
       Categoria(
-          id: 3,
           nome: 'Nota Fiscal',
           nomeIcone: 'notaFiscal.png',
           criadoEm: DateTime.now()),
       Categoria(
-          id: 4,
           nome: 'Contrato',
           nomeIcone: 'contrato.png',
           criadoEm: DateTime.now()),
       Categoria(
-          id: 5,
-          nome: 'Boleto',
-          nomeIcone: 'boleto.png',
-          criadoEm: DateTime.now()),
+          nome: 'Boleto', nomeIcone: 'boleto.png', criadoEm: DateTime.now()),
       Categoria(
-          id: 6,
-          nome: 'Pessoal',
-          nomeIcone: 'pessoal.png',
-          criadoEm: DateTime.now())
+          nome: 'Pessoal', nomeIcone: 'pessoal.png', criadoEm: DateTime.now())
     ];
 
     for (var categoria in categorias) {
-      addCategoria(categoria);
+      await db.rawInsert('''
+        INSERT INTO categorias (nome,nomeIcone,criadoEm)
+        VALUES (?, ?, ?)''', [
+        categoria.nome,
+        categoria.nomeIcone,
+        categoria.criadoEm.toIso8601String()
+      ]);
     }
   }
 
@@ -91,21 +84,31 @@ class DatabaseHelper {
       id INTEGER PRIMARY KEY AUTOINCREMENT
     )''';
 
-  String categorias = '''
+  String categoria = '''
     CREATE TABLE categorias(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome VARCHAR(255) NOT NULL, 
-      nomeIcone VARCHAR(255) NOT NULL, 
-      criadoEm DATE NULL
-    )''';
+      nome TEXT,
+      nomeIcone TEXT,
+      criadoEm DateTime
+    )
+    ''';
+
+  //Return Lista de documentos
+  // Future<List<Documento>> listDocumentos() async {
+  //   Database db = await instance.database;
+  //   var documentos = await db.query('documentos', orderBy: 'nome');
+  //   //alterar o orderby para id_categoria
+  //   List<Documento> documentosList = documentos.isNotEmpty
+  //       ? documentos.map((e) => Documento.fromMap(e)).toList()
+  //       : [];
+  //   return documentosList;
+  // }
 
   //Return Lista de documentos por id categoria
   Future<List<Documento>> listDocumentosByCategoriaId(int id) async {
     Database db = await instance.database;
-    // var documentos = await db.query('documentos',
-    //     orderBy: 'nome', where: 'categoria_id = ?', whereArgs: [id]);
-    var documentos = await db
-        .query('documentos', where: 'categoria_id = ?', whereArgs: [id]);
+    var documentos = await db.query('documentos',
+        orderBy: 'nome', where: 'categoria_id = ?', whereArgs: [id]);
     List<Documento> documentosList = documentos.isNotEmpty
         ? documentos.map((document) => Documento.fromMap(document)).toList()
         : [];
@@ -164,14 +167,15 @@ class DatabaseHelper {
         where: 'id = ?', whereArgs: [documento.id]);
   }
 
+  // ============CATEGORIA ==============================================
   // Retorna todas as categorias
-  Future<List<Categoria>> todasCategorias() async {
-    Database db = await instance.database;
-    List<Map<String, dynamic>> allRows = await db.query('categorias');
-    List<Categoria> categorias =
-        allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
-    return categorias;
-  }
+  // Future<List<Categoria>> todasCategorias() async {
+  //   Database db = await instance.database;
+  //   List<Map<String, dynamic>> allRows = await db.query('categorias');
+  //   List<Categoria> categorias =
+  //       allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
+  //   return categorias;
+  // }
 
   //Return Lista de dcategorias
   Future<List<Categoria>> listCategoriaById() async {

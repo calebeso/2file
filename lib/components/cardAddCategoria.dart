@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../pages/newCategoriaPage.dart';
 
 class CardAddCategoria extends StatelessWidget {
-  const CardAddCategoria({Key? key}) : super(key: key);
+  const CardAddCategoria({this.atualizarListaCategorias});
+
+  final atualizarListaCategorias;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,8 @@ class CardAddCategoria extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext context) => NewCategoriaPage()));
+                builder: (BuildContext context) => NewCategoriaPage(
+                    atualizarListaCategorias: atualizarListaCategorias)));
       },
       child: Container(
         height: 100.0,
@@ -25,7 +28,7 @@ class CardAddCategoria extends StatelessWidget {
           boxShadow: const <BoxShadow>[
             BoxShadow(
               color: Colors.black38,
-              blurRadius: 3.0,
+              blurRadius: 5.0,
               offset: Offset(0.0, 0.80),
             ),
           ],
