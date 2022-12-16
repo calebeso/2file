@@ -14,9 +14,12 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await initDatabase();
 
   Future<Database> initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    print(documentsDirectory.path);
-    String path = documentsDirectory.path + '/' + 'twofile.db';
+    // Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    // print(documentsDirectory.path);
+    // String path = documentsDirectory.path + '/' + 'twofile.db';
+
+    var databasePath = await getDatabasesPath();
+    String path = join(databasePath, 'twoFile.db');
 
     return await openDatabase(path, version: 2, onCreate: _onCreate);
   }
@@ -96,6 +99,19 @@ class DatabaseHelper {
       criadoEm DATE NULL
     )''';
 
+  //Return Lista de documentos por id categoria
+  Future<List<Documento>> listDocumentosByCategoriaId(int id) async {
+    Database db = await instance.database;
+    // var documentos = await db.query('documentos',
+    //     orderBy: 'nome', where: 'categoria_id = ?', whereArgs: [id]);
+    var documentos = await db
+        .query('documentos', where: 'categoria_id = ?', whereArgs: [id]);
+    List<Documento> documentosList = documentos.isNotEmpty
+        ? documentos.map((document) => Documento.fromMap(document)).toList()
+        : [];
+    return documentosList;
+  }
+
   //Return Lista de documentos
   Future<List<Documento>> listDocumentos() async {
     Database db = await instance.database;
@@ -107,11 +123,10 @@ class DatabaseHelper {
     return documentosList;
   }
 
-  //remover documento
   Future<List<Categoria>> getCategoriaById(int id) async {
     Database db = await instance.database;
-    var categorias = await db.query('categorias',
-        where: 'id = ?', whereArgs: [id], orderBy: 'nome');
+    var categorias =
+        await db.query('categorias', where: 'id = ?', whereArgs: [id]);
     //alterar o orderby para id_categoria
     List<Categoria> categoriaList = categorias.isNotEmpty
         ? categorias.map((e) => Categoria.fromMap(e)).toList()
@@ -119,10 +134,16 @@ class DatabaseHelper {
     return categoriaList;
   }
 
-  //Future<Categoria> getCategoriaById(int id) async {
-  //  Database db = await instance.database;
-  //  var categoria = await db.rawQuery(sql)
-  //}
+  // Future<List<Categoria>> getCategoriaById(int id) async {
+  //   Database db = await instance.database;
+  //   var categorias =
+  //       await db.query('categorias', where: 'id = ?', whereArgs: [id]);
+  //   //alterar o orderby para id_categoria
+  //   List<Categoria> categoriaList = categorias.isNotEmpty
+  //       ? categorias.map((e) => Categoria.fromMap(e)).toList()
+  //       : [];
+  //   return categoriaList;
+  // }
 
   //adicionar Documento
   Future<int> addDocumento(Documento documento) async {
@@ -150,17 +171,6 @@ class DatabaseHelper {
     List<Categoria> categorias =
         allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
     return categorias;
-  }
-
-  //Return Lista de documentos por id categoria
-  Future<List<Documento>> listDocumentosByCategoriaId(int id) async {
-    Database db = await instance.database;
-    var documentos = await db.query('documentos',
-        orderBy: 'nome', where: 'categoria_id = ?', whereArgs: [id]);
-    List<Documento> documentosList = documentos.isNotEmpty
-        ? documentos.map((document) => Documento.fromMap(document)).toList()
-        : [];
-    return documentosList;
   }
 
   //Return Lista de dcategorias

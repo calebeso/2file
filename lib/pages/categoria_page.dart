@@ -5,9 +5,9 @@ import '../models/categoria.dart';
 import '../models/documento.dart';
 
 class CategoriaPage extends StatefulWidget {
-  const CategoriaPage({super.key, required this.categoria});
+  const CategoriaPage({super.key, required this.id});
 
-  final Categoria categoria;
+  final int id;
 
   @override
   State<CategoriaPage> createState() => _CategoriaPageState();
@@ -15,15 +15,18 @@ class CategoriaPage extends StatefulWidget {
 
 class _CategoriaPageState extends State<CategoriaPage> {
   int? seletctedId;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(backgroundColor: const Color(0xff0C322C), title: Text('Oi')),
+      appBar: AppBar(
+        backgroundColor: const Color(0xff0C322C),
+        title: const Text('Lista de documentos'),
+      ),
       body: Center(
         child: FutureBuilder<List<Documento>>(
-          future: DatabaseHelper.instance
-              .listDocumentosByCategoriaId(widget.categoria.id!),
+          future:
+              DatabaseHelper.instance.listDocumentosByCategoriaId(widget.id),
           builder: (
             BuildContext context,
             AsyncSnapshot<List<Documento>> snapshot,

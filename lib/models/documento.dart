@@ -4,7 +4,7 @@ class Documento {
   DateTime? dataCompetencia;
   DateTime? dataValidade;
   DateTime? criadoEm;
-  int? categoria_id;
+  int categoria_id;
 
   Documento(
       {this.id,
@@ -12,14 +12,14 @@ class Documento {
       this.dataCompetencia,
       this.dataValidade,
       this.criadoEm,
-      this.categoria_id});
+      required this.categoria_id});
 
-  factory Documento.fromMap(Map<String, dynamic> json) => new Documento(
+  factory Documento.fromMap(Map<String, dynamic> json) => Documento(
         id: json['id'],
         nome: json['nome'],
-        dataCompetencia: json['dataCompetencia'],
-        dataValidade: json['dataValidade'],
-        criadoEm: json['criadoEm'],
+        dataCompetencia: DateTime.parse(json['dataCompetencia']),
+        dataValidade: DateTime.parse(json['dataValidade']),
+        criadoEm: DateTime.parse(json['criadoEm']),
         categoria_id: json['categoria_id'],
       );
 
@@ -27,9 +27,9 @@ class Documento {
     return {
       'id': id,
       'nome': nome,
-      'dataCompetencia': dataCompetencia?.microsecondsSinceEpoch,
-      'dataValidade': dataValidade?.microsecondsSinceEpoch,
-      'criadoEm': criadoEm?.microsecondsSinceEpoch,
+      'dataCompetencia': dataCompetencia!.toIso8601String(),
+      'dataValidade': dataValidade!.toIso8601String(),
+      'criadoEm': criadoEm!.toIso8601String(),
       'categoria_id': categoria_id,
     };
   }
