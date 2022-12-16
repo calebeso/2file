@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:to_file/models/categoria.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../models/documento.dart';
 
@@ -25,7 +27,9 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute(documentos);
     await db.execute(notificacoes);
+
     await db.execute(categoria);
+
     await _populateDefaultCategoria(db);
   }
 
@@ -110,6 +114,39 @@ class DatabaseHelper {
         : [];
     return documentosList;
   }
+
+  //Return Lista de documentos
+  Future<List<Documento>> listDocumentos() async {
+    Database db = await instance.database;
+    var documentos = await db.query('documentos', orderBy: 'nome');
+    //alterar o orderby para id_categoria
+    List<Documento> documentosList = documentos.isNotEmpty
+        ? documentos.map((e) => Documento.fromMap(e)).toList()
+        : [];
+    return documentosList;
+  }
+
+  Future<List<Categoria>> getCategoriaById(int id) async {
+    Database db = await instance.database;
+    var categorias =
+        await db.query('categorias', where: 'id = ?', whereArgs: [id]);
+    //alterar o orderby para id_categoria
+    List<Categoria> categoriaList = categorias.isNotEmpty
+        ? categorias.map((e) => Categoria.fromMap(e)).toList()
+        : [];
+    return categoriaList;
+  }
+
+  // Future<List<Categoria>> getCategoriaById(int id) async {
+  //   Database db = await instance.database;
+  //   var categorias =
+  //       await db.query('categorias', where: 'id = ?', whereArgs: [id]);
+  //   //alterar o orderby para id_categoria
+  //   List<Categoria> categoriaList = categorias.isNotEmpty
+  //       ? categorias.map((e) => Categoria.fromMap(e)).toList()
+  //       : [];
+  //   return categoriaList;
+  // }
 
   //adicionar Documento
   Future<int> addDocumento(Documento documento) async {

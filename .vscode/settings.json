@@ -1,3 +1,4 @@
 {
-    "avdmanager.sdkPath": "/home/calebeso/Documents/flutter/first_app/lib"
+  "avdmanager.sdkPath": "/home/calebeso/Documents/flutter/first_app/lib",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }
