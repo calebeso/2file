@@ -6,13 +6,14 @@ class Documento {
   DateTime? criadoEm;
   int categoria_id;
 
-  Documento(
-      {this.id,
-      this.nome,
-      this.dataCompetencia,
-      this.dataValidade,
-      this.criadoEm,
-      required this.categoria_id});
+  Documento({
+    this.id,
+    this.nome,
+    this.dataCompetencia,
+    this.dataValidade,
+    this.criadoEm,
+    required this.categoria_id,
+  });
 
   factory Documento.fromMap(Map<String, dynamic> json) => Documento(
         id: json['id'],

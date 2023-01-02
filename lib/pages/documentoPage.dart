@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
+import 'package:to_file/models/notificacoes.dart';
 import 'package:to_file/pages/categoria_page.dart';
 import 'package:to_file/pages/homePage.dart';
 
@@ -115,8 +116,9 @@ class _DocumentoPageState extends State<DocumentoPage> {
                   cat = element;
                 });
 
+                //adicionar este método para fechar o formulário quando enviar em salvar, assim, após clicar em voltar na lista de documentos, voltará para a pagina principal.
                 // ignore: use_build_context_synchronously
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) =>
@@ -150,7 +152,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2023),
-      locale: Locale("pt", "BR"),
+      locale: const Locale("pt", "BR"),
     );
 
     if (pickedDataValidade != null) {
@@ -161,5 +163,12 @@ class _DocumentoPageState extends State<DocumentoPage> {
             pickedDataValidade!.microsecondsSinceEpoch);
       });
     }
+  }
+
+  addNotify() async {
+    setState(() async {
+      await DatabaseHelper.instance
+          .addNotificacao(Notificacao(criadoEm: DateTime.now()));
+    });
   }
 }

@@ -5,6 +5,7 @@ import 'package:to_file/models/categoria.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/documento.dart';
+import '../models/notificacoes.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
@@ -26,10 +27,8 @@ class DatabaseHelper {
 
   Future _onCreate(Database db, int version) async {
     await db.execute(documentos);
-    await db.execute(notificacoes);
-
     await db.execute(categoria);
-
+    await db.execute(notificacoes);
     await _populateDefaultCategoria(db);
   }
 
@@ -81,7 +80,8 @@ class DatabaseHelper {
 
   String notificacoes = '''
     CREATE TABLE notificacoes(
-      id INTEGER PRIMARY KEY AUTOINCREMENT
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      criadoEm DateTime
     )''';
 
   String categoria = '''
@@ -92,17 +92,6 @@ class DatabaseHelper {
       criadoEm DateTime
     )
     ''';
-
-  //Return Lista de documentos
-  // Future<List<Documento>> listDocumentos() async {
-  //   Database db = await instance.database;
-  //   var documentos = await db.query('documentos', orderBy: 'nome');
-  //   //alterar o orderby para id_categoria
-  //   List<Documento> documentosList = documentos.isNotEmpty
-  //       ? documentos.map((e) => Documento.fromMap(e)).toList()
-  //       : [];
-  //   return documentosList;
-  // }
 
   //Return Lista de documentos por id categoria
   Future<List<Documento>> listDocumentosByCategoriaId(int id) async {
@@ -115,38 +104,18 @@ class DatabaseHelper {
     return documentosList;
   }
 
-  //Return Lista de documentos
+  //lista de documentos
   Future<List<Documento>> listDocumentos() async {
     Database db = await instance.database;
-    var documentos = await db.query('documentos', orderBy: 'nome');
-    //alterar o orderby para id_categoria
+    var documentos = await db.query(
+      'documentos',
+      orderBy: 'nome',
+    );
     List<Documento> documentosList = documentos.isNotEmpty
-        ? documentos.map((e) => Documento.fromMap(e)).toList()
+        ? documentos.map((document) => Documento.fromMap(document)).toList()
         : [];
     return documentosList;
   }
-
-  Future<List<Categoria>> getCategoriaById(int id) async {
-    Database db = await instance.database;
-    var categorias =
-        await db.query('categorias', where: 'id = ?', whereArgs: [id]);
-    //alterar o orderby para id_categoria
-    List<Categoria> categoriaList = categorias.isNotEmpty
-        ? categorias.map((e) => Categoria.fromMap(e)).toList()
-        : [];
-    return categoriaList;
-  }
-
-  // Future<List<Categoria>> getCategoriaById(int id) async {
-  //   Database db = await instance.database;
-  //   var categorias =
-  //       await db.query('categorias', where: 'id = ?', whereArgs: [id]);
-  //   //alterar o orderby para id_categoria
-  //   List<Categoria> categoriaList = categorias.isNotEmpty
-  //       ? categorias.map((e) => Categoria.fromMap(e)).toList()
-  //       : [];
-  //   return categoriaList;
-  // }
 
   //adicionar Documento
   Future<int> addDocumento(Documento documento) async {
@@ -168,14 +137,41 @@ class DatabaseHelper {
   }
 
   // ============CATEGORIA ==============================================
+  Future<List<Categoria>> getCategoriaById(int id) async {
+    Database db = await instance.database;
+    var categorias =
+        await db.query('categorias', where: 'id = ?', whereArgs: [id]);
+    //alterar o orderby para id_categoria
+    List<Categoria> categoriaList = categorias.isNotEmpty
+        ? categorias.map((e) => Categoria.fromMap(e)).toList()
+        : [];
+    return categoriaList;
+  }
+
+  //retorna uma categoria específica.
+  Future<Categoria> getCategoria(int id) async {
+    Database db = await instance.database;
+    Categoria? cat;
+    var categorias =
+        await db.query('categorias', where: 'id = ?', whereArgs: [id]);
+    //alterar o orderby para id_categoria
+    List<Categoria> categoriaList = categorias.isNotEmpty
+        ? categorias.map((e) => Categoria.fromMap(e)).toList()
+        : [];
+    for (Categoria c in categoriaList) {
+      cat = c;
+    }
+    return cat!;
+  }
+
   // Retorna todas as categorias
-  // Future<List<Categoria>> todasCategorias() async {
-  //   Database db = await instance.database;
-  //   List<Map<String, dynamic>> allRows = await db.query('categorias');
-  //   List<Categoria> categorias =
-  //       allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
-  //   return categorias;
-  // }
+  Future<List<Categoria>> todasCategorias() async {
+    Database db = await instance.database;
+    List<Map<String, dynamic>> allRows = await db.query('categorias');
+    List<Categoria> categorias =
+        allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
+    return categorias;
+  }
 
   //Return Lista de dcategorias
   Future<List<Categoria>> listCategoriaById() async {
@@ -204,5 +200,41 @@ class DatabaseHelper {
     Database db = await instance.database;
     return await db.update('categorias', categoria.toMap(),
         where: 'id = ?', whereArgs: [categoria.id]);
+  }
+
+  // ============NOTIFICAÇÕES ==============================================
+
+  //Get notificação por id
+  Future<List<Notificacao>> getNotificacaoById(int id_documento) async {
+    Database db = await instance.database;
+    var notificacoes = await db.query('notificacoes',
+        where: 'id_documento = ?', whereArgs: [id_documento]);
+    //alterar o orderby para id_categoria
+    List<Notificacao> notificacaoList = notificacoes.isNotEmpty
+        ? notificacoes.map((e) => Notificacao.fromMap(e)).toList()
+        : [];
+    return notificacaoList;
+  }
+
+  //Lista de notificacoes
+  Future<List<Notificacao>> listaNotificaoes() async {
+    Database db = await instance.database;
+    var notificacoes = await db.query('notificacoes', orderBy: 'id');
+    List<Notificacao> notificacoesList = notificacoes.isNotEmpty
+        ? notificacoes.map((e) => Notificacao.fromMap(e)).toList()
+        : [];
+    return notificacoesList;
+  }
+
+  //adicionar notificacao
+  Future<int> addNotificacao(Notificacao notificacao) async {
+    Database db = await instance.database;
+    return await db.insert('notificacoes', notificacao.toMap());
+  }
+
+  //remover notificacao
+  Future<int> removeNotificacao(int id) async {
+    Database db = await instance.database;
+    return await db.delete('notificacoes', where: 'id = ?', whereArgs: [id]);
   }
 }
