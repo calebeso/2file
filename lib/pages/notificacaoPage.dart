@@ -15,6 +15,16 @@ class NotificacaoPage extends StatefulWidget {
 }
 
 class _NotificacaoPageState extends State<NotificacaoPage> {
+  Future<String> _getNomeDocumentoName(int id_documento) async {
+    List<Documento> documentos =
+        await DatabaseHelper.instance.getDocumentoById(id_documento);
+    String? documento;
+    for (Documento doc in documentos) {
+      documento = doc.nome;
+    }
+    return documento!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +90,7 @@ class _NotificacaoPageState extends State<NotificacaoPage> {
                                         ),
                                       ),
                                       child: Text(
-                                        'O documento venceu em ${DateFormat('d/MM/y').format(notify.criadoEm!)}',
+                                        'O documento venceu em ${DateFormat('dd/MM/y').format(notify.criadoEm!)}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,

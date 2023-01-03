@@ -51,13 +51,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  addNotify() {
-    setState(() {
-      DatabaseHelper.instance
-          .addNotificacao(Notificacao(criadoEm: DateTime.now()));
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +77,6 @@ class _HomePageState extends State<HomePage> {
             children: [
               IconButton(
                 onPressed: () {
-                  addNotify();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

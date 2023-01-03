@@ -96,21 +96,37 @@ class _DocumentoPageState extends State<DocumentoPage> {
                 var now = DateTime.now();
 
                 final documento = Documento(
-                    nome: _controllerNome.text,
-                    dataCompetencia: dataCompetenciaTimeStamp,
-                    dataValidade: dataValidadeTimeStamp,
-                    criadoEm: DateTime.fromMicrosecondsSinceEpoch(
-                        now.microsecondsSinceEpoch),
-                    categoria_id: _selectedValue);
+                  nome: _controllerNome.text,
+                  dataCompetencia: dataCompetenciaTimeStamp,
+                  dataValidade: dataValidadeTimeStamp,
+                  criadoEm: DateTime.fromMicrosecondsSinceEpoch(
+                      now.microsecondsSinceEpoch),
+                  categoria_id: _selectedValue,
+                );
 
                 setState(() {
                   DatabaseHelper.instance.addDocumento(documento);
                 });
 
+                List<Documento> documentos =
+                    await DatabaseHelper.instance.listDocumentos();
+
+                for (Documento doc in documentos) {
+                  if (doc.criadoEm == documento.criadoEm) {
+                    final notificacao = Notificacao(
+                      criadoEm: DateTime.fromMicrosecondsSinceEpoch(
+                          now.microsecondsSinceEpoch),
+                      id_documento: doc.id,
+                    );
+                    setState(() {
+                      DatabaseHelper.instance.addNotificacao(notificacao);
+                    });
+                  }
+                }
+
                 List<Categoria> categoria = await DatabaseHelper.instance
                     .getCategoriaById(_selectedValue);
 
-                print(_selectedValue);
                 var cat;
                 categoria.forEach((element) {
                   cat = element;
@@ -132,7 +148,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2023),
+      lastDate: DateTime(2024),
       locale: const Locale("pt", "BR"),
     );
 
@@ -151,7 +167,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2023),
+      lastDate: DateTime(2024),
       locale: const Locale("pt", "BR"),
     );
 
@@ -163,12 +179,5 @@ class _DocumentoPageState extends State<DocumentoPage> {
             pickedDataValidade!.microsecondsSinceEpoch);
       });
     }
-  }
-
-  addNotify() async {
-    setState(() async {
-      await DatabaseHelper.instance
-          .addNotificacao(Notificacao(criadoEm: DateTime.now()));
-    });
   }
 }

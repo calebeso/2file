@@ -81,7 +81,9 @@ class DatabaseHelper {
   String notificacoes = '''
     CREATE TABLE notificacoes(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      criadoEm DateTime
+      criadoEm DateTime,
+      id_documento INT,
+      FOREIGN KEY (id_documento) REFERENCES documentos (id)
     )''';
 
   String categoria = '''
@@ -111,6 +113,16 @@ class DatabaseHelper {
       'documentos',
       orderBy: 'nome',
     );
+    List<Documento> documentosList = documentos.isNotEmpty
+        ? documentos.map((document) => Documento.fromMap(document)).toList()
+        : [];
+    return documentosList;
+  }
+
+  Future<List<Documento>> getDocumentoById(int id) async {
+    Database db = await instance.database;
+    var documentos =
+        await db.query('documentos', where: 'id = ?', whereArgs: [id]);
     List<Documento> documentosList = documentos.isNotEmpty
         ? documentos.map((document) => Documento.fromMap(document)).toList()
         : [];
@@ -205,7 +217,8 @@ class DatabaseHelper {
   // ============NOTIFICAÇÕES ==============================================
 
   //Get notificação por id
-  Future<List<Notificacao>> getNotificacaoById(int id_documento) async {
+  Future<List<Notificacao>> getNotificacaoByIdDocumento(
+      int id_documento) async {
     Database db = await instance.database;
     var notificacoes = await db.query('notificacoes',
         where: 'id_documento = ?', whereArgs: [id_documento]);

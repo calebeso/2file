@@ -9,7 +9,7 @@ class Notificacao {
   Notificacao({
     this.id,
     required this.criadoEm,
-    this.id_documento,
+    required this.id_documento,
     this.title,
     this.body,
     this.payload,
@@ -18,12 +18,14 @@ class Notificacao {
   factory Notificacao.fromMap(Map<String, dynamic> json) => Notificacao(
         id: json['id'],
         criadoEm: DateTime.parse(json['criadoEm']),
+        id_documento: json['id_documento'],
       );
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'criadoEm': criadoEm!.toIso8601String(),
+      'id_documento': id_documento,
     };
   }
 }
