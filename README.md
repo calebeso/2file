@@ -2,7 +2,7 @@
 
 # Projeto 2File- Gerenciador de documentos.
 
-Aplicativo para gerenciar documentos através de imagens salvas como documentos. Projeto
+Aplicativo para gerenciar documentos através de imagens salvas. Projeto
 mobile denominado 2File desenvolvido na linguagem de programação DART e com 
 framework FLUTTER.
 
