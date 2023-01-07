@@ -39,6 +39,6 @@ Studio.
 ## Observações:
 
 O Visual Studio Code é a IDE mais utilizada para o desenvolvimento, contudo, para 
-executar o aplicativo, poderá ser feito diretamente através da abertura da pasta do p
+executar o aplicativo, poderá ser feito diretamente através da abertura da pasta do
 projeto dentro do Android Studio e clicando em RUN.
 
