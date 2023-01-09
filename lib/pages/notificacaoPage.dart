@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:to_file/databases/database_config.dart';
+import 'package:to_file/services/notificationService.dart';
 import '../models/categoria.dart';
 import '../models/documento.dart';
 import 'package:intl/intl.dart';
@@ -15,15 +16,7 @@ class NotificacaoPage extends StatefulWidget {
 }
 
 class _NotificacaoPageState extends State<NotificacaoPage> {
-  Future<String> _getNomeDocumentoName(int id_documento) async {
-    List<Documento> documentos =
-        await DatabaseHelper.instance.getDocumentoById(id_documento);
-    String? documento;
-    for (Documento doc in documentos) {
-      documento = doc.nome;
-    }
-    return documento!;
-  }
+  NotificationService notificationService = NotificationService();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +27,7 @@ class _NotificacaoPageState extends State<NotificacaoPage> {
       ),
       body: Center(
         child: FutureBuilder<List<Notificacao>>(
-          future: DatabaseHelper.instance.listaNotificaoes(),
+          future: notificationService.mostrarNofiticacoes(),
           builder: (
             BuildContext context,
             AsyncSnapshot<List<Notificacao>> snapshot,

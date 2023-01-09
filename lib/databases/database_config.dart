@@ -217,7 +217,7 @@ class DatabaseHelper {
   // ============NOTIFICAÇÕES ==============================================
 
   //Get notificação por id
-  Future<List<Notificacao>> getNotificacaoByIdDocumento(
+  Future<List<Notificacao>> listNotificacoesByIdDocumento(
       int id_documento) async {
     Database db = await instance.database;
     var notificacoes = await db.query('notificacoes',

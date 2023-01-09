@@ -21,22 +21,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController? textController;
-
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
-
-  late final LocalNotificationService notificationService;
-
+  late final NotificationService notificationService;
   int count = 0;
 
   @override
   void initState() {
-    notificationService = LocalNotificationService();
+    notificationService = NotificationService();
     notificationService.initializeNotifications();
     super.initState();
     atualizarListaCategorias();
     atualizarContador();
-    // notifyCount();
   }
 
   Future<void> atualizarContador() async {
@@ -120,10 +116,7 @@ class _HomePageState extends State<HomePage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.white),
               ),
-              onPressed: () async {
-                await notificationService.showPushNotification(
-                    id: 1, title: 'teste', body: 'notificacao');
-              },
+              onPressed: () {},
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
