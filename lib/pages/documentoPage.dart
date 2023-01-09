@@ -5,6 +5,7 @@ import 'package:to_file/models/notificacoes.dart';
 import 'package:to_file/pages/categoria_page.dart';
 import 'package:to_file/pages/homePage.dart';
 
+import '../databases/NotificacaoDbHelper.dart';
 import '../databases/database_config.dart';
 
 class DocumentoPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
   final _controllerNome = TextEditingController();
   final _controllerDataCompetencia = TextEditingController();
   final _controllerDataValidade = TextEditingController();
+  NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
 
   var _selectedValue;
   var _categorias = <DropdownMenuItem>[];
@@ -119,7 +121,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
                       id_documento: doc.id,
                     );
                     setState(() {
-                      DatabaseHelper.instance.addNotificacao(notificacao);
+                      _notifyDbHelper.addNotificacao(notificacao);
                     });
                   }
                 }

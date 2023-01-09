@@ -8,8 +8,8 @@ import 'package:to_file/databases/database_config.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacoes.dart';
 
-class NotificationService {
-  NotificationService();
+class LocalNotificationService {
+  LocalNotificationService();
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
 
@@ -79,7 +79,8 @@ class NotificationService {
 
   Future<int> notifyCount() async {
     int count;
-    List<Notificacao> listaNotificacoes = await mostrarNofiticacoes();
+    List<Notificacao> listaNotificacoes =
+        await DatabaseHelper.instance.listaNotificaoes();
     if (listaNotificacoes == null || listaNotificacoes.isEmpty) {
       count = 0;
     } else {
@@ -95,18 +96,17 @@ class NotificationService {
     List<Notificacao> listNotificacao = [];
     bool teste = false;
     for (Documento doc in listDocumentos) {
-      // if (teste == false) {
-      //   showPushNotification(
-      //       id: doc.id!,
-      //       title: "2File app",
-      //       body:
-      //           'O documento "${doc.nome}" venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}.');
-      // }
-      if (teste == false) {
-        listNotificacao = await DatabaseHelper.instance
-            .listNotificacoesByIdDocumento(doc.id!);
-      } else {
-        print("não esta salvando");
+      if (doc.dataValidade == DateTime.now()) {
+        showPushNotification(
+            id: doc.id!,
+            title: "${doc.nome}",
+            body: 'Este documento venceu em ${doc.dataValidade}.');
+      }
+
+      listNotificacao =
+          await DatabaseHelper.instance.getNotificacaoByIdDocumento(doc.id!);
+      for (Notificacao notify in listNotificacao) {
+        notificacao = notify;
       }
     }
 
