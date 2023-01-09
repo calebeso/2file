@@ -7,8 +7,12 @@ import 'package:to_file/databases/database_config.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacoes.dart';
 
-class LocalNotificationService {
-  LocalNotificationService();
+import '../databases/NotificacaoDbHelper.dart';
+
+class NotificationService {
+  NotificationService();
+
+  NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
 
@@ -79,7 +83,7 @@ class LocalNotificationService {
   Future<int> notifyCount() async {
     int count;
     List<Notificacao> listaNotificacoes =
-        await DatabaseHelper.instance.listaNotificaoes();
+        await _notifyDbHelper.listaNotificacoes();
     if (listaNotificacoes == null || listaNotificacoes.isEmpty) {
       count = 0;
     } else {
@@ -104,7 +108,7 @@ class LocalNotificationService {
       }
 
       listNotificacao =
-          await DatabaseHelper.instance.getNotificacaoByIdDocumento(doc.id!);
+          await _notifyDbHelper.getNotificacaoByIdDocumento(doc.id!);
       for (Notificacao notify in listNotificacao) {
         notificacao = notify;
       }
@@ -112,36 +116,4 @@ class LocalNotificationService {
 
     return notificacao!;
   }
-
-  //====================métodos que poderão ser usados=========================NÃO DELETAR
-  // Future<void> showScheduledNotification(
-  //     {required int id,
-  //     required String title,
-  //     required String body,
-  //     required int seconds}) async {
-  //   final details = await _notificationDetails();
-  //   await _localNotificationService.zonedSchedule(
-  //     id,
-  //     title,
-  //     body,
-  //     tz.TZDateTime.from(
-  //       DateTime.now().add(Duration(seconds: seconds)),
-  //       tz.local,
-  //     ),
-  //     details,
-  //     androidAllowWhileIdle: true,
-  //     uiLocalNotificationDateInterpretation:
-  //         UILocalNotificationDateInterpretation.absoluteTime,
-  //   );
-  // }
-
-  // Future<void> showNotificationWithPayload(
-  //     {required int id,
-  //     required String title,
-  //     required String body,
-  //     required String payload}) async {
-  //   final details = await _notificationDetails();
-  //   await _localNotificationService.show(id, title, body, details,
-  //       payload: payload);
-  // }
 }

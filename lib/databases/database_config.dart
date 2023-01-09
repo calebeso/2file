@@ -214,40 +214,5 @@ class DatabaseHelper {
         where: 'id = ?', whereArgs: [categoria.id]);
   }
 
-  // ============NOTIFICAÇÕES ==============================================
 
-  //Get notificação por id
-  Future<List<Notificacao>> getNotificacaoByIdDocumento(
-      int id_documento) async {
-    Database db = await instance.database;
-    var notificacoes = await db.query('notificacoes',
-        where: 'id_documento = ?', whereArgs: [id_documento]);
-    //alterar o orderby para id_categoria
-    List<Notificacao> notificacaoList = notificacoes.isNotEmpty
-        ? notificacoes.map((e) => Notificacao.fromMap(e)).toList()
-        : [];
-    return notificacaoList;
-  }
-
-  //Lista de notificacoes
-  Future<List<Notificacao>> listaNotificaoes() async {
-    Database db = await instance.database;
-    var notificacoes = await db.query('notificacoes', orderBy: 'id');
-    List<Notificacao> notificacoesList = notificacoes.isNotEmpty
-        ? notificacoes.map((e) => Notificacao.fromMap(e)).toList()
-        : [];
-    return notificacoesList;
-  }
-
-  //adicionar notificacao
-  Future<int> addNotificacao(Notificacao notificacao) async {
-    Database db = await instance.database;
-    return await db.insert('notificacoes', notificacao.toMap());
-  }
-
-  //remover notificacao
-  Future<int> removeNotificacao(int id) async {
-    Database db = await instance.database;
-    return await db.delete('notificacoes', where: 'id = ?', whereArgs: [id]);
-  }
 }

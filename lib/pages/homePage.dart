@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
 import 'package:to_file/pages/documentoPage.dart';
@@ -8,9 +7,8 @@ import 'package:to_file/pages/sobrePage.dart';
 
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
-import '../models/notificacoes.dart';
 import '../services/notificationService.dart';
-import 'notificacaoPage.dart';
+import 'notificacaoPage2.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,13 +23,13 @@ class _HomePageState extends State<HomePage> {
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
 
-  late final LocalNotificationService notificationService;
+  late final NotificationService notificationService;
 
   int count = 0;
 
   @override
   void initState() {
-    notificationService = LocalNotificationService();
+    notificationService = NotificationService();
     notificationService.initializeNotifications();
     super.initState();
     atualizarListaCategorias();
@@ -81,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              const NotificacaoPage()));
+                              const  NotificacaoPage2()));
                 },
                 icon: const Icon(
                   Icons.notifications,
