@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/pages/categoria_page.dart';
-import 'package:to_file/pages/homePage.dart';
 
 import '../databases/database_config.dart';
 
@@ -26,23 +25,23 @@ class _DocumentoPageState extends State<DocumentoPage> {
   DateTime? dataCompetenciaTimeStamp;
   DateTime? dataValidadeTimeStamp;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadCategorias();
-  }
-
-  _loadCategorias() async {
-    var categorias = await DatabaseHelper.instance.todasCategorias();
-    categorias.forEach((element) {
-      setState(() {
-        _categorias.add(DropdownMenuItem(
-          child: Text(element.nome),
-          value: element.id,
-        ));
-      });
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _loadCategorias();
+  // }
+  //
+  // _loadCategorias() async {
+  //   var categorias = await DatabaseHelper.instance.todasCategorias();
+  //   categorias.forEach((element) {
+  //     setState(() {
+  //       _categorias.add(DropdownMenuItem(
+  //         child: Text(element.nome),
+  //         value: element.id,
+  //       ));
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

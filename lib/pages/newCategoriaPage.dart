@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:icon_picker/icon_picker.dart';
+import 'package:to_file/databases/categoria_crud.dart';
 import 'package:to_file/models/icones.dart';
 
-import '../databases/database_config.dart';
 import '../models/categoria.dart';
 
 class NewCategoriaPage extends StatefulWidget {
@@ -21,6 +21,8 @@ class _NewCategoriaPageState extends State<NewCategoriaPage> {
       TextEditingController();
 
   final Map<String, IconData> myIconCollection = Icones.mIcons;
+
+  CategoriaCrud categoriaCrud = CategoriaCrud();
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +104,8 @@ class _NewCategoriaPageState extends State<NewCategoriaPage> {
         nome: nomeCategoriaController.text,
         nomeIcone: iconeCategoriaController.text,
         criadoEm: DateTime.now());
-    await DatabaseHelper.instance.addCategoria(categoria);
+    // await DatabaseHelper.instance.addCategoria(categoria);
+    await categoriaCrud.addCategoria(categoria);
     await this.widget.atualizarListaCategorias();
     nomeCategoriaController.clear();
     iconeCategoriaController.clear();

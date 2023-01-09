@@ -1,13 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:to_file/databases/categoria_crud.dart';
 import 'package:to_file/models/icones.dart';
 
 import '../models/categoria.dart';
 import '../pages/categoria_page.dart';
 
-class CardCategoria extends StatelessWidget {
+class CardCategoria extends StatefulWidget {
   final Categoria categoria;
-
+  // List<Categoria> categorias = [];
   CardCategoria({required this.categoria});
+
+  @override
+  State<CardCategoria> createState() => _CardCategoriaState();
+}
+
+class _CardCategoriaState extends State<CardCategoria> {
+  CategoriaCrud categoriaCrud = CategoriaCrud();
+
+  void mostrarDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: const Text('Deseja excluir categoria?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Cancelar'),
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'OK'),
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +43,12 @@ class CardCategoria extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    CategoriaPage(id: categoria.id!)));
+                    CategoriaPage(id: widget.categoria.id!)));
+      },
+      onTapDown: (position) {},
+      onLongPress: () {
+        // _showContextMenu(context);
+        //mostrarDialog();
       },
       child: Container(
         height: 100.0,
@@ -40,11 +71,11 @@ class CardCategoria extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // se for do tipo imagem
-            categoria.nomeIcone.contains('png') == true
+            widget.categoria.nomeIcone.contains('png') == true
                 ? IconButton(
                     onPressed: null,
                     icon: ImageIcon(
-                      AssetImage('assets/images/${categoria.nomeIcone}'),
+                      AssetImage('assets/images/${widget.categoria.nomeIcone}'),
                       color: const Color(0xffFE7C3F),
                       size: 40,
                     ),
@@ -52,11 +83,11 @@ class CardCategoria extends StatelessWidget {
 
                 // se for icone
                 : Icon(
-                    Icones.mIcons[categoria.nomeIcone],
+                    Icones.mIcons[widget.categoria.nomeIcone],
                     color: const Color(0xffFE7C3F),
                     size: 40,
                   ),
-            Text(categoria.nome, textAlign: TextAlign.center),
+            Text(widget.categoria.nome, textAlign: TextAlign.center),
           ],
         ),
       ),
