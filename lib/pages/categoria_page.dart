@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:to_file/databases/database_config.dart';
+import 'package:to_file/databases/documentoDbHelper.dart';
 import '../models/categoria.dart';
 import '../models/documento.dart';
 import 'package:intl/intl.dart';
@@ -14,26 +15,19 @@ class CategoriaPage extends StatefulWidget {
   State<CategoriaPage> createState() => _CategoriaPageState();
 }
 
-/*nome da categoria não está aparecendo, corrigir*/
-//função para pegar nome de categoria do banco.
-_pegarNomeCategoria(int id) async {
-  Categoria categoria = await DatabaseHelper.instance.getCategoria(id);
-  return categoria.nome;
-}
-
 class _CategoriaPageState extends State<CategoriaPage> {
+  final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
   int? seletctedId;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff0C322C),
-        title: Text(_pegarNomeCategoria(widget.id).toString()),
+        title: Text('Categoria'),
       ),
       body: Center(
         child: FutureBuilder<List<Documento>>(
-          future:
-              DatabaseHelper.instance.listDocumentosByCategoriaId(widget.id),
+          future: _documentoDbHelper.listDocumentosByCategoriaId(widget.id),
           builder: (
             BuildContext context,
             AsyncSnapshot<List<Documento>> snapshot,
@@ -138,7 +132,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                                   child: const Text("Sim"),
                                                   onPressed: () {
                                                     setState(() {
-                                                      DatabaseHelper.instance
+                                                      _documentoDbHelper
                                                           .removeDocumento(
                                                               document.id!);
                                                     });

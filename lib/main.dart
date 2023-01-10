@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:to_file/pages/homePage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:to_file/databases/database_config.dart';
-import 'package:to_file/services/notificationService.dart';
+import 'package:to_file/services/notificacaoService.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

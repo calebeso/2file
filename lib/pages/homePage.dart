@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
 import 'package:to_file/pages/documentoPage.dart';
+import 'package:to_file/pages/notificacaoPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
-import '../services/notificationService.dart';
+import '../services/notificacaoService.dart';
 import 'notificacaoPage2.dart';
 
 class HomePage extends StatefulWidget {
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              const NotificacaoPage2()));
+                              const NotificacaoPage()));
                 },
                 icon: const Icon(
                   Icons.notifications,
@@ -150,29 +151,6 @@ class _HomePageState extends State<HomePage> {
                     CardCategoria(categoria: cat)
                   ],
                 ]),
-
-            // child: FutureBuilder<List<Categoria>>(
-            //   future: DatabaseHelper.instance.listCategoriaById(),
-            //   builder: (BuildContext context,
-            //       AsyncSnapshot<List<Categoria>> snapshot) {
-            //     if (snapshot.hasData) {
-            //       return GridView.count(
-            //           crossAxisCount: 3,
-            //           primary: false,
-            //           padding: const EdgeInsets.all(20),
-            //           crossAxisSpacing: 10,
-            //           mainAxisSpacing: 10,
-            //           children: [
-            //             const CardAddCategoria(),
-            //             for (var cat in snapshot.data!) ...[
-            //               CardCategoria(categoria: cat)
-            //             ],
-            //           ]);
-            //     } else {
-            //       return const Text("");
-            //     }
-            //   },
-            // ),
           ),
         ],
       ),

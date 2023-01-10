@@ -3,8 +3,7 @@ import 'package:to_file/databases/database_config.dart';
 
 import '../models/notificacoes.dart';
 
-class NotifyDbHelper{
-
+class NotifyDbHelper {
   static final DatabaseHelper dbHelper = DatabaseHelper.instance;
 
   // ============NOTIFICAÇÕES ==============================================
@@ -43,5 +42,4 @@ class NotifyDbHelper{
     Database db = await dbHelper.database;
     return await db.delete('notificacoes', where: 'id = ?', whereArgs: [id]);
   }
-
 }

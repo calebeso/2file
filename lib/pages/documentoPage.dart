@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacoes.dart';
@@ -19,7 +20,8 @@ class _DocumentoPageState extends State<DocumentoPage> {
   final _controllerNome = TextEditingController();
   final _controllerDataCompetencia = TextEditingController();
   final _controllerDataValidade = TextEditingController();
-  NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
+  final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
+  final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
 
   var _selectedValue;
   var _categorias = <DropdownMenuItem>[];
@@ -107,11 +109,11 @@ class _DocumentoPageState extends State<DocumentoPage> {
                 );
 
                 setState(() {
-                  DatabaseHelper.instance.addDocumento(documento);
+                  _documentoDbHelper.addDocumento(documento);
                 });
 
                 List<Documento> documentos =
-                    await DatabaseHelper.instance.listDocumentos();
+                    await _documentoDbHelper.listDocumentos();
 
                 for (Documento doc in documentos) {
                   if (doc.criadoEm == documento.criadoEm) {

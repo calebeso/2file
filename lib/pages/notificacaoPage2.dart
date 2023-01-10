@@ -16,60 +16,53 @@ class NotificacaoPage2 extends StatefulWidget {
 }
 
 class _NotificacaoPage2State extends State<NotificacaoPage2> {
-
   List<Notificacao> _listNotificacao = [];
   NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
 
-  void initiState(){
+  void initiState() {
     super.initState();
     _atualizarListaNotificacao();
   }
 
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
 
-  _atualizarListaNotificacao() async{
-    List<Notificacao> notifys = await _notifyDbHelper.listaNotificacoes();
-    setState(() {
-      _listNotificacao = notifys;
-    });
+  final notificacao = Notificacao(
+    id: 1,
+    id_documento: 2,
+    criadoEm: DateTime.now(),
+  );
+
+  _atualizarListaNotificacao() {
+    // _listNotificacao = await _notifyDbHelper.listaNotificacoes();
+    _listNotificacao.add(notificacao);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xff0C322C),
-        title: const Text('Notificações'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          _listaDeNotificacoes(),
-        ],
-      )
-    );
+        appBar: AppBar(
+          backgroundColor: const Color(0xff0C322C),
+          title: const Text('Notificações'),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            _listaDeNotificacoes(),
+          ],
+        ));
   }
 
-  _listaDeNotificacoes(){
-
-    return _listNotificacao.isEmpty ? const Center(
-      child: Text(
-        'Lista de notificações vazia',
-        style: TextStyle(
-          fontSize: 18,
-        ),
-      ),
-    ):Expanded(
-        child: Card(
+  _listaDeNotificacoes() {
+    return Expanded(
+      child: Card(
           margin: const EdgeInsets.all(10),
           elevation: 5,
           child: Scrollbar(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount:_listNotificacao.length,
+              padding: const EdgeInsets.all(2),
+              itemCount: _listNotificacao.length,
               itemBuilder: (context, index) {
                 return Column(
                   children: <Widget>[
@@ -77,41 +70,43 @@ class _NotificacaoPage2State extends State<NotificacaoPage2> {
                       child: ListTile(
                         title: Text(_listNotificacao[index].title.toString()),
                         trailing: const Icon(
-                          Icons.document_scanner, color: Color(0xffFE7C3F),
-                          size: 35,),
+                          Icons.document_scanner,
+                          color: Color(0xffFE7C3F),
+                          size: 35,
+                        ),
                       ),
                       onLongPress: () => showDialog(
-                         context: context,
-                         builder: (context) => AlertDialog(
-                               elevation: 5.0,
-                               title: const Text("Deseja excluir esta notificação definitivamente?"),
-                               actions: [
-                                    MaterialButton(
-                                        child: const Text("Sim"),
-                                        onPressed: () {
-                                            setState(() {
-                                            _notifyDbHelper.removeNotificacao(_listNotificacao[index].id!);
-                                            });
-                                             Navigator.pop(context);
-                                         },
-                                    ),
-                                    MaterialButton(
-                                        child: const Text('Não'),
-                                        onPressed: () {
-                                           Navigator.pop(context);
-                                        },
-                                    )
-                                ],
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          elevation: 5.0,
+                          title: const Text(
+                              "Deseja excluir esta notificação definitivamente?"),
+                          actions: [
+                            MaterialButton(
+                              child: const Text("Sim"),
+                              onPressed: () {
+                                setState(() {
+                                  _notifyDbHelper.removeNotificacao(
+                                      _listNotificacao[index].id!);
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                            MaterialButton(
+                              child: const Text('Não'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
                         ),
-                    ),
+                      ),
                     ),
                   ],
                 );
               },
-
             ),
-          )
-       ),
+          )),
     );
   }
 }

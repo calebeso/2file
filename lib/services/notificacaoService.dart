@@ -4,16 +4,20 @@ import 'package:intl/intl.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:to_file/databases/NotificacaoDbHelper.dart';
 import 'package:to_file/databases/database_config.dart';
+import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacoes.dart';
 
-class LocalNotificationService {
-  LocalNotificationService();
+class NotificationService {
+  NotificationService();
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
-
+  final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
+  final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
   final BehaviorSubject<String?> onNotificationClick = BehaviorSubject();
+  List<Notificacao> listaDeNotificoes = [];
 
   Future<void> initializeNotifications() async {
     tz.initializeTimeZones();
@@ -79,8 +83,8 @@ class LocalNotificationService {
 
   Future<int> notifyCount() async {
     int count;
-    List<Notificacao> listaNotificacoes =
-        await DatabaseHelper.instance.listaNotificaoes();
+    List<Notificacao> listaNotificacoes = await listarNotificacoes();
+    // await _notifyDbHelper.listaNotificacoes();
     if (listaNotificacoes == null || listaNotificacoes.isEmpty) {
       count = 0;
     } else {
@@ -89,27 +93,21 @@ class LocalNotificationService {
     return count;
   }
 
-  //metodo para mostrar noficações tanto no dispositivo quanto na lista de notificações.
-  Future<List<Notificacao>> mostrarNofiticacoes() async {
-    List<Documento> listDocumentos =
-        await DatabaseHelper.instance.listDocumentos();
-    List<Notificacao> listNotificacao = [];
-    bool teste = false;
-    for (Documento doc in listDocumentos) {
-      if (doc.dataValidade == DateTime.now()) {
-        showPushNotification(
-            id: doc.id!,
-            title: "${doc.nome}",
-            body: 'Este documento venceu em ${doc.dataValidade}.');
-      }
-
-      listNotificacao =
-          await DatabaseHelper.instance.getNotificacaoByIdDocumento(doc.id!);
-      for (Notificacao notify in listNotificacao) {
-        notificacao = notify;
+  Future<List<Notificacao>> listarNotificacoes() async {
+    bool teste = true;
+    List<Documento> listaDocumentos = await _documentoDbHelper.listDocumentos();
+    for (Documento doc in listaDocumentos) {
+      var data1 = doc.dataValidade;
+      var dataHoje = DateTime.now();
+      // if (data1!.isAtSameMomentAs(dataHoje)) {
+      if (teste) {
+        List<Notificacao> listaNotificacoes =
+            await _notifyDbHelper.getNotificacaoByIdDocumento(doc.id!);
+        for (Notificacao notificacao in listaNotificacoes) {
+          listaDeNotificoes.add(notificacao);
+        }
       }
     }
-
-    return listNotificacao;
+    return listaDeNotificoes;
   }
 }
