@@ -1,23 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:intl/intl.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:to_file/databases/NotificacaoDbHelper.dart';
-import 'package:to_file/databases/database_config.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacoes.dart';
 
-class NotificationService {
+class NotificationService with ChangeNotifier{
   NotificationService();
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
   final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
   final BehaviorSubject<String?> onNotificationClick = BehaviorSubject();
-  List<Notificacao> listaDeNotificoes = [];
+  List<Notificacao> listaDeNotificacoes = [];
 
   Future<void> initializeNotifications() async {
     tz.initializeTimeZones();
@@ -81,33 +78,30 @@ class NotificationService {
     }
   }
 
-  Future<int> notifyCount() async {
-    int count;
-    List<Notificacao> listaNotificacoes = await listarNotificacoes();
-    // await _notifyDbHelper.listaNotificacoes();
-    if (listaNotificacoes == null || listaNotificacoes.isEmpty) {
-      count = 0;
-    } else {
-      count = listaNotificacoes.length;
-    }
-    return count;
+  int get notifyCount {
+    return listaDeNotificacoes.length;
+  }
+
+  List<Notificacao> get listaNotificacoes {
+    return [...listaDeNotificacoes];
   }
 
   Future<List<Notificacao>> listarNotificacoes() async {
     bool teste = true;
     List<Documento> listaDocumentos = await _documentoDbHelper.listDocumentos();
     for (Documento doc in listaDocumentos) {
-      var data1 = doc.dataValidade;
-      var dataHoje = DateTime.now();
+      // var data1 = doc.dataValidade;
+      // var dataHoje = DateTime.now();
       // if (data1!.isAtSameMomentAs(dataHoje)) {
+      //arrumar teste de comparação de datas para apresentar notificações em tempo.
       if (teste) {
         List<Notificacao> listaNotificacoes =
             await _notifyDbHelper.getNotificacaoByIdDocumento(doc.id!);
         for (Notificacao notificacao in listaNotificacoes) {
-          listaDeNotificoes.add(notificacao);
+          listaDeNotificacoes.add(notificacao);
         }
       }
     }
-    return listaDeNotificoes;
+    return listaDeNotificacoes;
   }
 }

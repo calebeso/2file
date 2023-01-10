@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
 import 'package:to_file/pages/documentoPage.dart';
@@ -9,6 +10,7 @@ import 'package:to_file/pages/sobrePage.dart';
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
 import '../services/notificacaoService.dart';
+import '../services/notification/pushNotificationService.dart';
 import 'notificacaoPage2.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,8 +38,8 @@ class _HomePageState extends State<HomePage> {
     atualizarContador();
   }
 
-  Future<void> atualizarContador() async {
-    count = await notificationService.notifyCount();
+  void atualizarContador() {
+    count = notificationService.notifyCount;
   }
 
   atualizarListaCategorias() async {
@@ -92,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   maxRadius: 10,
                   backgroundColor: Colors.red.shade800,
                   child: Text(
-                    '$count',
+                    '${Provider.of<NotificationService>(context).notifyCount}',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,

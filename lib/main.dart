@@ -4,6 +4,7 @@ import 'package:to_file/pages/homePage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:to_file/databases/database_config.dart';
 import 'package:to_file/services/notificacaoService.dart';
+import 'package:to_file/services/notification/pushNotificationService.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,17 +17,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        localizationsDelegates: [
-          GlobalWidgetsLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          Locale("pt", "BR")
-        ],
-        debugShowCheckedModeBanner: false,
-        home: HomePage() // tela inicial do App
-        );
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PushNotificationService(),),
+        ChangeNotifierProvider(create: (_) => NotificationService(),),
+      ],
+      child: const MaterialApp(
+          localizationsDelegates: [
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: [
+            Locale("pt", "BR")
+          ],
+          debugShowCheckedModeBanner: false,
+          home: HomePage() // tela inicial do App
+          ),
+    );
   }
 }
