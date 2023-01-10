@@ -17,22 +17,67 @@ class CardCategoria extends StatefulWidget {
 class _CardCategoriaState extends State<CardCategoria> {
   CategoriaCrud categoriaCrud = CategoriaCrud();
 
-  void mostrarDialog() {
-    showDialog(
+  Offset _tapPosition = Offset.zero;
+
+  void _getTapPosition(TapDownDetails tapPosition) {
+    final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    setState(() {
+      _tapPosition = referenceBox.globalToLocal(tapPosition.globalPosition);
+      print(_tapPosition);
+    });
+  }
+
+  void _showContextMenu(BuildContext context) async {
+    final RenderObject? overlay =
+        Overlay.of(context)?.context.findRenderObject();
+    final result = await showMenu(
         context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: const Text('Deseja excluir categoria?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'Cancelar'),
-                  child: const Text('Cancelar'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Text('OK'),
-                ),
-              ],
-            ));
+        position: RelativeRect.fromRect(
+            Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 100, 100),
+            Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+                overlay.paintBounds.size.height)),
+        items: [
+          PopupMenuItem(
+              value: "edit",
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [Icon(Icons.edit), Text('Editar')],
+              )),
+          PopupMenuItem(
+              value: "delete",
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [Icon(Icons.delete), Text('Excluir')]))
+        ]);
+
+    switch (result) {
+      case 'delete':
+        Future.delayed(
+            const Duration(seconds: 0),
+            () => showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      title: const Text('Excluir categoria?'),
+                      actions: [
+                        ElevatedButton(
+                          child: const Text('Cancelar'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const ElevatedButton(
+                          child: Text('OK'),
+                          onPressed: null,
+                          // () async {
+                          // await categoriaCrud.removeCategoria(id);
+                          // _atualizarListaContatos();
+                          // Navigator.pop(context);
+                          // },
+                        )
+                      ],
+                    )));
+        break;
+    }
   }
 
   @override
@@ -45,10 +90,11 @@ class _CardCategoriaState extends State<CardCategoria> {
                 builder: (BuildContext context) =>
                     CategoriaPage(id: widget.categoria.id!)));
       },
-      onTapDown: (position) {},
+      onTapDown: (position) {
+        _getTapPosition(position);
+      },
       onLongPress: () {
-        // _showContextMenu(context);
-        //mostrarDialog();
+        _showContextMenu(context);
       },
       child: Container(
         height: 100.0,
@@ -93,4 +139,68 @@ class _CardCategoriaState extends State<CardCategoria> {
       ),
     );
   }
+
+// void deletarCategoria() async {
+//   await categoriaCrud.removeCategoria();
+// }
 }
+
+// class CardCategoria extends StatelessWidget {
+//   final Categoria categoria;
+//
+//   CardCategoria({required this.categoria});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: () {
+//         Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//                 builder: (BuildContext context) =>
+//                     CategoriaPage(id: categoria.id!)));
+//       },
+//       child: Container(
+//         height: 100.0,
+//         width: 100.0,
+//         padding: const EdgeInsets.all(8),
+//         // color: const Color(0xffEAEBD9),
+//         decoration: BoxDecoration(
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(8.0),
+//           boxShadow: const <BoxShadow>[
+//             BoxShadow(
+//               color: Colors.black38,
+//               blurRadius: 5.0,
+//               offset: Offset(0.0, 0.80),
+//             ),
+//           ],
+//         ),
+//
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             // se for do tipo imagem
+//             categoria.nomeIcone.contains('png') == true
+//                 ? IconButton(
+//                     onPressed: null,
+//                     icon: ImageIcon(
+//                       AssetImage('assets/images/${categoria.nomeIcone}'),
+//                       color: const Color(0xffFE7C3F),
+//                       size: 40,
+//                     ),
+//                   )
+//
+//                 // se for icone
+//                 : Icon(
+//                     Icones.mIcons[categoria.nomeIcone],
+//                     color: const Color(0xffFE7C3F),
+//                     size: 40,
+//                   ),
+//             Text(categoria.nome, textAlign: TextAlign.center),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
