@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:to_file/databases/NotificacaoDbHelper.dart';
@@ -7,7 +8,7 @@ import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacoes.dart';
 
-class NotificationService with ChangeNotifier{
+class NotificationService {
   NotificationService();
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
@@ -16,6 +17,7 @@ class NotificationService with ChangeNotifier{
   final BehaviorSubject<String?> onNotificationClick = BehaviorSubject();
   List<Notificacao> listaDeNotificacoes = [];
 
+  //========================METODOS DE LOCAL PUSH NOTIFICATION==============
   Future<void> initializeNotifications() async {
     tz.initializeTimeZones();
     const AndroidInitializationSettings androidInitializationSettings =
@@ -78,30 +80,30 @@ class NotificationService with ChangeNotifier{
     }
   }
 
-  int get notifyCount {
-    return listaDeNotificacoes.length;
-  }
-
-  List<Notificacao> get listaNotificacoes {
-    return [...listaDeNotificacoes];
-  }
-
+  //===========================METODOS DE NOTIFICAÇÕES DO APLICATIVO============================
+  //LISTAR NOTIFICAÇÕES DO BANCO DE DADOS SQL
+  //APLICAR REGRA DE DATA E COLOCAR NETODO INITsTATE NA HOME PAGE
   Future<List<Notificacao>> listarNotificacoes() async {
-    bool teste = true;
+    // bool teste = true;
     List<Documento> listaDocumentos = await _documentoDbHelper.listDocumentos();
-    for (Documento doc in listaDocumentos) {
-      // var data1 = doc.dataValidade;
-      // var dataHoje = DateTime.now();
-      // if (data1!.isAtSameMomentAs(dataHoje)) {
-      //arrumar teste de comparação de datas para apresentar notificações em tempo.
-      if (teste) {
-        List<Notificacao> listaNotificacoes =
-            await _notifyDbHelper.getNotificacaoByIdDocumento(doc.id!);
-        for (Notificacao notificacao in listaNotificacoes) {
-          listaDeNotificacoes.add(notificacao);
-        }
-      }
-    }
+
+    // List<Notificacao> listaNotificacoes =
+    //     await _notifyDbHelper.getNotificacaoByIdDocumento(doc.id!);
+
+    //PASSAR O SHOWPUSHNOTIFICATION() AQUI DENTRO PARA ENVIAR A MENSAGEM AO DISPOSITIVO SE APLICADA A REGRA.
+    listaDeNotificacoes = await _notifyDbHelper.listaNotificacoes();
     return listaDeNotificacoes;
   }
+
+  //CONTADOR DE NOTIFICAÇÕES
+  Future<int> notifyCount() async {
+    List<Notificacao> notifys = await listarNotificacoes();
+    return notifys.length;
+  }
+
+  //METODO TESTE DE PUSH NOTIFICATION
+
+  //??? CRIAR METODO PARA COLOCAR NOTIFICAÇÃO NO BANCO DE DADOS CONFORME REGRA DE CONFRONTO DE DATAS?
+  //LOOPING ETERNO? CONSUMO DE MEMÓRIA?
+  //VERIFICAR QUAL É MELHOR!
 }

@@ -17,7 +17,6 @@ class NotificacaoPage extends StatefulWidget {
 }
 
 class _NotificacaoPageState extends State<NotificacaoPage> {
-  List<Notificacao> _listNotificacao = [];
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
   final NotificationService _notificationService = NotificationService();
 

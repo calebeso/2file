@@ -11,7 +11,6 @@ import '../databases/database_config.dart';
 import '../models/categoria.dart';
 import '../services/notificacaoService.dart';
 import '../services/notification/pushNotificationService.dart';
-import 'notificacaoPage2.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,22 +23,20 @@ class _HomePageState extends State<HomePage> {
   TextEditingController? textController;
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
-
-  late final NotificationService notificationService;
+  late final NotificationService notificationService = NotificationService();
 
   int count = 0;
 
   @override
   void initState() {
-    notificationService = NotificationService();
     notificationService.initializeNotifications();
     super.initState();
     atualizarListaCategorias();
     atualizarContador();
   }
 
-  void atualizarContador() {
-    count = notificationService.notifyCount;
+  void atualizarContador() async {
+    count = await notificationService.notifyCount();
   }
 
   atualizarListaCategorias() async {
@@ -94,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                   maxRadius: 10,
                   backgroundColor: Colors.red.shade800,
                   child: Text(
-                    '${Provider.of<NotificationService>(context).notifyCount}',
+                    '$count',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
