@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:to_file/databases/database_config.dart';
 
-import '../models/notificacoes.dart';
+import '../models/notificacao.dart';
 
 class NotifyDbHelper {
   static final DatabaseHelper dbHelper = DatabaseHelper.instance;

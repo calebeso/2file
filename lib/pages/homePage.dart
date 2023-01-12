@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     notificationService.initializeNotifications();
+    notificationService.mostrarNotificacoes();
     super.initState();
     atualizarListaCategorias();
     atualizarContador();

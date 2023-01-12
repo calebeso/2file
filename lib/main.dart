@@ -9,8 +9,8 @@ import 'package:to_file/services/notification/pushNotificationService.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseHelper.instance.initDatabase();
-  NotificationService notificationService = NotificationService();
-  notificationService.initializeNotifications();
+  // NotificationService notificationService = NotificationService();
+  // notificationService.initializeNotifications();
   runApp(const MyApp());
 }
 

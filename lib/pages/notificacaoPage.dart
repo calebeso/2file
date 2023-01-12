@@ -7,7 +7,7 @@ import '../models/categoria.dart';
 import '../models/documento.dart';
 import 'package:intl/intl.dart';
 
-import '../models/notificacoes.dart';
+import '../models/notificacao.dart';
 
 class NotificacaoPage extends StatefulWidget {
   const NotificacaoPage({super.key});
@@ -29,7 +29,7 @@ class _NotificacaoPageState extends State<NotificacaoPage> {
       ),
       body: Center(
         child: FutureBuilder<List<Notificacao>>(
-          future: _notificationService.listarNotificacoes(),
+          future: _notifyDbHelper.listaNotificacoes(),
           builder: (
             BuildContext context,
             AsyncSnapshot<List<Notificacao>> snapshot,
@@ -85,7 +85,7 @@ class _NotificacaoPageState extends State<NotificacaoPage> {
                                         ),
                                       ),
                                       child: Text(
-                                        'O documento venceu em ${DateFormat('dd/MM/y').format(notify.criadoEm!)}',
+                                        _notificationService.textoDaNotificacao,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,

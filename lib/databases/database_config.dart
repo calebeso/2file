@@ -5,7 +5,7 @@ import 'package:to_file/models/categoria.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/documento.dart';
-import '../models/notificacoes.dart';
+import '../models/notificacao.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();

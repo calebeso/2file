@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
-import 'package:to_file/models/notificacoes.dart';
+import 'package:to_file/models/notificacao.dart';
 import 'package:to_file/pages/categoria_page.dart';
 import 'package:to_file/pages/homePage.dart';
 
@@ -115,18 +115,18 @@ class _DocumentoPageState extends State<DocumentoPage> {
                 List<Documento> documentos =
                     await _documentoDbHelper.listDocumentos();
 
-                for (Documento doc in documentos) {
-                  if (doc.criadoEm == documento.criadoEm) {
-                    final notificacao = Notificacao(
-                      criadoEm: DateTime.fromMicrosecondsSinceEpoch(
-                          now.microsecondsSinceEpoch),
-                      id_documento: doc.id,
-                    );
-                    setState(() {
-                      _notifyDbHelper.addNotificacao(notificacao);
-                    });
-                  }
-                }
+                // for (Documento doc in documentos) {
+                //   if (doc.criadoEm == documento.criadoEm) {
+                //     final notificacao = Notificacao(
+                //       criadoEm: DateTime.fromMicrosecondsSinceEpoch(
+                //           now.microsecondsSinceEpoch),
+                //       id_documento: doc.id,
+                //     );
+                //     setState(() {
+                //       _notifyDbHelper.addNotificacao(notificacao);
+                //     });
+                //   }
+                // }
 
                 List<Categoria> categoria = await DatabaseHelper.instance
                     .getCategoriaById(_selectedValue);
