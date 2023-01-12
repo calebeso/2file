@@ -113,7 +113,9 @@ class _HomePageState extends State<HomePage> {
                   CardAddCategoria(
                       atualizarListaCategorias: atualizarListaCategorias()),
                   for (var cat in _categorias) ...[
-                    CardCategoria(categoria: cat)
+                    CardCategoria(
+                        categoria: cat,
+                        atualizarListaCategorias: atualizarListaCategorias())
                   ],
                 ]),
           ),

@@ -4,11 +4,13 @@ import 'package:to_file/models/icones.dart';
 
 import '../models/categoria.dart';
 import '../pages/categoria_page.dart';
+import '../pages/newCategoriaPage.dart';
 
 class CardCategoria extends StatefulWidget {
   final Categoria categoria;
-  // List<Categoria> categorias = [];
-  CardCategoria({required this.categoria});
+  final atualizarListaCategorias;
+
+  CardCategoria({required this.categoria, this.atualizarListaCategorias});
 
   @override
   State<CardCategoria> createState() => _CardCategoriaState();
@@ -57,7 +59,9 @@ class _CardCategoriaState extends State<CardCategoria> {
             () => showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                      title: const Text('Excluir categoria?'),
+                      title: const Text('Excluir Categoria'),
+                      content: Text(
+                          'Tem certeza que deseja excluir a categoria: ${widget.categoria.nome}?'),
                       actions: [
                         ElevatedButton(
                           child: const Text('Cancelar'),
@@ -65,17 +69,31 @@ class _CardCategoriaState extends State<CardCategoria> {
                             Navigator.pop(context);
                           },
                         ),
-                        const ElevatedButton(
-                          child: Text('OK'),
-                          onPressed: null,
-                          // () async {
-                          // await categoriaCrud.removeCategoria(id);
-                          // _atualizarListaContatos();
-                          // Navigator.pop(context);
-                          // },
+                        ElevatedButton(
+                          child: const Text('OK'),
+                          onPressed: () async {
+                            await categoriaCrud
+                                .removeCategoria(widget.categoria.id!);
+                            Navigator.pop(context);
+                          },
                         )
                       ],
                     )));
+        break;
+
+      case 'edit':
+        Future.delayed(
+            const Duration(seconds: 0),
+            () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => NewCategoriaPage(
+                                atualizarListaCategorias:
+                                    widget.atualizarListaCategorias,
+                                categoria: widget.categoria,
+                              )))
+                });
         break;
     }
   }
@@ -139,68 +157,4 @@ class _CardCategoriaState extends State<CardCategoria> {
       ),
     );
   }
-
-// void deletarCategoria() async {
-//   await categoriaCrud.removeCategoria();
-// }
 }
-
-// class CardCategoria extends StatelessWidget {
-//   final Categoria categoria;
-//
-//   CardCategoria({required this.categoria});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: () {
-//         Navigator.push(
-//             context,
-//             MaterialPageRoute(
-//                 builder: (BuildContext context) =>
-//                     CategoriaPage(id: categoria.id!)));
-//       },
-//       child: Container(
-//         height: 100.0,
-//         width: 100.0,
-//         padding: const EdgeInsets.all(8),
-//         // color: const Color(0xffEAEBD9),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(8.0),
-//           boxShadow: const <BoxShadow>[
-//             BoxShadow(
-//               color: Colors.black38,
-//               blurRadius: 5.0,
-//               offset: Offset(0.0, 0.80),
-//             ),
-//           ],
-//         ),
-//
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             // se for do tipo imagem
-//             categoria.nomeIcone.contains('png') == true
-//                 ? IconButton(
-//                     onPressed: null,
-//                     icon: ImageIcon(
-//                       AssetImage('assets/images/${categoria.nomeIcone}'),
-//                       color: const Color(0xffFE7C3F),
-//                       size: 40,
-//                     ),
-//                   )
-//
-//                 // se for icone
-//                 : Icon(
-//                     Icones.mIcons[categoria.nomeIcone],
-//                     color: const Color(0xffFE7C3F),
-//                     size: 40,
-//                   ),
-//             Text(categoria.nome, textAlign: TextAlign.center),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
