@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
 import 'package:to_file/pages/documentoPage.dart';
@@ -10,7 +9,7 @@ import 'package:to_file/pages/sobrePage.dart';
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
 import '../services/notificacaoService.dart';
-import '../services/notification/pushNotificationService.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -117,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.white),
               ),
-              onPressed: () {},
+              onPressed: () => notificationService.showPushNotification(id: 10, title: 'teste', body: 'teste'),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [

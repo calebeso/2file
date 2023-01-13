@@ -85,7 +85,7 @@ class _NotificacaoPageState extends State<NotificacaoPage> {
                                         ),
                                       ),
                                       child: Text(
-                                        _notificationService.textoDaNotificacao,
+                                        'teste',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,

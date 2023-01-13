@@ -1,16 +1,21 @@
+import 'package:cron/cron.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:to_file/pages/homePage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:to_file/databases/database_config.dart';
+import 'package:to_file/pages/homePage.dart';
 import 'package:to_file/services/notificacaoService.dart';
-import 'package:to_file/services/notification/pushNotificationService.dart';
 
-void main() {
+
+void main() async {
+  final NotificationService _notificationService = NotificationService();
+  final cron = Cron();
+  cron.schedule(Schedule.parse('*/10 * * * * *'), () async => {
+    _notificationService.mostrarNotificacoes(),
+    print("five seconds")
+  });
+
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseHelper.instance.initDatabase();
-  // NotificationService notificationService = NotificationService();
-  // notificationService.initializeNotifications();
   runApp(const MyApp());
 }
 
