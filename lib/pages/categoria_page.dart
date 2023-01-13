@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:to_file/databases/database_config.dart';
-import '../models/categoria.dart';
+
 import '../models/documento.dart';
 
 class CategoriaPage extends StatefulWidget {
-  const CategoriaPage({super.key, required this.id});
+  const CategoriaPage({required this.id});
 
   final int id;
 

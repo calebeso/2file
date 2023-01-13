@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:to_file/pages/homePage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:to_file/databases/database_config.dart';
+import 'package:to_file/pages/homePage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: [
           GlobalWidgetsLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
           Locale("pt", "BR")

@@ -5,6 +5,7 @@ import 'package:to_file/pages/documentoPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
+import '../databases/categoria_crud.dart';
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
 
@@ -20,6 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
+  CategoriaCrud categoriaCrud = CategoriaCrud();
 
   @override
   void initState() {
@@ -28,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   atualizarListaCategorias() async {
-    List<Categoria> cat = await dbConfig.listCategoriaById();
+    List<Categoria> cat = await categoriaCrud.listCategoriaById();
     setState(() {
       _categorias = cat;
     });
@@ -111,32 +113,11 @@ class _HomePageState extends State<HomePage> {
                   CardAddCategoria(
                       atualizarListaCategorias: atualizarListaCategorias()),
                   for (var cat in _categorias) ...[
-                    CardCategoria(categoria: cat)
+                    CardCategoria(
+                        categoria: cat,
+                        atualizarListaCategorias: atualizarListaCategorias())
                   ],
                 ]),
-
-            // child: FutureBuilder<List<Categoria>>(
-            //   future: DatabaseHelper.instance.listCategoriaById(),
-            //   builder: (BuildContext context,
-            //       AsyncSnapshot<List<Categoria>> snapshot) {
-            //     if (snapshot.hasData) {
-            //       return GridView.count(
-            //           crossAxisCount: 3,
-            //           primary: false,
-            //           padding: const EdgeInsets.all(20),
-            //           crossAxisSpacing: 10,
-            //           mainAxisSpacing: 10,
-            //           children: [
-            //             const CardAddCategoria(),
-            //             for (var cat in snapshot.data!) ...[
-            //               CardCategoria(categoria: cat)
-            //             ],
-            //           ]);
-            //     } else {
-            //       return const Text("");
-            //     }
-            //   },
-            // ),
           ),
         ],
       ),
