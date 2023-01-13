@@ -32,6 +32,10 @@ class _HomePageState extends State<HomePage> {
 
   CategoriaCrud categoriaCrud = CategoriaCrud();
 
+  // pesquisa de documento
+  final _formKey = GlobalKey<FormState>();
+  final _nomeDocumento = TextEditingController();
+
   @override
   void initState() {
     notificationService.initializeNotifications();
@@ -114,59 +118,22 @@ class _HomePageState extends State<HomePage> {
       ),
 
       body: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 30.0),
-            height: 65,
-            width: 350,
-            // alignment: Alignment.center,
-            padding: const EdgeInsets.all(10),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-              ),
-              onPressed: () => notificationService.showPushNotification(
-                  id: 10, title: 'teste', body: 'teste'),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'pesquisar',
-                    style: TextStyle(
-                      color: Color(0xffB9B1B1),
-                    ),
-                  ),
-                  Icon(
-                    Icons.search,
-                    color: Color(0xffB9B1B1),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            // height: MediaQuery.of(context).size.height,
-            child: GridView.count(
-                crossAxisCount: 3,
-                primary: false,
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                children: [
-                  CardAddCategoria(
-                      atualizarListaCategorias: atualizarListaCategorias()),
-                  for (var cat in _categorias) ...[
-                    CardCategoria(
-                        categoria: cat,
-                        atualizarListaCategorias: atualizarListaCategorias())
-                  ],
-                ]),
-          ),
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          pesquisarNomeDocumento(),
+
+          // IF ==> TextForm nomeDocumento estiver vazio - mostrar GridViewCards
+          criarGridViewCards(),
+
+          // Flexible(flex: 1, child: Container()),
+
+          // ELSE ==> mostrar demais TextForm, tornar GridView invisible
+          mostrarCamposPesquisa(),
         ],
       ),
 
-      // Botão de ação - adicionar documento
+      // ADICIONAR DOCUMENTO
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -180,6 +147,61 @@ class _HomePageState extends State<HomePage> {
           size: 40,
         ),
       ),
+    );
+  }
+
+  pesquisarNomeDocumento() {
+    return Flexible(
+      child: Container(
+        height: 100,
+        color: Colors.green,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        child: Form(
+          key: _formKey,
+          child: Expanded(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nomeDocumento,
+                  decoration: const InputDecoration(labelText: 'Nome'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  criarGridViewCards() {
+    return Flexible(
+      child: Container(
+        color: Colors.yellow,
+        child: GridView.count(
+            crossAxisCount: 3,
+            primary: false,
+            padding: const EdgeInsets.all(20),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            children: [
+              CardAddCategoria(
+                  atualizarListaCategorias: atualizarListaCategorias()),
+              for (var cat in _categorias) ...[CardCategoria(categoria: cat)],
+            ]),
+      ),
+    );
+  }
+
+  mostrarCamposPesquisa() {
+    return Flexible(
+      child: Container(),
     );
   }
 
