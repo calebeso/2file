@@ -72,6 +72,7 @@ class DatabaseHelper {
       nome VARCHAR(255) NOT NULL, 
       dataCompetencia DATE NULL,
       dataValidade DATE NULL,
+      nome_imagem VARCHAR(255) NOT NULL, 
       criadoEm DATE NULL,
       categoria_id INT NOT NULL, 
       FOREIGN KEY (categoria_id) REFERENCES categorias (id)
