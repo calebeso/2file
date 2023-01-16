@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/categoria.dart';
@@ -5,8 +7,8 @@ import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacao.dart';
 import 'package:to_file/pages/categoria_page.dart';
 import 'package:to_file/pages/homePage.dart';
-
 import '../databases/NotificacaoDbHelper.dart';
+import 'package:image_picker/image_picker.dart';
 import '../databases/database_config.dart';
 
 class DocumentoPage extends StatefulWidget {
@@ -22,6 +24,10 @@ class _DocumentoPageState extends State<DocumentoPage> {
   final _controllerDataValidade = TextEditingController();
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
   final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
+
+  ImagePicker imagePicker = ImagePicker();
+  File? arquivo;
+  String? nomeArquivo;
 
   var _selectedValue;
   var _categorias = <DropdownMenuItem>[];
@@ -94,19 +100,41 @@ class _DocumentoPageState extends State<DocumentoPage> {
                 });
               }),
           const SizedBox(height: 32),
+          arquivo == null ? Container() : Image.file(arquivo!),
+          const SizedBox(height: 32),
+          ElevatedButton.icon(
+            onPressed: () => {
+              capturaImagemCamera(),
+            },
+            icon: Icon(Icons.camera_alt),
+            label: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Text('Tire uma foto'),
+            ),
+            style: ElevatedButton.styleFrom(
+                elevation: 0.0,
+                textStyle: TextStyle(
+                  fontSize: 18,
+                )),
+          ),
+          OutlinedButton.icon(
+            icon: Icon(Icons.attach_file),
+            label: Text('Selecione um arquivo'),
+            onPressed: () => {pegaImagemGaleria()},
+          ),
           ElevatedButton(
               child: const Text('Salvar'),
               onPressed: () async {
                 var now = DateTime.now();
 
                 final documento = Documento(
-                  nome: _controllerNome.text,
-                  dataCompetencia: dataCompetenciaTimeStamp,
-                  dataValidade: dataValidadeTimeStamp,
-                  criadoEm: DateTime.fromMicrosecondsSinceEpoch(
-                      now.microsecondsSinceEpoch),
-                  categoria_id: _selectedValue,
-                );
+                    nome: _controllerNome.text,
+                    dataCompetencia: dataCompetenciaTimeStamp,
+                    dataValidade: dataValidadeTimeStamp,
+                    criadoEm: DateTime.fromMicrosecondsSinceEpoch(
+                        now.microsecondsSinceEpoch),
+                    nome_imagem: nomeArquivo,
+                    categoria_id: _selectedValue);
 
                 setState(() {
                   _documentoDbHelper.addDocumento(documento);
@@ -114,19 +142,6 @@ class _DocumentoPageState extends State<DocumentoPage> {
 
                 List<Documento> documentos =
                     await _documentoDbHelper.listDocumentos();
-
-                // for (Documento doc in documentos) {
-                //   if (doc.criadoEm == documento.criadoEm) {
-                //     final notificacao = Notificacao(
-                //       criadoEm: DateTime.fromMicrosecondsSinceEpoch(
-                //           now.microsecondsSinceEpoch),
-                //       id_documento: doc.id,
-                //     );
-                //     setState(() {
-                //       _notifyDbHelper.addNotificacao(notificacao);
-                //     });
-                //   }
-                // }
 
                 List<Categoria> categoria = await DatabaseHelper.instance
                     .getCategoriaById(_selectedValue);
@@ -152,7 +167,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2024),
+      lastDate: DateTime(2025),
       locale: const Locale("pt", "BR"),
     );
 
@@ -171,8 +186,8 @@ class _DocumentoPageState extends State<DocumentoPage> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2024),
-      locale: const Locale("pt", "BR"),
+      lastDate: DateTime(2025),
+      locale: Locale("pt", "BR"),
     );
 
     if (pickedDataValidade != null) {
@@ -181,6 +196,29 @@ class _DocumentoPageState extends State<DocumentoPage> {
             '${pickedDataValidade!.day}/${pickedDataValidade!.month}/${pickedDataValidade!.year}';
         dataValidadeTimeStamp = DateTime.fromMicrosecondsSinceEpoch(
             pickedDataValidade!.microsecondsSinceEpoch);
+      });
+    }
+  }
+
+  pegaImagemGaleria() async {
+    final PickedFile? imagemTemporaria =
+        await imagePicker.getImage(source: ImageSource.gallery);
+
+    if (imagemTemporaria != null) {
+      setState(() {
+        arquivo = File(imagemTemporaria.path);
+        nomeArquivo = imagemTemporaria.path.split('/').last;
+      });
+    }
+  }
+
+  capturaImagemCamera() async {
+    final PickedFile? imagemTemporaria =
+        await imagePicker.getImage(source: ImageSource.camera);
+
+    if (imagemTemporaria != null) {
+      setState(() {
+        arquivo = File(imagemTemporaria.path);
       });
     }
   }

@@ -7,6 +7,7 @@ import 'package:to_file/pages/notificacaoPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
+import '../databases/categoria_crud.dart';
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
 import '../models/notificacao.dart';
@@ -23,10 +24,13 @@ class _HomePageState extends State<HomePage> {
   TextEditingController? textController;
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
+
   final NotificationService notificationService = NotificationService();
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
 
   int count = 0;
+
+  CategoriaCrud categoriaCrud = CategoriaCrud();
 
   @override
   void initState() {
@@ -45,7 +49,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   atualizarListaCategorias() async {
-    List<Categoria> cat = await dbConfig.listCategoriaById();
+    List<Categoria> cat = await categoriaCrud.listCategoriaById();
     setState(() {
       _categorias = cat;
       atualizarContador();
@@ -153,7 +157,9 @@ class _HomePageState extends State<HomePage> {
                   CardAddCategoria(
                       atualizarListaCategorias: atualizarListaCategorias()),
                   for (var cat in _categorias) ...[
-                    CardCategoria(categoria: cat)
+                    CardCategoria(
+                        categoria: cat,
+                        atualizarListaCategorias: atualizarListaCategorias())
                   ],
                 ]),
           ),

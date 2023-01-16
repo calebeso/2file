@@ -7,7 +7,7 @@ import '../models/documento.dart';
 import 'package:intl/intl.dart';
 
 class CategoriaPage extends StatefulWidget {
-  const CategoriaPage({super.key, required this.id});
+  const CategoriaPage({required this.id});
 
   final int id;
 

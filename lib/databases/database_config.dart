@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:to_file/models/categoria.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../models/documento.dart';
 import '../models/notificacao.dart';
@@ -73,6 +71,7 @@ class DatabaseHelper {
       nome VARCHAR(255) NOT NULL, 
       dataCompetencia DATE NULL,
       dataValidade DATE NULL,
+      nome_imagem VARCHAR(255) NOT NULL, 
       criadoEm DATE NULL,
       categoria_id INT NOT NULL, 
       FOREIGN KEY (categoria_id) REFERENCES categorias (id)
@@ -135,29 +134,38 @@ class DatabaseHelper {
   //Return Lista de dcategorias
   Future<List<Categoria>> listCategoriaById() async {
     Database db = await instance.database;
-    var categorias = await db.query('categorias', orderBy: 'id');
-    List<Categoria> categoriaList = categorias.isNotEmpty
-        ? categorias.map((e) => Categoria.fromMap(e)).toList()
-        : [];
-    return categoriaList;
+    List<Map<String, dynamic>> allRows = await db.query('categorias');
+    List<Categoria> categorias =
+        allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
+    return categorias;
   }
+
+  //Return Lista de dcategorias
+  // Future<List<Categoria>> listCategoriaById() async {
+  //   Database db = await instance.database;
+  //   var categorias = await db.query('categorias', orderBy: 'id');
+  //   List<Categoria> categoriaList = categorias.isNotEmpty
+  //       ? categorias.map((e) => Categoria.fromMap(e)).toList()
+  //       : [];
+  //   return categoriaList;
+  // }
 
   //adicionar Categoria
-  Future<int> addCategoria(Categoria categoria) async {
-    Database db = await instance.database;
-    return await db.insert('categorias', categoria.toMap());
-  }
+  // Future<int> addCategoria(Categoria categoria) async {
+  //   Database db = await instance.database;
+  //   return await db.insert('categorias', categoria.toMap());
+  // }
 
   //remover categoria
-  Future<int> removeCategoria(int id) async {
-    Database db = await instance.database;
-    return await db.delete('categorias', where: 'id = ?', whereArgs: [id]);
-  }
+  // Future<int> removeCategoria(int id) async {
+  //   Database db = await instance.database;
+  //   return await db.delete('categorias', where: 'id = ?', whereArgs: [id]);
+  // }
 
   //editar categoria
-  Future<int> updateCategoria(Categoria categoria) async {
-    Database db = await instance.database;
-    return await db.update('categorias', categoria.toMap(),
-        where: 'id = ?', whereArgs: [categoria.id]);
-  }
+  // Future<int> updateCategoria(Categoria categoria) async {
+  //   Database db = await instance.database;
+  //   return await db.update('categorias', categoria.toMap(),
+  //       where: 'id = ?', whereArgs: [categoria.id]);
+  // }
 }

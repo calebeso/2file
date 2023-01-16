@@ -5,6 +5,7 @@ import 'package:to_file/databases/database_config.dart';
 import 'package:to_file/pages/homePage.dart';
 import 'package:to_file/services/notificacaoService.dart';
 
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseHelper.instance.initDatabase();
