@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
+import 'package:to_file/databases/NotificacaoDbHelper.dart';
 import 'package:to_file/pages/documentoPage.dart';
+import 'package:to_file/pages/notificacaoPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
 import '../databases/categoria_crud.dart';
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
+import '../models/notificacao.dart';
+import '../services/notificacaoService.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,21 +22,37 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController? textController;
-
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
+
+  final NotificationService notificationService = NotificationService();
+  final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
+
+  int count = 0;
+
   CategoriaCrud categoriaCrud = CategoriaCrud();
 
   @override
   void initState() {
+    notificationService.initializeNotifications();
+    notificationService.mostrarNotificacoes();
     super.initState();
     atualizarListaCategorias();
+    atualizarContador();
+  }
+
+  atualizarContador() async {
+    List<Notificacao> notifys = await _notifyDbHelper.listaNotificacoes();
+    setState(() {
+      count = notifys.length;
+    });
   }
 
   atualizarListaCategorias() async {
     List<Categoria> cat = await categoriaCrud.listCategoriaById();
     setState(() {
       _categorias = cat;
+      atualizarContador();
     });
   }
 
@@ -57,12 +77,39 @@ class _HomePageState extends State<HomePage> {
             },
             icon: const Icon(Icons.info, color: Color(0xffFE7C3F)),
           ),
-          const IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.notifications,
-                color: Color(0xffFE7C3F),
-              ))
+          Stack(
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              NotificacaoPage()));
+                },
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Color(0xffFE7C3F),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: CircleAvatar(
+                  maxRadius: 10,
+                  backgroundColor: Colors.red.shade800,
+                  child: Text(
+                    '$count',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ],
       ),
 
@@ -78,11 +125,8 @@ class _HomePageState extends State<HomePage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.white),
               ),
-              onPressed: () {
-                setState(() {
-                  pageSearch();
-                });
-              },
+              onPressed: () => notificationService.showPushNotification(
+                  id: 10, title: 'teste', body: 'teste'),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
@@ -101,8 +145,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           const SizedBox(height: 20),
-          Container(
-            height: 400.0,
+          Expanded(
+            // height: MediaQuery.of(context).size.height,
             child: GridView.count(
                 crossAxisCount: 3,
                 primary: false,

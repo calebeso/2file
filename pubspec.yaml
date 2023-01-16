@@ -20,7 +20,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.18.2 <3.0.0"
+  sdk: ">=2.18.4 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -33,14 +33,18 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-
+  flutter_local_notifications: ^9.6.0
+  timezone: ^0.8.0
+  rxdart: ^0.27.4
   intl: ^0.17.0
+  cron:
 
   image_picker: ^0.8.6
   cupertino_icons: ^1.0.2
   icon_picker: "2.0.1"
   sqflite: ^2.2.1
   path_provider: ^2.0.11
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:

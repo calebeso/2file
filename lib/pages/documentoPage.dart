@@ -1,9 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
+import 'package:to_file/models/notificacao.dart';
 import 'package:to_file/pages/categoria_page.dart';
+import 'package:to_file/pages/homePage.dart';
+import '../databases/NotificacaoDbHelper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../databases/database_config.dart';
 
@@ -18,6 +22,8 @@ class _DocumentoPageState extends State<DocumentoPage> {
   final _controllerNome = TextEditingController();
   final _controllerDataCompetencia = TextEditingController();
   final _controllerDataValidade = TextEditingController();
+  final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
+  final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
 
   ImagePicker imagePicker = ImagePicker();
   File? arquivo;
@@ -131,8 +137,11 @@ class _DocumentoPageState extends State<DocumentoPage> {
                     categoria_id: _selectedValue);
 
                 setState(() {
-                  DatabaseHelper.instance.addDocumento(documento);
+                  _documentoDbHelper.addDocumento(documento);
                 });
+
+                List<Documento> documentos =
+                    await _documentoDbHelper.listDocumentos();
 
                 List<Categoria> categoria = await DatabaseHelper.instance
                     .getCategoriaById(_selectedValue);
@@ -142,8 +151,9 @@ class _DocumentoPageState extends State<DocumentoPage> {
                   cat = element;
                 });
 
+                //adicionar este método para fechar o formulário quando enviar em salvar, assim, após clicar em voltar na lista de documentos, voltará para a pagina principal.
                 // ignore: use_build_context_synchronously
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) =>
