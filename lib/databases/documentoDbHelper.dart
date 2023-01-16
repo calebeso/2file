@@ -29,20 +29,24 @@ class DocumentoDbHelper {
     return documentosList;
   }
 
-  Future<List<Documento>> getDocumentoById(int id) async {
+  Future<Documento> getDocumentoById(int id) async {
     Database db = await dbHelper.database;
     var documentos =
         await db.query('documentos', where: 'id = ?', whereArgs: [id]);
     List<Documento> documentosList = documentos.isNotEmpty
         ? documentos.map((document) => Documento.fromMap(document)).toList()
         : [];
-    return documentosList;
+    Documento? documento;
+    for (Documento doc in documentosList) {
+      documento = doc;
+    }
+    return documento!;
   }
 
   //adicionar Documento
-  Future<int> addDocumento(Documento documento) async {
+  Future<void> addDocumento(Documento documento) async {
     Database db = await dbHelper.database;
-    return await db.insert('documentos', documento.toMap());
+    await db.insert('documentos', documento.toMap());
   }
 
   //remover documento
@@ -52,9 +56,25 @@ class DocumentoDbHelper {
   }
 
   //editar documento
-  Future<int> updateDocumento(Documento documento) async {
+  Future<void> updateDocumento(Documento documento) async {
     Database db = await dbHelper.database;
-    return await db.update('documentos', documento.toMap(),
+    await db.update('documentos', documento.toMap(),
         where: 'id = ?', whereArgs: [documento.id]);
+  }
+
+  //get documento by id notificação
+  Future<Documento> getDocumentoByIdNotificacao(int id_documento) async {
+    Database db = await dbHelper.database;
+    var documentos = await db.query('documento',
+        where: 'id_documento = ?', whereArgs: [id_documento]);
+    //alterar o orderby para id_categoria
+    List<Documento> documentosList = documentos.isNotEmpty
+        ? documentos.map((e) => Documento.fromMap(e)).toList()
+        : [];
+    Documento? documento;
+    for (Documento doc in documentosList) {
+      documento = doc;
+    }
+    return documento!;
   }
 }

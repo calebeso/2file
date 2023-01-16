@@ -9,8 +9,7 @@ class NotifyDbHelper {
   // ============NOTIFICAÇÕES ==============================================
 
   //Get notificação por id
-  Future<List<Notificacao>> getNotificacaoByIdDocumento(
-      int id_documento) async {
+  Future<Notificacao> getNotificacaoByIdDocumento(int id_documento) async {
     Database db = await dbHelper.database;
     var notificacoes = await db.query('notificacoes',
         where: 'id_documento = ?', whereArgs: [id_documento]);
@@ -18,7 +17,11 @@ class NotifyDbHelper {
     List<Notificacao> notificacaoList = notificacoes.isNotEmpty
         ? notificacoes.map((e) => Notificacao.fromMap(e)).toList()
         : [];
-    return notificacaoList;
+    Notificacao? notificacao;
+    for (Notificacao notify in notificacaoList) {
+      notificacao = notify;
+    }
+    return notificacao!;
   }
 
   //Lista de notificacoes
@@ -32,14 +35,23 @@ class NotifyDbHelper {
   }
 
   //adicionar notificacao
-  Future<int> addNotificacao(Notificacao notificacao) async {
+  Future<void> addNotificacao(Notificacao notificacao) async {
     Database db = await dbHelper.database;
-    return await db.insert('notificacoes', notificacao.toMap());
+    await db.insert('notificacoes', notificacao.toMap());
   }
 
   //remover notificacao
-  Future<int> removeNotificacao(int id) async {
+  Future<void> removeNotificacao(int id) async {
     Database db = await dbHelper.database;
-    return await db.delete('notificacoes', where: 'id = ?', whereArgs: [id]);
+    await db.delete('notificacoes', where: 'id = ?', whereArgs: [id]);
+  }
+
+  //remover todas as notificações
+  Future<void> removerTodasNotificacoes() async {
+    Database db = await dbHelper.database;
+    String sqlDelete = '''
+        DELETE FROM notificacoes;
+    ''';
+    await db.rawDelete(sqlDelete);
   }
 }

@@ -37,7 +37,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                     child: Text(
                       'Lista de documentos vazia',
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 16,
                       ),
                     ),
                   )

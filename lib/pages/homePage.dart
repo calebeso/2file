@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
+import 'package:to_file/databases/NotificacaoDbHelper.dart';
 import 'package:to_file/pages/documentoPage.dart';
 import 'package:to_file/pages/notificacaoPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
@@ -8,8 +9,8 @@ import 'package:to_file/pages/sobrePage.dart';
 
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
+import '../models/notificacao.dart';
 import '../services/notificacaoService.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,7 +23,8 @@ class _HomePageState extends State<HomePage> {
   TextEditingController? textController;
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
-  late final NotificationService notificationService = NotificationService();
+  final NotificationService notificationService = NotificationService();
+  final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
 
   int count = 0;
 
@@ -35,8 +37,11 @@ class _HomePageState extends State<HomePage> {
     atualizarContador();
   }
 
-  void atualizarContador() async {
-    count = await notificationService.notifyCount();
+  atualizarContador() async {
+    List<Notificacao> notifys = await _notifyDbHelper.listaNotificacoes();
+    setState(() {
+      count = notifys.length;
+    });
   }
 
   atualizarListaCategorias() async {
@@ -77,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              const NotificacaoPage()));
+                              NotificacaoPage()));
                 },
                 icon: const Icon(
                   Icons.notifications,
@@ -116,7 +121,8 @@ class _HomePageState extends State<HomePage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.white),
               ),
-              onPressed: () => notificationService.showPushNotification(id: 10, title: 'teste', body: 'teste'),
+              onPressed: () => notificationService.showPushNotification(
+                  id: 10, title: 'teste', body: 'teste'),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [

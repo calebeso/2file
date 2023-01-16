@@ -5,17 +5,19 @@ import 'package:to_file/databases/database_config.dart';
 import 'package:to_file/pages/homePage.dart';
 import 'package:to_file/services/notificacaoService.dart';
 
-
-void main() async {
-  final NotificationService _notificationService = NotificationService();
-  final cron = Cron();
-  cron.schedule(Schedule.parse('*/10 * * * * *'), () async => {
-    _notificationService.mostrarNotificacoes(),
-    print("five seconds")
-  });
-
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseHelper.instance.initDatabase();
+  final NotificationService _notificationService = NotificationService();
+  _notificationService.initializeNotifications();
+  final cron = Cron();
+  cron.schedule(
+    Schedule.parse('*/15 * * * * *'),
+    () async => {
+      await _notificationService.mostrarNotificacoes(),
+    },
+  );
+
   runApp(const MyApp());
 }
 

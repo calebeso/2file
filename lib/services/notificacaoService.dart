@@ -1,4 +1,5 @@
 import 'package:cron/cron.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/subjects.dart';
@@ -8,6 +9,8 @@ import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacao.dart';
 
+import '../pages/notificacaoPage.dart';
+
 class NotificationService {
   NotificationService();
 
@@ -15,18 +18,20 @@ class NotificationService {
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
   final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
   final BehaviorSubject<String?> onNotificationClick = BehaviorSubject();
+  NotificacaoPage notificacaoPage = NotificacaoPage();
   List<Notificacao> listaDeNotificacoes = [];
   String notificacaoTexto = '';
-  final cron = Cron();
+  Documento? documento;
+  Notificacao? notify;
 
   //========================METODOS DE LOCAL PUSH NOTIFICATION==============
   Future<void> initializeNotifications() async {
     tz.initializeTimeZones();
     const AndroidInitializationSettings androidInitializationSettings =
-    AndroidInitializationSettings('@drawable/ic_stat_android');
+        AndroidInitializationSettings('@drawable/ic_stat_android');
 
     IOSInitializationSettings iosInitializationSettings =
-    IOSInitializationSettings(
+        IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
@@ -46,14 +51,17 @@ class NotificationService {
 
   Future<NotificationDetails> _notificationDetails() async {
     const AndroidNotificationDetails androidNotificationDetails =
-    AndroidNotificationDetails('channel_id', 'channel_name',
-        channelDescription: 'description',
-        importance: Importance.max,
-        priority: Priority.max,
-        playSound: true);
+        AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      channelDescription: 'description',
+      importance: Importance.max,
+      priority: Priority.max,
+      playSound: true,
+    );
 
     const IOSNotificationDetails iosNotificationDetails =
-    IOSNotificationDetails();
+        IOSNotificationDetails();
 
     return const NotificationDetails(
       android: androidNotificationDetails,
@@ -70,8 +78,8 @@ class NotificationService {
     await _localNotificationService.show(id, title, body, details);
   }
 
-  void onDidReceiveLocalNotification(int id, String? title, String? body,
-      String? payload) {
+  void onDidReceiveLocalNotification(
+      int id, String? title, String? body, String? payload) {
     print('id $id');
   }
 
@@ -85,49 +93,38 @@ class NotificationService {
   //===========================METODOS DE ADICIONAR E MOSTRAR NOTIFICAÇÕES DO APLICATIVO============================
 
   Future<void> mostrarNotificacoes() async {
-    Notificacao? notify;
     List<Documento> listaDocumentos = await _documentoDbHelper.listDocumentos();
-      for (Documento doc in listaDocumentos) {
-        var dateAtual = DateTime.now();
-        var docDataValidade = doc.dataValidade;
+    for (Documento doc in listaDocumentos) {
+      var agora = DateTime.now();
+      var docDataValidade = doc.dataValidade;
 
-        if (docDataValidade?.difference(dateAtual).inDays == 0) {
-        // if(dateAtual.isAtSameMomentAs(docDataValidade!)){
-          final notificacao = Notificacao(
-            criadoEm: DateTime.now(),
-            id_documento: doc.id,
-          );
-          _notifyDbHelper.addNotificacao(notificacao);
-          listaDeNotificacoes = await _notifyDbHelper.listaNotificacoes();
-          NotificationService instance = NotificationService();
-          instance.showPushNotification(
-            id: notify!.id!,
-            title: "2File",
-            body:
-            "O documento ${doc.nome?.toUpperCase()} venceu em ${DateFormat("dd/MM/Y").format(
-                doc.dataValidade!)}",
-          );
+      if (DateUtils.isSameDay(agora, docDataValidade)) {
+        final notificacao = Notificacao(
+          criadoEm: DateTime.now(),
+          id_documento: doc.id,
+          body:
+              "O documento ${doc.nome?.toUpperCase()} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}",
+        );
 
-          notificacaoTexto =
-          "O documento ${doc.nome} venceu em ${DateFormat("dd/MM/y").format(
-              doc.dataValidade!)}";
+        _notifyDbHelper.addNotificacao(notificacao);
+        listaDeNotificacoes = await _notifyDbHelper.listaNotificacoes();
+        for (Notificacao n in listaDeNotificacoes) {
+          notify = n;
         }
+        await showPushNotification(
+          id: notify!.id!,
+          title: "2File",
+          body:
+              "O documento ${doc.nome?.toUpperCase()} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}",
+        );
       }
+      documento = await _documentoDbHelper.getDocumentoById(doc.id!);
+      notificacaoTexto =
+          "O documento ${doc.nome} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}.";
+    }
   }
 
-  //CONTADOR DE NOTIFICAÇÕES
-  Future<int> notifyCount() async {
-    int count = listaDeNotificacoes.length;
-    return count;
-  }
-
-  String get textoDaNotificacao {
-    return notificacaoTexto;
-  }
-
-
-  //retorn lista de notificações
-  List<Notificacao> get NotificaoesList {
-    return listaDeNotificacoes;
+  Notificacao getNotificacao() {
+    return notify!;
   }
 }
