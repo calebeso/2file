@@ -25,23 +25,23 @@ class _DocumentoPageState extends State<DocumentoPage> {
   DateTime? dataCompetenciaTimeStamp;
   DateTime? dataValidadeTimeStamp;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadCategorias();
-  // }
-  //
-  // _loadCategorias() async {
-  //   var categorias = await DatabaseHelper.instance.todasCategorias();
-  //   categorias.forEach((element) {
-  //     setState(() {
-  //       _categorias.add(DropdownMenuItem(
-  //         child: Text(element.nome),
-  //         value: element.id,
-  //       ));
-  //     });
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _loadCategorias();
+  }
+
+  _loadCategorias() async {
+    var categorias = await DatabaseHelper.instance.todasCategorias();
+    categorias.forEach((element) {
+      setState(() {
+        _categorias.add(DropdownMenuItem(
+          child: Text(element.nome),
+          value: element.id,
+        ));
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2023),
+      lastDate: DateTime(2025),
       locale: const Locale("pt", "BR"),
     );
 
@@ -148,7 +148,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2023),
+      lastDate: DateTime(2025),
       locale: Locale("pt", "BR"),
     );
 

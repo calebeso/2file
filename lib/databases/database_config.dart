@@ -166,14 +166,15 @@ class DatabaseHelper {
   }
 
   // ============CATEGORIA ==============================================
-  // Retorna todas as categorias
-  // Future<List<Categoria>> todasCategorias() async {
-  //   Database db = await instance.database;
-  //   List<Map<String, dynamic>> allRows = await db.query('categorias');
-  //   List<Categoria> categorias =
-  //       allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
-  //   return categorias;
-  // }
+
+  //Retorna todas as categorias
+  Future<List<Categoria>> todasCategorias() async {
+    Database db = await instance.database;
+    List<Map<String, dynamic>> allRows = await db.query('categorias');
+    List<Categoria> categorias =
+        allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
+    return categorias;
+  }
 
   //Return Lista de dcategorias
   // Future<List<Categoria>> listCategoriaById() async {
