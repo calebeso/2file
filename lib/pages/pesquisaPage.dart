@@ -8,7 +8,8 @@ class PesquisaPage extends StatefulWidget {
 }
 
 class _CategoriaPageState extends State<PesquisaPage> {
-  List<String> meses = [
+  final valorDropdown = ValueNotifier('');
+  final List<String> dropdownListaMeses = [
     "janeiro",
     "fevereiro",
     "março",
@@ -28,7 +29,6 @@ class _CategoriaPageState extends State<PesquisaPage> {
     return Container(
       child: Column(
         children: [
-          const Text('área de pesquisa'),
           create_dropdownsButtons(),
         ],
       ),
@@ -38,19 +38,65 @@ class _CategoriaPageState extends State<PesquisaPage> {
   create_dropdownsButtons() {
     return Container(
       margin: const EdgeInsets.all(30),
-      color: Colors.orange,
+      //color: Colors.orange,
       child: Row(
-        children: const [
-          Expanded(child: Text('MÊS')),
-          Expanded(
-            child: Text('ANO'),
-          ),
-          Expanded(
-            child: Text('CATEGORIA'),
-          ),
+        children: [
+          // MÊS
+          ValueListenableBuilder(
+              valueListenable: valorDropdown,
+              builder: (BuildContext context, String value, _) {
+                return DropdownButton<String>(
+                  hint: const Text('mês'),
+                  value: (value.isEmpty) ? null : value,
+                  onChanged: (opcao) => valorDropdown.value = opcao.toString(),
+                  items: dropdownListaMeses
+                      .map(
+                        (opcao) => DropdownMenuItem(
+                          child: Text(opcao),
+                          value: opcao,
+                        ),
+                      )
+                      .toList(),
+                );
+              }),
 
-          // DropdownButton(
-          //     items: const [], value: const Text('janeiro'), onChanged: null),
+          // ANO
+          ValueListenableBuilder(
+              valueListenable: valorDropdown,
+              builder: (BuildContext context, String value, _) {
+                return DropdownButton<String>(
+                  hint: const Text('ano'),
+                  value: (value.isEmpty) ? null : value,
+                  onChanged: (opcao) => valorDropdown.value = opcao.toString(),
+                  items: dropdownListaMeses
+                      .map(
+                        (opcao) => DropdownMenuItem(
+                          child: Text(opcao),
+                          value: opcao,
+                        ),
+                      )
+                      .toList(),
+                );
+              }),
+
+          // CATEGORIA
+          ValueListenableBuilder(
+              valueListenable: valorDropdown,
+              builder: (BuildContext context, String value, _) {
+                return DropdownButton<String>(
+                  hint: const Text('categoria'),
+                  value: (value.isEmpty) ? null : value,
+                  onChanged: (opcao) => valorDropdown.value = opcao.toString(),
+                  items: dropdownListaMeses
+                      .map(
+                        (opcao) => DropdownMenuItem(
+                          child: Text(opcao),
+                          value: opcao,
+                        ),
+                      )
+                      .toList(),
+                );
+              }),
         ],
       ),
     );
