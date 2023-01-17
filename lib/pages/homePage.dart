@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
 
+  var showGrid = true;
   final NotificationService notificationService = NotificationService();
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
 
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   atualizarListaCategorias() async {
-    List<Categoria> cat = await categoriaCrud.listCategoriaById();
+    List<Categoria> cat = await dbConfig.listCategoriaById();
     setState(() {
       _categorias = cat;
       atualizarContador();
@@ -117,18 +118,54 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
 
+      // CONTEÚDO DA TELA
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          pesquisarNomeDocumento(),
-
-          // IF ==> TextForm nomeDocumento estiver vazio - mostrar GridViewCards
-          criarGridViewCards(),
-
-          // Flexible(flex: 1, child: Container()),
-
-          // ELSE ==> mostrar demais TextForm, tornar GridView invisible
-          mostrarCamposPesquisa(),
+          // Pesquisar documento
+          Container(
+            height: 100,
+            // color: Colors.green,
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _nomeDocumento,
+                    decoration: InputDecoration(
+                      labelText: 'Digite o nome do documento',
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 1, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Campo obrigatório';
+                      } else {
+                        return null;
+                      }
+                    },
+                    onTap: () {
+                      // ocultar gridView
+                      showGrid = !showGrid;
+                      print('textFormClicado');
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: showGrid,
+            child: criarGridViewCards(),
+          ),
+          Visibility(
+            visible: !showGrid,
+            child: const PesquisaPage(),
+          )
         ],
       ),
 
@@ -145,36 +182,6 @@ class _HomePageState extends State<HomePage> {
           Icons.add,
           color: Colors.white,
           size: 40,
-        ),
-      ),
-    );
-  }
-
-  pesquisarNomeDocumento() {
-    return Flexible(
-      child: Container(
-        height: 100,
-        color: Colors.green,
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-        child: Form(
-          key: _formKey,
-          child: Expanded(
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nomeDocumento,
-                  decoration: const InputDecoration(labelText: 'Nome'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo obrigatório';
-                    } else {
-                      return null;
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -200,9 +207,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   mostrarCamposPesquisa() {
-    return Flexible(
-      child: Container(),
-    );
+    return Container();
   }
 
   void pageSobre() {
