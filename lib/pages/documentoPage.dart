@@ -219,6 +219,7 @@ class _DocumentoPageState extends State<DocumentoPage> {
     if (imagemTemporaria != null) {
       setState(() {
         arquivo = File(imagemTemporaria.path);
+        nomeArquivo = imagemTemporaria.path.split('/').last;
       });
     }
   }
