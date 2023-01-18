@@ -39,64 +39,108 @@ class _CategoriaPageState extends State<PesquisaPage> {
     return Container(
       margin: const EdgeInsets.all(30),
       //color: Colors.orange,
-      child: Row(
+      child: Column(
         children: [
-          // MÊS
-          ValueListenableBuilder(
-              valueListenable: valorDropdown,
-              builder: (BuildContext context, String value, _) {
-                return DropdownButton<String>(
-                  hint: const Text('mês'),
-                  value: (value.isEmpty) ? null : value,
-                  onChanged: (opcao) => valorDropdown.value = opcao.toString(),
-                  items: dropdownListaMeses
-                      .map(
-                        (opcao) => DropdownMenuItem(
-                          child: Text(opcao),
-                          value: opcao,
-                        ),
-                      )
-                      .toList(),
-                );
-              }),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // MÊS
+              ValueListenableBuilder(
+                  valueListenable: valorDropdown,
+                  builder: (BuildContext context, String value, _) {
+                    return DropdownButton<String>(
+                      icon: const Icon(Icons.calendar_month),
+                      hint: const Text('Mês'),
+                      value: (value.isEmpty) ? null : value,
+                      onChanged: (opcao) =>
+                          valorDropdown.value = opcao.toString(),
+                      items: dropdownListaMeses
+                          .map(
+                            (opcao) => DropdownMenuItem(
+                              child: Text(opcao),
+                              value: opcao,
+                            ),
+                          )
+                          .toList(),
+                    );
+                  }),
 
-          // ANO
-          ValueListenableBuilder(
-              valueListenable: valorDropdown,
-              builder: (BuildContext context, String value, _) {
-                return DropdownButton<String>(
-                  hint: const Text('ano'),
-                  value: (value.isEmpty) ? null : value,
-                  onChanged: (opcao) => valorDropdown.value = opcao.toString(),
-                  items: dropdownListaMeses
-                      .map(
-                        (opcao) => DropdownMenuItem(
-                          child: Text(opcao),
-                          value: opcao,
-                        ),
-                      )
-                      .toList(),
-                );
-              }),
+              // ANO
+              ValueListenableBuilder(
+                  valueListenable: valorDropdown,
+                  builder: (BuildContext context, String value, _) {
+                    return DropdownButton<String>(
+                      icon: const Icon(Icons.calendar_today),
+                      hint: const Text('Ano'),
+                      value: (value.isEmpty) ? null : value,
+                      onChanged: (opcao) =>
+                          valorDropdown.value = opcao.toString(),
+                      items: dropdownListaMeses
+                          .map(
+                            (opcao) => DropdownMenuItem(
+                              child: Text(opcao),
+                              value: opcao,
+                            ),
+                          )
+                          .toList(),
+                    );
+                  }),
 
-          // CATEGORIA
-          ValueListenableBuilder(
-              valueListenable: valorDropdown,
-              builder: (BuildContext context, String value, _) {
-                return DropdownButton<String>(
-                  hint: const Text('categoria'),
-                  value: (value.isEmpty) ? null : value,
-                  onChanged: (opcao) => valorDropdown.value = opcao.toString(),
-                  items: dropdownListaMeses
-                      .map(
-                        (opcao) => DropdownMenuItem(
-                          child: Text(opcao),
-                          value: opcao,
-                        ),
-                      )
-                      .toList(),
-                );
-              }),
+              // CATEGORIA
+              // ValueListenableBuilder(
+              //     valueListenable: valorDropdown,
+              //     builder: (BuildContext context, String value, _) {
+              //       return DropdownButton<String>(
+              //         hint: const Text('categoria'),
+              //         value: (value.isEmpty) ? null : value,
+              //         onChanged: (opcao) => valorDropdown.value = opcao.toString(),
+              //         items: dropdownListaMeses
+              //             .map(
+              //               (opcao) => DropdownMenuItem(
+              //                 child: Text(opcao),
+              //                 value: opcao,
+              //               ),
+              //             )
+              //             .toList(),
+              //       );
+              //     }),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              //CATEGORIA
+              ValueListenableBuilder(
+                  valueListenable: valorDropdown,
+                  builder: (BuildContext context, String value, _) {
+                    return DropdownButton<String>(
+                      icon: const Icon(Icons.list),
+                      hint: const Text('Categoria'),
+                      value: (value.isEmpty) ? null : value,
+                      onChanged: (opcao) =>
+                          valorDropdown.value = opcao.toString(),
+                      items: dropdownListaMeses
+                          .map(
+                            (opcao) => DropdownMenuItem(
+                              child: Text(opcao),
+                              value: opcao,
+                            ),
+                          )
+                          .toList(),
+                    );
+                  }),
+              ElevatedButton(
+                onPressed: null,
+                child: const Icon(
+                  Icons.search,
+                  size: 30,
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xffFE7C3F),
+                    padding: const EdgeInsets.all(0.8)),
+              ),
+            ],
+          ),
         ],
       ),
     );

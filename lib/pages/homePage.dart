@@ -124,22 +124,20 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           // Pesquisar documento
           Container(
+            margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
             height: 100,
             // color: Colors.green,
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
                   TextFormField(
                     controller: _nomeDocumento,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
                       labelText: 'Digite o nome do documento',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      hintText: 'Ex: Contrato',
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -190,7 +188,7 @@ class _HomePageState extends State<HomePage> {
   criarGridViewCards() {
     return Flexible(
       child: Container(
-        color: Colors.yellow,
+        //color: Colors.yellow,
         child: GridView.count(
             crossAxisCount: 3,
             primary: false,

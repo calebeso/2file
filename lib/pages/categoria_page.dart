@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:to_file/databases/database_config.dart';
-import 'package:to_file/databases/documentoDbHelper.dart';
-import '../models/categoria.dart';
-import '../models/documento.dart';
 import 'package:intl/intl.dart';
+import 'package:to_file/databases/documentoDbHelper.dart';
+
+import '../models/documento.dart';
 
 class CategoriaPage extends StatefulWidget {
   const CategoriaPage({required this.id});
@@ -32,7 +31,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
             BuildContext context,
             AsyncSnapshot<List<Documento>> snapshot,
           ) {
-            return snapshot.data!.isEmpty
+            return snapshot.data != null && snapshot.data!.isEmpty
                 ? const Center(
                     child: Text(
                       'Lista de documentos vazia',
