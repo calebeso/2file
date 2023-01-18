@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../databases/documentoDbHelper.dart';
+import '../models/documento.dart';
+
 class PesquisaPage extends StatefulWidget {
   const PesquisaPage({Key? key}) : super(key: key);
 
@@ -8,6 +11,41 @@ class PesquisaPage extends StatefulWidget {
 }
 
 class _CategoriaPageState extends State<PesquisaPage> {
+
+  DocumentoDbHelper documentoDbHelper = DocumentoDbHelper();
+
+  List<Documento> documents = [];
+  List months = [];
+  List years = [];
+
+  getDocumentsDb() async {
+    List<Documento> doc = await documentoDbHelper.listDocumentos();
+    getMonthDocument(doc);
+    setState(() {
+      documents = doc;
+    });
+  }
+
+  getMonthDocument(List<Documento> doc) async {
+    documents.forEach((documento) {
+      setState(() {
+        var month = documento.dataCompetencia?.month;
+        months.add(month!);
+        // aplicar filter
+      });
+    });
+  }
+
+  getYearDocument(List<Documento> doc) async {
+    documents.forEach((documento) {
+      setState(() {
+        var year = documento.dataCompetencia?.year;
+        years.add(year!);
+        // aplicar filter
+      });
+    });
+  }
+
   final valorDropdown = ValueNotifier('');
   final List<String> dropdownListaMeses = [
     "janeiro",
@@ -30,6 +68,7 @@ class _CategoriaPageState extends State<PesquisaPage> {
       child: Column(
         children: [
           create_dropdownsButtons(),
+          //buscarMesCompetencia(),
         ],
       ),
     );
@@ -131,13 +170,13 @@ class _CategoriaPageState extends State<PesquisaPage> {
                   }),
               ElevatedButton(
                 onPressed: null,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xffFE7C3F),
+                    padding: const EdgeInsets.all(0.8)),
                 child: const Icon(
                   Icons.search,
                   size: 30,
                 ),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xffFE7C3F),
-                    padding: const EdgeInsets.all(0.8)),
               ),
             ],
           ),
