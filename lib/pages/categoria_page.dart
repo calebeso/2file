@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
+import 'package:to_file/models/categoria.dart';
 import 'package:to_file/pages/imagemViewPage.dart';
 
 import '../models/documento.dart';
 
 class CategoriaPage extends StatefulWidget {
-  const CategoriaPage({required this.id});
+  const CategoriaPage({required this.categoria});
 
-  final int id;
+  final Categoria categoria;
 
   @override
   State<CategoriaPage> createState() => _CategoriaPageState();
@@ -19,16 +20,31 @@ class _CategoriaPageState extends State<CategoriaPage> {
   final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
   // final ImagemViewPage imagemViewPage = const ImagemViewPage();
   int? seletctedId;
+  String nomeCategoria = '';
+
+  @override
+  void initState() {
+    super.initState();
+    atualizarNomeCategoria();
+  }
+
+  atualizarNomeCategoria() {
+    setState(() {
+      nomeCategoria = widget.categoria.nome;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff0C322C),
-        title: Text('Categoria'),
+        title: Text(nomeCategoria),
       ),
       body: Center(
         child: FutureBuilder<List<Documento>>(
-          future: _documentoDbHelper.listDocumentosByCategoriaId(widget.id),
+          future: _documentoDbHelper
+              .listDocumentosByCategoriaId(widget.categoria.id!),
           builder: (
             BuildContext context,
             AsyncSnapshot<List<Documento>> snapshot,

@@ -78,6 +78,7 @@ class DatabaseHelper {
     CREATE TABLE notificacoes(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       criadoEm DateTime,
+      body TEXT,
       id_documento INT,
       FOREIGN KEY (id_documento) REFERENCES documentos (id)
     )''';

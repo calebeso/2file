@@ -106,7 +106,7 @@ class _CardCategoriaState extends State<CardCategoria> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    CategoriaPage(id: widget.categoria.id!)));
+                    CategoriaPage(categoria: widget.categoria)));
       },
       onTapDown: (position) {
         _getTapPosition(position);

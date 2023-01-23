@@ -156,8 +156,9 @@ class _DocumentoPageState extends State<DocumentoPage> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            CategoriaPage(id: _selectedValue)));
+                        builder: (BuildContext context) => CategoriaPage(
+                              categoria: cat,
+                            )));
               }),
         ]));
   }
