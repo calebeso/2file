@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
+import 'package:to_file/components/dropdownButton.dart';
 import 'package:to_file/databases/NotificacaoDbHelper.dart';
 import 'package:to_file/pages/documentoPage.dart';
 import 'package:to_file/pages/notificacaoPage.dart';
-import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
-import '../databases/categoria_crud.dart';
+import '../databases/categoriaDbHelper.dart';
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
 import '../models/notificacao.dart';
@@ -21,7 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController? textController;
+  TextEditingController nameDocumentController = TextEditingController();
+
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
 
@@ -31,11 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   int count = 0;
 
-  CategoriaCrud categoriaCrud = CategoriaCrud();
-
-  // pesquisa de documento
-  final _formKey = GlobalKey<FormState>();
-  final _nomeDocumento = TextEditingController();
+  CategoriaDbHelper categoriaCrud = CategoriaDbHelper();
 
   @override
   void initState() {
@@ -119,52 +116,43 @@ class _HomePageState extends State<HomePage> {
       ),
 
       // CONTEÚDO DA TELA
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          // Pesquisar documento
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 25, 0, 0),
-            height: 100,
-            // color: Colors.green,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _nomeDocumento,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Digite o nome do documento',
-                      hintText: 'Ex: Contrato',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Campo obrigatório';
-                      } else {
-                        return null;
-                      }
-                    },
-                    onTap: () {
-                      // ocultar gridView
-                      showGrid = !showGrid;
-                      print('textFormClicado');
-                    },
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Pesquisar documento
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              height: 100,
+              // color: Colors.green,
+              //padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+              child: TextField(
+                controller: nameDocumentController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Digite o nome do documento',
+                  hintText: 'Ex: Contrato',
+                ),
+                onTap: () {
+                  // ocultar gridView
+                  showGrid = !showGrid;
+                  print(nameDocumentController.text);
+                },
               ),
             ),
-          ),
-          Visibility(
-            visible: showGrid,
-            child: criarGridViewCards(),
-          ),
-          Visibility(
-            visible: !showGrid,
-            child: const PesquisaPage(),
-          )
-        ],
+
+            Visibility(
+              visible: showGrid,
+              child: criarGridViewCards(),
+            ),
+            Visibility(
+              visible: !showGrid,
+              child: DropdownButtonPesquisa(
+                  nameDocumentController: nameDocumentController),
+            ),
+          ],
+        ),
       ),
 
       // ADICIONAR DOCUMENTO
@@ -188,7 +176,6 @@ class _HomePageState extends State<HomePage> {
   criarGridViewCards() {
     return Flexible(
       child: Container(
-        //color: Colors.yellow,
         child: GridView.count(
             crossAxisCount: 3,
             primary: false,
@@ -204,10 +191,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  mostrarCamposPesquisa() {
-    return Container();
-  }
-
   void pageSobre() {
     Navigator.push(
         context,
@@ -220,12 +203,5 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(
             builder: (BuildContext context) => const DocumentoPage()));
-  }
-
-  void pageSearch() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => const PesquisaPage()));
   }
 }
