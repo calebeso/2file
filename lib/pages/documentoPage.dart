@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
-import 'package:to_file/models/notificacao.dart';
 import 'package:to_file/pages/categoria_page.dart';
-import 'package:to_file/pages/homePage.dart';
+
 import '../databases/NotificacaoDbHelper.dart';
-import 'package:image_picker/image_picker.dart';
 import '../databases/database_config.dart';
 
 class DocumentoPage extends StatefulWidget {
@@ -106,20 +105,20 @@ class _DocumentoPageState extends State<DocumentoPage> {
             onPressed: () => {
               capturaImagemCamera(),
             },
-            icon: const Icon(Icons.camera_alt),
-            label: const Padding(
-              padding: EdgeInsets.all(14.0),
+            icon: Icon(Icons.camera_alt),
+            label: Padding(
+              padding: const EdgeInsets.all(14.0),
               child: Text('Tire uma foto'),
             ),
             style: ElevatedButton.styleFrom(
                 elevation: 0.0,
-                textStyle: const TextStyle(
+                textStyle: TextStyle(
                   fontSize: 18,
                 )),
           ),
           OutlinedButton.icon(
-            icon: const Icon(Icons.attach_file),
-            label: const Text('Selecione um arquivo'),
+            icon: Icon(Icons.attach_file),
+            label: Text('Selecione um arquivo'),
             onPressed: () => {pegaImagemGaleria()},
           ),
           ElevatedButton(
@@ -156,9 +155,8 @@ class _DocumentoPageState extends State<DocumentoPage> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => CategoriaPage(
-                              categoria: cat,
-                            )));
+                        builder: (BuildContext context) =>
+                            CategoriaPage(categoria: cat)));
               }),
         ]));
   }
@@ -220,7 +218,6 @@ class _DocumentoPageState extends State<DocumentoPage> {
     if (imagemTemporaria != null) {
       setState(() {
         arquivo = File(imagemTemporaria.path);
-        print(arquivo);
         nomeArquivo = imagemTemporaria.path.split('/').last;
       });
     }
