@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:to_file/databases/documentoDbHelper.dart';
 
 import '../models/categoria.dart';
 import '../models/documento.dart';
 
 class ElementListView extends StatefulWidget {
-  const ElementListView(
-      {super.key,
-      required this.document,
-      required this.listMonth,
-      required this.categoria});
+  const ElementListView({
+    super.key,
+    required this.document,
+    required this.listMonth,
+    required this.categoria,
+  });
 
   final Documento document;
   final List<Map<String, dynamic>> listMonth;
@@ -19,6 +21,9 @@ class ElementListView extends StatefulWidget {
 }
 
 class _ElementListViewState extends State<ElementListView> {
+  SampleItem? selectedMenu;
+  final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
+
   @override
   Widget build(BuildContext context) {
     final String month = widget.listMonth
@@ -41,6 +46,7 @@ class _ElementListViewState extends State<ElementListView> {
           children: [
             Row(
               children: [
+                // Imagem do documento
                 Image.asset('assets/images/icon_doc.png'),
                 const SizedBox(width: 10),
                 Column(
@@ -80,6 +86,16 @@ class _ElementListViewState extends State<ElementListView> {
                     ),
                   ],
                 ),
+                const SizedBox(width: 20),
+                // MENU EDIT E REMOVE
+                Expanded(
+                  child: Column(
+                    children: [
+                      //Text('Menu'),
+                      createPopupMenuButton(),
+                    ],
+                  ),
+                )
               ],
             ),
           ],
@@ -87,4 +103,60 @@ class _ElementListViewState extends State<ElementListView> {
       ),
     );
   }
+
+  createPopupMenuButton() {
+    return PopupMenuButton<SampleItem>(
+      initialValue: selectedMenu,
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+        const PopupMenuItem<SampleItem>(
+          onTap: null,
+          value: SampleItem.editar,
+          child: Text('Editar'),
+        ),
+        const PopupMenuItem<SampleItem>(
+          value: SampleItem.excluir,
+          onTap: null,
+          child: Text('Excluir'),
+        ),
+      ],
+      onSelected: (SampleItem item) {
+        setState(() {
+          //selectedMenu = item;
+          switch (item) {
+            case SampleItem.editar:
+              //chamar cadastrarDocumento passando o documento
+              break;
+            case SampleItem.excluir:
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  elevation: 5.0,
+                  title: Text(
+                      "Deseja excluir ${widget.document.nome} definitivamente?"),
+                  actions: [
+                    MaterialButton(
+                      child: const Text("Sim"),
+                      onPressed: () {
+                        _documentoDbHelper.removeDocumento(widget.document.id!);
+                        Navigator.pop(context);
+                      },
+                    ),
+                    MaterialButton(
+                      child: const Text('Não'),
+                      onPressed: () {},
+                    )
+                  ],
+                ),
+              );
+              break;
+          }
+        });
+      },
+    );
+  }
+}
+
+enum SampleItem {
+  editar,
+  excluir,
 }

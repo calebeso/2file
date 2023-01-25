@@ -221,10 +221,6 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     );
   }
 
-  // createCleanButton(){
-  //   return
-  // }
-
   createListViewDocument() {
     return Expanded(
       child: ListView(
@@ -240,6 +236,11 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
       ),
     );
   }
+
+  // void updateFilterDocument(Documento documento) {
+  //   documents.remove(documento);
+  //   searchDocuments();
+  // }
 
   void searchDocuments() {
     setState(() {
