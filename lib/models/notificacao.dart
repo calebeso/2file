@@ -1,3 +1,5 @@
+import 'package:to_file/models/documento.dart';
+
 class Notificacao {
   final int? id;
   final String? title;
@@ -11,7 +13,7 @@ class Notificacao {
     required this.criadoEm,
     required this.id_documento,
     this.title,
-    this.body,
+    required this.body,
     this.payload,
   });
 
@@ -19,6 +21,7 @@ class Notificacao {
         id: json['id'],
         criadoEm: DateTime.parse(json['criadoEm']),
         id_documento: json['id_documento'],
+        body: json['body'],
       );
 
   Map<String, dynamic> toMap() {
@@ -26,6 +29,7 @@ class Notificacao {
       'id': id,
       'criadoEm': criadoEm!.toIso8601String(),
       'id_documento': id_documento,
+      'body': body,
     };
   }
 }

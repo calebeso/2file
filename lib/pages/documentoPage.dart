@@ -106,20 +106,20 @@ class _DocumentoPageState extends State<DocumentoPage> {
             onPressed: () => {
               capturaImagemCamera(),
             },
-            icon: Icon(Icons.camera_alt),
-            label: Padding(
-              padding: const EdgeInsets.all(14.0),
+            icon: const Icon(Icons.camera_alt),
+            label: const Padding(
+              padding: EdgeInsets.all(14.0),
               child: Text('Tire uma foto'),
             ),
             style: ElevatedButton.styleFrom(
                 elevation: 0.0,
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   fontSize: 18,
                 )),
           ),
           OutlinedButton.icon(
-            icon: Icon(Icons.attach_file),
-            label: Text('Selecione um arquivo'),
+            icon: const Icon(Icons.attach_file),
+            label: const Text('Selecione um arquivo'),
             onPressed: () => {pegaImagemGaleria()},
           ),
           ElevatedButton(
@@ -156,8 +156,9 @@ class _DocumentoPageState extends State<DocumentoPage> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            CategoriaPage(id: _selectedValue)));
+                        builder: (BuildContext context) => CategoriaPage(
+                              categoria: cat,
+                            )));
               }),
         ]));
   }
@@ -219,6 +220,8 @@ class _DocumentoPageState extends State<DocumentoPage> {
     if (imagemTemporaria != null) {
       setState(() {
         arquivo = File(imagemTemporaria.path);
+        print(arquivo);
+        nomeArquivo = imagemTemporaria.path.split('/').last;
       });
     }
   }

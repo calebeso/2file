@@ -8,6 +8,7 @@ import '../models/categoria.dart';
 import '../models/documento.dart';
 import 'package:intl/intl.dart';
 
+import '../models/documento.dart';
 import '../models/notificacao.dart';
 
 class NotificacaoPage extends StatefulWidget {
@@ -19,15 +20,24 @@ class NotificacaoPage extends StatefulWidget {
 
 class _NotificacaoPageState extends State<NotificacaoPage> {
   final NotifyDbHelper notifyDbHelper = NotifyDbHelper();
-  final NotificationService notificationService = NotificationService();
-  Documento? documento;
+  NotificationService _notificationService = NotificationService();
+  final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
+  String textoNotificacao = '';
+  DateTime? dataValidade;
+  String documentoNome = '';
 
-  Future<String> textoNotificacao(int id) async {
-    DocumentoDbHelper documentoDbHelper = DocumentoDbHelper();
-    Documento documento = await documentoDbHelper.getDocumentoById(id);
-    String texto =
-        "O documento ${documento.nome} venceu em ${DateFormat("dd/MM/yyyy").format(documento.dataValidade!)}";
-    return texto;
+  @override
+  void initState() {
+    super.initState();
+    _atualizarTextoNotificacao();
+  }
+
+  _atualizarTextoNotificacao() async {
+    String text = await _notificationService.notificacaoTexto;
+    setState(() {
+      textoNotificacao = text;
+    });
+    print(textoNotificacao);
   }
 
   @override
@@ -102,46 +112,41 @@ class _NotificacaoPageState extends State<NotificacaoPage> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     GestureDetector(
-                                      onLongPress: () => showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10.0))),
-                                          elevation: 5.0,
-                                          title: const Text(
-                                              "Deseja excluir esta notificação definitivamente?"),
-                                          actions: [
-                                            MaterialButton(
-                                              child: const Text("Sim"),
-                                              onPressed: () {
-                                                setState(() {
-                                                  notifyDbHelper
-                                                      .removeNotificacao(
-                                                          notify.id!);
-                                                });
-                                                Navigator.pop(context);
-                                              },
+                                        onLongPress: () => showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10.0))),
+                                                elevation: 5.0,
+                                                title: const Text(
+                                                    "Deseja excluir esta notificação definitivamente?"),
+                                                actions: [
+                                                  MaterialButton(
+                                                    child: const Text("Sim"),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        notifyDbHelper
+                                                            .removeNotificacao(
+                                                                notify.id!);
+                                                      });
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                  MaterialButton(
+                                                    child: const Text('Não'),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                            MaterialButton(
-                                              child: const Text('Não'),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      //inserir aqui o texto com o nome do documento para a noitificação.
-                                      child: Text(
-                                        textoNotificacao(notify.id_documento!)
-                                            .toString(),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
+                                        //inserir aqui o texto com o nome do documento para a noitificação.***************
+                                        child: Text(notify.body.toString())),
                                     GestureDetector(
                                       onDoubleTap: () {
                                         return print('teste');
@@ -166,5 +171,19 @@ class _NotificacaoPageState extends State<NotificacaoPage> {
         ),
       ),
     );
+  }
+
+  _recuperarTexto(int id_documento) async {
+    List<Documento> documentos =
+        await _documentoDbHelper.getDocumentoByIdNotificacao(id_documento);
+    for (Documento doc in documentos) {
+      documentoNome = doc.nome.toString();
+      dataValidade = doc.dataValidade;
+    }
+
+    setState(() {
+      textoNotificacao =
+          "O documento $documentoNome venceu em ${DateFormat("dd/MM/yyyy").format(dataValidade!)}";
+    });
   }
 }
