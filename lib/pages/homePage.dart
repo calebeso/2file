@@ -137,7 +137,6 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   // ocultar gridView
                   showGrid = !showGrid;
-                  print(nameDocumentController.text);
                 },
               ),
             ),

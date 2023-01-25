@@ -25,6 +25,12 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
   List<Map<String, dynamic>> dropdownMonthList = [];
   List<int> listYears = [];
 
+  // dropDownButtons
+  int? _dropDownValueMonth;
+  int? _dropDownValueYear;
+  int? _dropDownValueCategory;
+  GlobalKey<FormFieldState>? _dropDownMonth;
+
   _addToList(dynamic list, var element) {
     if (!list.contains(element)) {
       list.add(element);
@@ -61,11 +67,6 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
       cats.sort((a, b) => a.nome.compareTo(b.nome));
     });
   }
-
-  // dropDownButtons
-  int? _dropDownValueMonth;
-  int? _dropDownValueYear;
-  int? _dropDownValueCategory;
 
   final List<Map<String, dynamic>> listMonth = [
     {"month": "Janeiro", "value": 1},
@@ -121,21 +122,38 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     return SizedBox(
       width: 150,
       child: DropdownButtonFormField<int>(
-          value: _dropDownValueMonth,
-          onChanged: (int? value) {
-            setState(() {
-              _dropDownValueMonth = value;
-            });
-          },
-          hint: const Text('Mês'),
-          icon: const Icon(Icons.calendar_month),
-          isExpanded: true,
-          items: dropdownMonthList.map<DropdownMenuItem<int>>((element) {
-            return DropdownMenuItem(
-              value: element["value"],
-              child: Text(element["month"]),
-            );
-          }).toList()),
+        key: _dropDownMonth,
+        value: _dropDownValueMonth,
+        validator: (int? value) => value == null ? '' : null,
+        onSaved: (int? value) => _dropDownValueMonth = value,
+        hint: const Text('Mês'),
+        icon: const Icon(Icons.calendar_month),
+        isExpanded: true,
+        onChanged: (int? value) {
+          setState(() {
+            _dropDownValueMonth = value;
+          });
+        },
+
+        items: [
+          // const DropdownMenuItem(
+          //   value: null,
+          //   child: Text('Mês'),
+          // ),
+          for (var month in dropdownMonthList) ...[
+            DropdownMenuItem(
+              value: month["value"],
+              child: Text(month["month"]),
+            )
+          ]
+        ],
+        // items: dropdownMonthList.map<DropdownMenuItem<int>>((element) {
+        //   return DropdownMenuItem(
+        //     value: element["value"],
+        //     child: Text(element["month"]),
+        //   );
+        // }).toList()),
+      ),
     );
   }
 
@@ -203,6 +221,10 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     );
   }
 
+  // createCleanButton(){
+  //   return
+  // }
+
   createListViewDocument() {
     return Expanded(
       child: ListView(
@@ -211,6 +233,8 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
             ElementListView(
               document: doc,
               listMonth: listMonth,
+              categoria:
+                  categories.where((cat) => cat.id == doc.categoria_id).first,
             ),
         ],
       ),

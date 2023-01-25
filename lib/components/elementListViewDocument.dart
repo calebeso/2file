@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../models/categoria.dart';
 import '../models/documento.dart';
 
 class ElementListView extends StatefulWidget {
   const ElementListView(
-      {super.key, required this.document, required this.listMonth});
+      {super.key,
+      required this.document,
+      required this.listMonth,
+      required this.categoria});
 
   final Documento document;
   final List<Map<String, dynamic>> listMonth;
+  final Categoria categoria;
 
   @override
   State<ElementListView> createState() => _ElementListViewState();
@@ -70,7 +75,7 @@ class _ElementListViewState extends State<ElementListView> {
                           'Categoria: ',
                           style: TextStyle(fontWeight: FontWeight.w700),
                         ),
-                        Text('${widget.document.categoria_id}'),
+                        Text(widget.categoria.nome),
                       ],
                     ),
                   ],
