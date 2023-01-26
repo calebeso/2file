@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:to_file/databases/database_config.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
-import '../models/categoria.dart';
+import 'package:to_file/pages/documentos/documento_page.dart';
 import '../models/documento.dart';
 import 'package:intl/intl.dart';
 
@@ -57,7 +55,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                       'assets/images/icon_doc.png',
                                       height: 60),
                                   title: Text(
-                                    document.nome!,
+                                    document.nome,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24),
@@ -75,7 +73,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                         ),
                                         TextSpan(
                                           text:
-                                              ' ${DateFormat(DateFormat.YEAR_MONTH, 'pt-Br').format(document.dataCompetencia!)}.',
+                                              ' ${DateFormat(DateFormat.YEAR_MONTH, 'pt-Br').format(document.dataCompetencia)}.',
                                           style: const TextStyle(
                                               color: Colors.black),
                                         ),
@@ -86,7 +84,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                                 color: Colors.black)),
                                         TextSpan(
                                           text:
-                                              ' ${DateFormat('dd/MM/yyyy').format(document.dataValidade!)}.',
+                                              ' ${DateFormat('dd/MM/yyyy').format(document.dataValidade)}.',
                                           style: const TextStyle(
                                               color: Colors.black),
                                         ),
@@ -97,7 +95,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                                 color: Colors.black)),
                                         TextSpan(
                                           text:
-                                              ' ${DateFormat('dd/MM/yyyy KK:mm').format(document.criadoEm!)}',
+                                              ' ${DateFormat('dd/MM/yyyy KK:mm').format(document.criadoEm)}',
                                           style: const TextStyle(
                                               color: Colors.black),
                                         ),
@@ -118,7 +116,14 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                     onSelected: (value) {
                                       switch (value) {
                                         case _ValueDialog.editar:
-                                          //chamar cadastrarDocumento passando o documento
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          DocumentoPage(
+                                                              documento:
+                                                                  document)));
                                           break;
                                         case _ValueDialog.excluir:
                                           showDialog(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
 import 'package:to_file/databases/NotificacaoDbHelper.dart';
-import 'package:to_file/pages/documentoPage.dart';
+import 'package:to_file/pages/documentos/documento_page.dart';
 import 'package:to_file/pages/notificacaoPage.dart';
 import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
