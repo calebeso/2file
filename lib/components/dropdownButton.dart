@@ -29,7 +29,9 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
   int? _dropDownValueMonth;
   int? _dropDownValueYear;
   int? _dropDownValueCategory;
-  GlobalKey<FormFieldState>? _dropDownMonth;
+  final GlobalKey<FormFieldState> _keyDropdownMonth = GlobalKey();
+  final GlobalKey<FormFieldState> _keyDropdownYear = GlobalKey();
+  final GlobalKey<FormFieldState> _keyDropdownCategory = GlobalKey();
 
   _addToList(dynamic list, var element) {
     if (!list.contains(element)) {
@@ -66,6 +68,7 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
       categories = cats;
       cats.sort((a, b) => a.nome.compareTo(b.nome));
     });
+    searchDocuments();
   }
 
   final List<Map<String, dynamic>> listMonth = [
@@ -104,14 +107,14 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
               createDropdownCategory(),
             ],
           ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              createSearchButton(),
-            ],
-          ),
-          const SizedBox(height: 12),
+          // const SizedBox(height: 10),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     createSearchButton(),
+          //   ],
+          // ),
+          const SizedBox(height: 20),
           createListViewDocument(),
         ],
       ),
@@ -122,17 +125,21 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     return SizedBox(
       width: 150,
       child: DropdownButtonFormField<int>(
-        key: _dropDownMonth,
-        value: _dropDownValueMonth,
-        validator: (int? value) => value == null ? '' : null,
-        onSaved: (int? value) => _dropDownValueMonth = value,
-        hint: const Text('Mês'),
-        icon: const Icon(Icons.calendar_month),
+        decoration: InputDecoration(
+          hintText: 'Mês',
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.calendar_month),
+            onPressed: () {
+              _dropDownValueMonth = null;
+              _keyDropdownMonth.currentState?.reset();
+            },
+          ),
+        ),
+        key: _keyDropdownMonth,
+        value: null,
         isExpanded: true,
         onChanged: (int? value) {
-          setState(() {
-            _dropDownValueMonth = value;
-          });
+          _dropDownValueMonth = value;
         },
 
         items: [
@@ -161,14 +168,21 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     return SizedBox(
       width: 150,
       child: DropdownButtonFormField<int>(
+          decoration: InputDecoration(
+            hintText: 'Ano',
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.calendar_today),
+              onPressed: () {
+                _dropDownValueYear = null;
+                _keyDropdownYear.currentState?.reset();
+              },
+            ),
+          ),
+          key: _keyDropdownYear,
           value: _dropDownValueYear,
           onChanged: (int? value) {
-            setState(() {
-              _dropDownValueYear = value;
-            });
+            _dropDownValueYear = value;
           },
-          hint: const Text('Ano'),
-          icon: const Icon(Icons.calendar_today),
           isExpanded: true,
           items: listYears.map<DropdownMenuItem<int>>((selectedValue) {
             return DropdownMenuItem(
@@ -183,14 +197,20 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     return SizedBox(
       width: 310,
       child: DropdownButtonFormField<int>(
+          decoration: InputDecoration(
+            hintText: 'Categoria',
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.list),
+              onPressed: () {
+                _dropDownValueCategory = null;
+                _keyDropdownCategory.currentState?.reset();
+              },
+            ),
+          ),
           value: _dropDownValueCategory,
           onChanged: (int? value) {
-            setState(() {
-              _dropDownValueCategory = value;
-            });
+            _dropDownValueCategory = value;
           },
-          hint: const Text('Categoria'),
-          icon: const Icon(Icons.list),
           isExpanded: true,
           items: categories.map<DropdownMenuItem<int>>((category) {
             return DropdownMenuItem(
@@ -201,29 +221,31 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     );
   }
 
-  createSearchButton() {
-    return SizedBox(
-      width: 310,
-      child: ElevatedButton(
-        onPressed: () {
-          searchDocuments();
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xffDFDDC7),
-          //padding: const EdgeInsets.all(5),
-        ),
-        child: const Icon(
-          Icons.search,
-          size: 30,
-          color: Color(0xffFE7C3F),
-        ),
-      ),
-    );
-  }
+  // createSearchButton() {
+  //   return SizedBox(
+  //     width: 310,
+  //     child: ElevatedButton(
+  //       onPressed: () {
+  //         searchDocuments();
+  //       },
+  //       style: ElevatedButton.styleFrom(
+  //         backgroundColor: const Color(0xffDFDDC7),
+  //         //padding: const EdgeInsets.all(5),
+  //       ),
+  //       child: const Icon(
+  //         Icons.search,
+  //         size: 30,
+  //         color: Color(0xffFE7C3F),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   createListViewDocument() {
     return Expanded(
       child: ListView(
+        //shrinkWrap: true,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           for (Documento doc in documentsFiltered)
             ElementListView(
@@ -237,24 +259,21 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     );
   }
 
-  // void updateFilterDocument(Documento documento) {
-  //   documents.remove(documento);
-  //   searchDocuments();
-  // }
-
   void searchDocuments() {
     setState(() {
-      documentsFiltered = documents
-          .where((doc) =>
-              (doc.nome!.contains(widget.nameDocumentController.text) ||
-                  widget.nameDocumentController.text == "") &&
-              (doc.dataCompetencia?.month == _dropDownValueMonth ||
-                  _dropDownValueMonth == null) &&
-              (doc.dataCompetencia?.year == _dropDownValueYear ||
-                  _dropDownValueYear == null) &&
-              (doc.categoria_id == _dropDownValueCategory ||
-                  _dropDownValueCategory == null))
-          .toList();
+      documentsFiltered = documents.isEmpty
+          ? []
+          : documents
+              .where((doc) =>
+                  (doc.nome!.contains(widget.nameDocumentController.text) ||
+                      widget.nameDocumentController.text == "") &&
+                  (doc.dataCompetencia?.month == _dropDownValueMonth ||
+                      _dropDownValueMonth == null) &&
+                  (doc.dataCompetencia?.year == _dropDownValueYear ||
+                      _dropDownValueYear == null) &&
+                  (doc.categoria_id == _dropDownValueCategory ||
+                      _dropDownValueCategory == null))
+              .toList();
     });
   }
 }

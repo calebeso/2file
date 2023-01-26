@@ -116,41 +116,52 @@ class _HomePageState extends State<HomePage> {
       ),
 
       // CONTEÚDO DA TELA
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // Pesquisar documento
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              height: 100,
-              // color: Colors.green,
-              //padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-              child: TextField(
-                controller: nameDocumentController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Digite o nome do documento',
-                  hintText: 'Ex: Contrato',
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              // Pesquisar documento
+              Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                height: 50,
+                child: TextField(
+                  controller: nameDocumentController,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: 'Digite o nome do documento',
+                    hintText: 'Ex: Contrato',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        nameDocumentController.clear();
+                      },
+                      icon: const Icon(
+                        Icons.clear,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    // ocultar gridView
+                    showGrid = !showGrid;
+                  },
                 ),
-                onTap: () {
-                  // ocultar gridView
-                  showGrid = !showGrid;
-                },
               ),
-            ),
 
-            Visibility(
-              visible: showGrid,
-              child: criarGridViewCards(),
-            ),
-            Visibility(
-              visible: !showGrid,
-              child: DropdownButtonPesquisa(
-                  nameDocumentController: nameDocumentController),
-            ),
-          ],
+              Visibility(
+                visible: showGrid,
+                child: criarGridViewCards(),
+              ),
+              Visibility(
+                visible: !showGrid,
+                child: DropdownButtonPesquisa(
+                    nameDocumentController: nameDocumentController),
+              ),
+            ],
+          ),
         ),
       ),
 
@@ -189,6 +200,22 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  // createReturnButton() {
+  //   return ElevatedButton(
+  //       onPressed: (){
+  //         showGrid;
+  //       },
+  //       style: ElevatedButton.styleFrom(
+  //         backgroundColor: const Color(0xff30BA78),
+  //       ),
+  //       child:  const Icon(
+  //           Icons.keyboard_return,
+  //           size: 30,
+  //           color:  Colors.white,
+  //       ),
+  //   );
+  // }
 
   void pageSobre() {
     Navigator.push(
