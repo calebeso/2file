@@ -12,7 +12,7 @@ mixin ValidationsMixin {
   }
 
   String? isCompetenciaMenor(value, datacomp, [String? message]) {
-    bool validacaoData = value!.isBefore(datacomp!);
+    bool validacaoData = value.isBefore(datacomp);
 
     if (validacaoData == true)
       return message ??

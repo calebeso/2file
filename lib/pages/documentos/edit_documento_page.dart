@@ -13,14 +13,17 @@ import 'package:image_picker/image_picker.dart';
 import '../../databases/database_config.dart';
 import 'package:path_provider/path_provider.dart';
 
-class DocumentoPage extends StatefulWidget {
-  const DocumentoPage({Key? key}) : super(key: key);
+class EditDocumentoPage extends StatefulWidget {
+  final Documento? documento;
+
+  const EditDocumentoPage({Key? key, this.documento}) : super(key: key);
 
   @override
-  State<DocumentoPage> createState() => _DocumentoPageState();
+  State<EditDocumentoPage> createState() => _EditDocumentoPageState();
 }
 
-class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
+class _EditDocumentoPageState extends State<EditDocumentoPage>
+    with ValidationsMixin {
   Documento? documentoExistente;
   final _formKey = GlobalKey<FormState>();
   final _controllerNome = TextEditingController();
@@ -64,12 +67,23 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.documento != null) {
+      recuperaDiretorioDeDocs();
+      String tempImage = widget.documento!.nome_imagem;
+      _controllerNome.text = widget.documento!.nome;
+      _controllerDataCompetencia.text =
+          '${widget.documento!.dataCompetencia.day}/${widget.documento!.dataCompetencia.month}/${widget.documento!.dataCompetencia.year}';
+      _controllerDataValidade.text =
+          '${widget.documento!.dataValidade.day}/${widget.documento!.dataValidade.month}/${widget.documento!.dataValidade.year}';
+      _selectedValue = widget.documento!.categoria_id;
+      arquivo = File('$pastaArquivos/$tempImage');
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F5),
       appBar: AppBar(
-        backgroundColor: const Color(0xff0C322C),
-        title: Text('Cadastrar documento'),
-      ),
+          backgroundColor: const Color(0xff0C322C),
+          title: Text('Atualizar documento')),
       body: Form(
           key: _formKey,
           child: ListView(padding: EdgeInsets.all(16), children: <Widget>[
@@ -99,8 +113,8 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
                 readOnly: true,
                 validator: (val) => combine([
                       () => isNotEmpty(val),
-                      () => isCompetenciaMenor(
-                          dataValidadeTimeStamp, dataCompetenciaTimeStamp),
+                      () => isCompetenciaMenor(widget.documento!.dataValidade,
+                          widget.documento!.dataCompetencia),
                     ]),
                 onTap: () {
                   _pickDateDialogValidade();
@@ -114,6 +128,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
               onChanged: (value) {
                 if (this.mounted) {
                   setState(() {
+                    print(value);
                     _selectedValue = value;
                   });
                 }
@@ -146,13 +161,12 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
                 child: const Text('Salvar'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    salvaDocumento();
+                    atualizaDocumento();
 
                     const snack = SnackBar(
                         content: Text(
                             'Voce precisa anexar uma imagem ao documento!'),
                         backgroundColor: Colors.deepOrange);
-
                     List<Categoria> categoria = await DatabaseHelper.instance
                         .getCategoriaById(_selectedValue);
 
@@ -160,8 +174,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
                     categoria.forEach((element) {
                       cat = element;
                     });
-
-                    if (nomeArquivo == null) {
+                    if (arquivo == null) {
                       ScaffoldMessenger.of(context).showSnackBar(snack);
                     } else {
                       Navigator.pushReplacement(
@@ -177,7 +190,9 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
   }
 
   void _pickDateDialogCompetencia() async {
-    var initialDate = DateTime.now();
+    var initialDate = widget.documento?.dataCompetencia != null
+        ? widget.documento!.dataCompetencia
+        : DateTime.now();
 
     pickedDataCompetencia = await showDatePicker(
       context: context,
@@ -200,7 +215,9 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
   }
 
   void _pickDateDialogValidade() async {
-    var initialDate = DateTime.now();
+    var initialDate = widget.documento?.dataValidade != null
+        ? widget.documento!.dataValidade
+        : DateTime.now();
 
     pickedDataValidade = await showDatePicker(
       context: context,
@@ -233,8 +250,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
 
       nomeArquivo = imagemTemporaria.path.split('/').last;
 
-      final imagemSalva =
-          await File(imagemTemporaria.path).copy('$path/$nomeArquivo');
+      await File(imagemTemporaria.path).copy('$path/$nomeArquivo');
 
       if (this.mounted) {
         setState(() {
@@ -255,8 +271,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
 
       nomeArquivo = imagemTemporaria.path.split('/').last;
 
-      final savedImage =
-          await File(imagemTemporaria.path).copy('$path/$nomeArquivo');
+      await File(imagemTemporaria.path).copy('$path/$nomeArquivo');
 
       if (this.mounted) {
         setState(() {
@@ -266,22 +281,25 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
     }
   }
 
-  salvaDocumento() {
-    var now = DateTime.now();
-
-    if (nomeArquivo == null) {
+  atualizaDocumento() {
+    if (arquivo == null) {
       return;
     } else {
-      final documento = Documento(
-          nome: _controllerNome.text,
-          dataCompetencia: dataCompetenciaTimeStamp!,
-          dataValidade: dataValidadeTimeStamp!,
-          criadoEm:
-              DateTime.fromMicrosecondsSinceEpoch(now.microsecondsSinceEpoch),
-          nome_imagem: nomeArquivo!,
-          categoria_id: _selectedValue);
-
-      _documentoDbHelper.addDocumento(documento);
+      widget.documento!.nome = _controllerNome.text;
+      widget.documento!.dataCompetencia =
+          pickedDataCompetencia ?? widget.documento!.dataCompetencia;
+      widget.documento!.dataValidade =
+          pickedDataValidade ?? widget.documento!.dataValidade;
+      widget.documento!.nome_imagem =
+          nomeArquivo ?? widget.documento!.nome_imagem;
+      widget.documento!.categoria_id =
+          _selectedValue ?? widget.documento!.categoria_id;
+      _documentoDbHelper.updateDocumento(widget.documento!);
     }
+  }
+
+  recuperaDiretorioDeDocs() async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    pastaArquivos = directory.path;
   }
 }
