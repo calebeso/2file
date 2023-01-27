@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import '../models/categoria.dart';
 import 'database_config.dart';
 
-class CategoriaCrud {
+class CategoriaDbHelper {
   static final DatabaseHelper dbHelper = DatabaseHelper.instance;
 
   Future<List<Categoria>> getCategoriaById(int id) async {
@@ -44,5 +44,17 @@ class CategoriaCrud {
     Database db = await dbHelper.database;
     return await db.update('categorias', categoria.toMap(),
         where: 'id = ?', whereArgs: [categoria.id]);
+  }
+
+  // get categories by IDs
+  Future<List<Categoria>> getCategoriesByListId(List<int> idList) async {
+    Database db = await dbHelper.database;
+    var categorias = await db.query('categorias',
+        where: 'id IN (${idList.map((_) => "?").join(", ")})',
+        whereArgs: idList);
+    List<Categoria> categoriaList = categorias.isNotEmpty
+        ? categorias.map((e) => Categoria.fromMap(e)).toList()
+        : [];
+    return categoriaList;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:to_file/databases/database_config.dart';
 import 'package:to_file/models/documento.dart';
@@ -62,8 +63,8 @@ class DocumentoDbHelper {
         where: 'id = ?', whereArgs: [documento.id]);
   }
 
-  //get documento by id notificação
-  Future<Documento> getDocumentoByIdNotificacao(int id_documento) async {
+  // get documento by id notificação
+  Future<List<Documento>> getDocumentoByIdNotificacao(int id_documento) async {
     Database db = await dbHelper.database;
     var documentos = await db.query('documento',
         where: 'id_documento = ?', whereArgs: [id_documento]);
@@ -71,10 +72,42 @@ class DocumentoDbHelper {
     List<Documento> documentosList = documentos.isNotEmpty
         ? documentos.map((e) => Documento.fromMap(e)).toList()
         : [];
-    Documento? documento;
-    for (Documento doc in documentosList) {
-      documento = doc;
-    }
-    return documento!;
+
+    return documentosList;
   }
+
+  Future<String> getTextoNotificacao(int id_documento) async {
+    String? textoNotificacao;
+    Database db = await dbHelper.database;
+    var documentos = await db.query('documento',
+        where: 'id_documento = ?', whereArgs: [id_documento]);
+    //alterar o orderby para id_categoria
+    List<Documento> documentosList = documentos.isNotEmpty
+        ? documentos.map((e) => Documento.fromMap(e)).toList()
+        : [];
+
+    for (Documento doc in documentosList) {
+      textoNotificacao =
+          "O documento ${doc.nome?.toUpperCase()} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}";
+    }
+
+    return textoNotificacao!;
+  }
+
+  // Future<List<Documento>> getDocumentoByIdNotificacao(int id_documento) async {
+  //   Database db = await dbHelper.database;
+  //   var documentos = await db.rawQuery(''',
+  //   SELECT *
+  //   FROM documentos
+  //   WHERE documentos.id = notificacoes.$id_documento
+  //   ''');
+  //   List<Documento> documentosList = documentos.isNotEmpty
+  //       ? documentos.map((e) => Documento.fromMap(e)).toList()
+  //       : [];
+  //   Documento? documento;
+  //   for (Documento doc in documentosList) {
+  //     documento = doc;
+  //   }
+  //   return documento!;
+  // }
 }

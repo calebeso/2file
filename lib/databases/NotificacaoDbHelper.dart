@@ -27,7 +27,7 @@ class NotifyDbHelper {
   //Lista de notificacoes
   Future<List<Notificacao>> listaNotificacoes() async {
     Database db = await dbHelper.database;
-    var notificacoes = await db.query('notificacoes', orderBy: 'id');
+    var notificacoes = await db.query('notificacoes');
     List<Notificacao> notificacoesList = notificacoes.isNotEmpty
         ? notificacoes.map((e) => Notificacao.fromMap(e)).toList()
         : [];

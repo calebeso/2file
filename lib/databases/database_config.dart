@@ -2,9 +2,6 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:to_file/models/categoria.dart';
 
-import '../models/documento.dart';
-import '../models/notificacao.dart';
-
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -81,6 +78,7 @@ class DatabaseHelper {
     CREATE TABLE notificacoes(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       criadoEm DateTime,
+      body TEXT,
       id_documento INT,
       FOREIGN KEY (id_documento) REFERENCES documentos (id)
     )''';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_file/databases/categoria_crud.dart';
+import 'package:to_file/databases/categoriaDbHelper.dart';
 import 'package:to_file/models/icones.dart';
 
 import '../models/categoria.dart';
@@ -17,7 +17,7 @@ class CardCategoria extends StatefulWidget {
 }
 
 class _CardCategoriaState extends State<CardCategoria> {
-  CategoriaCrud categoriaCrud = CategoriaCrud();
+  CategoriaDbHelper categoriaCrud = CategoriaDbHelper();
 
   Offset _tapPosition = Offset.zero;
 
@@ -106,7 +106,7 @@ class _CardCategoriaState extends State<CardCategoria> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    CategoriaPage(id: widget.categoria.id!)));
+                    CategoriaPage(categoria: widget.categoria)));
       },
       onTapDown: (position) {
         _getTapPosition(position);

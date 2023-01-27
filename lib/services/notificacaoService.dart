@@ -73,9 +73,11 @@ class NotificationService {
     required int id,
     required String title,
     required String body,
+    required String payload,
   }) async {
     final details = await _notificationDetails();
-    await _localNotificationService.show(id, title, body, details);
+    await _localNotificationService.show(id, title, body, details,
+        payload: payload);
   }
 
   void onDidReceiveLocalNotification(
@@ -116,15 +118,18 @@ class NotificationService {
           title: "2File",
           body:
               "O documento ${doc.nome?.toUpperCase()} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}",
+          payload: '/notificacoes',
         );
       }
       documento = await _documentoDbHelper.getDocumentoById(doc.id!);
-      notificacaoTexto =
-          "O documento ${doc.nome} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}.";
+      // notificacaoTexto =
+      //     "O documento ${doc.nome} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}.";
     }
   }
 
-  Notificacao getNotificacao() {
-    return notify!;
+  String getTextoNotificacao() {
+    notificacaoTexto =
+        "O documento ${documento!.nome} venceu em ${DateFormat("dd/MM/yyyy").format(documento!.dataValidade!)}.";
+    return notificacaoTexto;
   }
 }

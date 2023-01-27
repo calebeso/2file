@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/components/cardAddCategoria.dart';
 import 'package:to_file/components/cardCategoria.dart';
+import 'package:to_file/components/dropdownButton.dart';
 import 'package:to_file/databases/NotificacaoDbHelper.dart';
 import 'package:to_file/pages/documentos/documento_page.dart';
 import 'package:to_file/pages/notificacaoPage.dart';
-import 'package:to_file/pages/pesquisaPage.dart';
 import 'package:to_file/pages/sobrePage.dart';
 
-import '../databases/categoria_crud.dart';
+import '../databases/categoriaDbHelper.dart';
 import '../databases/database_config.dart';
 import '../models/categoria.dart';
 import '../models/notificacao.dart';
@@ -21,16 +21,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController? textController;
+  TextEditingController nameDocumentController = TextEditingController();
+
   List<Categoria> _categorias = [];
   final DatabaseHelper dbConfig = DatabaseHelper.instance;
 
+  var showGrid = true;
   final NotificationService notificationService = NotificationService();
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
 
   int count = 0;
 
-  CategoriaCrud categoriaCrud = CategoriaCrud();
+  CategoriaDbHelper categoriaCrud = CategoriaDbHelper();
 
   @override
   void initState() {
@@ -49,7 +51,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   atualizarListaCategorias() async {
-    List<Categoria> cat = await categoriaCrud.listCategoriaById();
+    List<Categoria> cat = await dbConfig.listCategoriaById();
     setState(() {
       _categorias = cat;
       atualizarContador();
@@ -113,60 +115,64 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
 
-      body: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 30.0),
-            height: 65,
-            width: 350,
-            // alignment: Alignment.center,
-            padding: const EdgeInsets.all(10),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.white),
-              ),
-              onPressed: () => notificationService.showPushNotification(
-                  id: 10, title: 'teste', body: 'teste'),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'pesquisar',
-                    style: TextStyle(
-                      color: Color(0xffB9B1B1),
+      // CONTEÚDO DA TELA
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                height: 50,
+                child: TextField(
+                  controller: nameDocumentController,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: 'Digite o nome do documento',
+                    hintText: 'Ex: Contrato',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        nameDocumentController.clear();
+                      },
+                      icon: Icon(
+                        nameDocumentController.text == ''
+                            ? Icons.search
+                            : Icons.clear,
+                        size: 30,
+                      ),
                     ),
                   ),
-                  Icon(
-                    Icons.search,
-                    color: Color(0xffB9B1B1),
-                  ),
-                ],
+                  onTap: () {
+                    // ocultar gridView
+                    showGrid = !showGrid;
+                  },
+                ),
               ),
-            ),
+              // const SizedBox(width: 8),
+              //
+              // Visibility(
+              //   visible: !showGrid,
+              //   child: createReturnButton(),
+              // ),
+
+              Visibility(
+                visible: showGrid,
+                child: criarGridViewCards(),
+              ),
+              Visibility(
+                visible: !showGrid,
+                child: DropdownButtonPesquisa(
+                    nameDocumentController: nameDocumentController),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          Expanded(
-            // height: MediaQuery.of(context).size.height,
-            child: GridView.count(
-                crossAxisCount: 3,
-                primary: false,
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                children: [
-                  CardAddCategoria(
-                      atualizarListaCategorias: atualizarListaCategorias()),
-                  for (var cat in _categorias) ...[
-                    CardCategoria(
-                        categoria: cat,
-                        atualizarListaCategorias: atualizarListaCategorias())
-                  ],
-                ]),
-          ),
-        ],
+        ),
       ),
 
-      // Botão de ação - adicionar documento
+      // ADICIONAR DOCUMENTO
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -183,6 +189,57 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // createReturnButton() {
+  //   return IconButton(
+  //     onPressed: () {
+  //       setState(() {
+  //         Visibility(
+  //           visible: showGrid,
+  //           child: criarGridViewCards(),
+  //         );
+  //       });
+  //     },
+  //     icon: const Icon(
+  //       Icons.keyboard_return,
+  //       size: 30,
+  //     ),
+  //   );
+  // }
+
+  criarGridViewCards() {
+    return Flexible(
+      child: Container(
+        child: GridView.count(
+            crossAxisCount: 3,
+            primary: false,
+            padding: const EdgeInsets.all(20),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            children: [
+              CardAddCategoria(
+                  atualizarListaCategorias: atualizarListaCategorias()),
+              for (var cat in _categorias) ...[CardCategoria(categoria: cat)],
+            ]),
+      ),
+    );
+  }
+
+  // createReturnButton() {
+  //   return ElevatedButton(
+  //       onPressed: (){
+  //         showGrid;
+  //       },
+  //       style: ElevatedButton.styleFrom(
+  //         backgroundColor: const Color(0xff30BA78),
+  //       ),
+  //       child:  const Icon(
+  //           Icons.keyboard_return,
+  //           size: 30,
+  //           color:  Colors.white,
+  //       ),
+  //   );
+  // }
+
   void pageSobre() {
     Navigator.push(
         context,
@@ -195,12 +252,5 @@ class _HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(
             builder: (BuildContext context) => const DocumentoPage()));
-  }
-
-  void pageSearch() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => const PesquisaPage()));
   }
 }

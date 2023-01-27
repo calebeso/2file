@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icon_picker/icon_picker.dart';
-import 'package:to_file/databases/categoria_crud.dart';
+import 'package:to_file/databases/categoriaDbHelper.dart';
 import 'package:to_file/models/icones.dart';
 
 import '../models/categoria.dart';
@@ -23,7 +23,7 @@ class _NewCategoriaPageState extends State<NewCategoriaPage> {
 
   final Map<String, IconData> myIconCollection = Icones.mIcons;
 
-  CategoriaCrud categoriaCrud = CategoriaCrud();
+  CategoriaDbHelper categoriaCrud = CategoriaDbHelper();
 
   @override
   Widget build(BuildContext context) {

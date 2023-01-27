@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/pages/documentos/documento_page.dart';
 import '../models/documento.dart';
 import 'package:intl/intl.dart';
+import 'package:to_file/databases/documentoDbHelper.dart';
+import 'package:to_file/models/categoria.dart';
+import 'package:to_file/pages/imagemViewPage.dart';
+
+import '../models/documento.dart';
 
 class CategoriaPage extends StatefulWidget {
-  const CategoriaPage({required this.id});
+  const CategoriaPage({required this.categoria});
 
-  final int id;
+  final Categoria categoria;
 
   @override
   State<CategoriaPage> createState() => _CategoriaPageState();
@@ -15,27 +19,37 @@ class CategoriaPage extends StatefulWidget {
 
 class _CategoriaPageState extends State<CategoriaPage> {
   final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
+
   late Future<List<Documento>> documentos;
+
+  String nomeCategoria = '';
+  Future<List<Documento>> getDocs() async {
+    Future.delayed(Duration(seconds: 1));
+    return await _documentoDbHelper
+        .listDocumentosByCategoriaId(widget.categoria.id!);
+  }
 
   @override
   void initState() {
     super.initState();
+    atualizarNomeCategoria();
     documentos = getDocs();
   }
 
-  int? seletctedId;
-
-  Future<List<Documento>> getDocs() async {
-    await Future.delayed(Duration(seconds: 4));
-    return await _documentoDbHelper.listDocumentosByCategoriaId(widget.id);
+  atualizarNomeCategoria() {
+    setState(() {
+      nomeCategoria = widget.categoria.nome;
+    });
   }
+
+  int? seletctedId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff0C322C),
-        title: Text('Categoria'),
+        title: Text(nomeCategoria),
       ),
       body: Center(
         child: FutureBuilder<List<Documento>>(
