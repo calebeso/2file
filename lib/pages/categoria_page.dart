@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/pages/documentos/documento_page.dart';
+import 'package:to_file/pages/documentos/edit_documento_page.dart';
 import '../models/documento.dart';
 import 'package:intl/intl.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
@@ -135,7 +136,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (BuildContext context) =>
-                                                  DocumentoPage(
+                                                  EditDocumentoPage(
                                                       documento: document)));
                                       break;
                                     case _ValueDialog.excluir:

@@ -1,4 +1,3 @@
-import 'package:cron/cron.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
@@ -81,12 +80,9 @@ class NotificationService {
   }
 
   void onDidReceiveLocalNotification(
-      int id, String? title, String? body, String? payload) {
-    print('id $id');
-  }
+      int id, String? title, String? body, String? payload) {}
 
   void onSelectNotification(String? payload) {
-    print('payload $payload');
     if (payload != null && payload.isNotEmpty) {
       onNotificationClick.add(payload);
     }
@@ -105,7 +101,7 @@ class NotificationService {
           criadoEm: DateTime.now(),
           id_documento: doc.id,
           body:
-              "O documento ${doc.nome?.toUpperCase()} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}",
+              "O documento ${doc.nome.toUpperCase()} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade)}",
         );
 
         _notifyDbHelper.addNotificacao(notificacao);

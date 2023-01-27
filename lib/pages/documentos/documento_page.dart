@@ -14,9 +14,7 @@ import '../../databases/database_config.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DocumentoPage extends StatefulWidget {
-  final Documento? documento;
-
-  const DocumentoPage({Key? key, this.documento}) : super(key: key);
+  const DocumentoPage({Key? key}) : super(key: key);
 
   @override
   State<DocumentoPage> createState() => _DocumentoPageState();
@@ -66,25 +64,11 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.documento != null) {
-      recuperaDiretorioDeDocs();
-      String tempImage = widget.documento!.nome_imagem;
-      _controllerNome.text = widget.documento!.nome;
-      _controllerDataCompetencia.text =
-          '${widget.documento!.dataCompetencia.day}/${widget.documento!.dataCompetencia.month}/${widget.documento!.dataCompetencia.year}';
-      _controllerDataValidade.text =
-          '${widget.documento!.dataValidade.day}/${widget.documento!.dataValidade.month}/${widget.documento!.dataValidade.year}';
-      _selectedValue = widget.documento!.categoria_id;
-      arquivo = File('$pastaArquivos/$tempImage');
-    }
-
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F5),
       appBar: AppBar(
         backgroundColor: const Color(0xff0C322C),
-        title: widget.documento != null
-            ? Text('Atualizar documento')
-            : Text('Cadastrar documento'),
+        title: Text('Cadastrar documento'),
       ),
       body: Form(
           key: _formKey,
@@ -162,9 +146,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
                 child: const Text('Salvar'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    widget.documento != null
-                        ? salvaDocumento()
-                        : atualizaDocumento();
+                    salvaDocumento();
 
                     const snack = SnackBar(
                         content: Text(
@@ -187,10 +169,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
   }
 
   void _pickDateDialogCompetencia() async {
-    //caso ja exista um documento, seta o valor da data de comp como data inicial do calendario
-    var initialDate = widget.documento?.dataCompetencia != null
-        ? widget.documento!.dataCompetencia
-        : DateTime.now();
+    var initialDate = DateTime.now();
 
     pickedDataCompetencia = await showDatePicker(
       context: context,
@@ -213,9 +192,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
   }
 
   void _pickDateDialogValidade() async {
-    var initialDate = widget.documento?.dataValidade != null
-        ? widget.documento!.dataValidade
-        : DateTime.now();
+    var initialDate = DateTime.now();
 
     pickedDataValidade = await showDatePicker(
       context: context,
@@ -281,7 +258,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
     }
   }
 
-  salvaDocumento() async {
+  salvaDocumento() {
     var now = DateTime.now();
 
     if (nomeArquivo == null) {
@@ -296,34 +273,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
           nome_imagem: nomeArquivo!,
           categoria_id: _selectedValue);
 
-      if (this.mounted) {
-        setState(() {
-          _documentoDbHelper.addDocumento(documento);
-        });
-      }
-    }
-  }
-
-  atualizaDocumento() async {
-    var now = DateTime.now();
-
-    if (nomeArquivo == null) {
-      return;
-    } else {
-      if (this.mounted) {
-        setState(() {
-          _documentoDbHelper.updateDocumento(widget.documento!);
-        });
-      }
-    }
-  }
-
-  recuperaDiretorioDeDocs() async {
-    final Directory directory = await getApplicationDocumentsDirectory();
-    if (this.mounted) {
-      setState(() {
-        pastaArquivos = directory.path;
-      });
+      _documentoDbHelper.addDocumento(documento);
     }
   }
 }

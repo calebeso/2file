@@ -25,7 +25,6 @@ class _CardCategoriaState extends State<CardCategoria> {
     final RenderBox referenceBox = context.findRenderObject() as RenderBox;
     setState(() {
       _tapPosition = referenceBox.globalToLocal(tapPosition.globalPosition);
-      print(_tapPosition);
     });
   }
 
