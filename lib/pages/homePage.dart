@@ -138,8 +138,10 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () {
                         nameDocumentController.clear();
                       },
-                      icon: const Icon(
-                        Icons.clear,
+                      icon: Icon(
+                        nameDocumentController.text == ''
+                            ? Icons.search
+                            : Icons.clear,
                         size: 30,
                       ),
                     ),

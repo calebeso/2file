@@ -251,8 +251,13 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
             ElementListView(
               document: doc,
               listMonth: listMonth,
-              categoria:
-                  categories.where((cat) => cat.id == doc.categoria_id).first,
+              categoria: categories.isEmpty
+                  ? Categoria(
+                      id: -1,
+                      nome: 'carregando...',
+                      nomeIcone: '',
+                      criadoEm: DateTime.now())
+                  : categories.where((cat) => cat.id == doc.categoria_id).first,
             ),
         ],
       ),
