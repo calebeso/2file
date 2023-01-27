@@ -121,9 +121,7 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // Pesquisar documento
+            children: [
               Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -152,6 +150,12 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
+              // const SizedBox(width: 8),
+              //
+              // Visibility(
+              //   visible: !showGrid,
+              //   child: createReturnButton(),
+              // ),
 
               Visibility(
                 visible: showGrid,
@@ -184,6 +188,23 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  // createReturnButton() {
+  //   return IconButton(
+  //     onPressed: () {
+  //       setState(() {
+  //         Visibility(
+  //           visible: showGrid,
+  //           child: criarGridViewCards(),
+  //         );
+  //       });
+  //     },
+  //     icon: const Icon(
+  //       Icons.keyboard_return,
+  //       size: 30,
+  //     ),
+  //   );
+  // }
 
   criarGridViewCards() {
     return Flexible(
