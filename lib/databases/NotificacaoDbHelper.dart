@@ -54,4 +54,10 @@ class NotifyDbHelper {
     ''';
     await db.rawDelete(sqlDelete);
   }
+
+  Future<void> removerNotificacaoByIdDocumento(int id_documento) async {
+    Database db = await dbHelper.database;
+    await db.delete('notificacoes',
+        where: 'id_documento = ?', whereArgs: [id_documento]);
+  }
 }

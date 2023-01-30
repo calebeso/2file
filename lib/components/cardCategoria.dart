@@ -150,7 +150,10 @@ class _CardCategoriaState extends State<CardCategoria> {
                     color: const Color(0xffFE7C3F),
                     size: 40,
                   ),
-            Text(widget.categoria.nome, textAlign: TextAlign.center),
+            Expanded(
+              child: Text(widget.categoria.nome,
+                  textAlign: TextAlign.center, overflow: TextOverflow.ellipsis),
+            ),
           ],
         ),
       ),

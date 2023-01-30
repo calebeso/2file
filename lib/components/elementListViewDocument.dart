@@ -51,7 +51,7 @@ class _ElementListViewState extends State<ElementListView> {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      ImagemViewPage(documento: widget.document),
+                      ImagemViewPage(id_documento: widget.document.id!),
                 ),
               ),
               child: Image.asset('assets/images/icon_doc.png'),

@@ -47,6 +47,7 @@ dependencies:
   provider: ^6.0.5
   photo_view: ^0.14.0
   package_info_plus: ^1.0.6
+  colorful_circular_progress_indicator: ^0.0.2
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,6 @@
+import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:to_file/databases/NotificacaoDbHelper.dart';
 import 'package:to_file/pages/documentos/documento_page.dart';
 import 'package:to_file/pages/documentos/edit_documento_page.dart';
 import '../models/documento.dart';
@@ -155,7 +157,18 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                                       .removeDocumento(
                                                           document.id!);
                                                 });
-
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                        const SnackBar(
+                                                  content: Text(
+                                                      "Documento excluído com sucesso!"),
+                                                  duration:
+                                                      Duration(seconds: 2),
+                                                  backgroundColor:
+                                                      Color(0xffFE7C3F),
+                                                ));
+                                                _excluirNotificacao(
+                                                    document.id!);
                                                 Navigator.pop(context);
                                               },
                                             ),
@@ -172,7 +185,12 @@ class _CategoriaPageState extends State<CategoriaPage> {
                               ),
                               isThreeLine: false,
                               onTap: () {
-                                //chamar função para abrir view documento
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            ImagemViewPage(
+                                                id_documento: document.id!)));
                               },
                             ),
                           ],
@@ -183,7 +201,13 @@ class _CategoriaPageState extends State<CategoriaPage> {
                 }).toList(),
               );
             } else {
-              return const CircularProgressIndicator();
+              return const Center(
+                  child: ColorfulCircularProgressIndicator(
+                colors: [Colors.blue, Colors.red, Colors.amber, Colors.green],
+                strokeWidth: 5,
+                indicatorHeight: 40,
+                indicatorWidth: 40,
+              ));
             }
           },
         ),
@@ -195,4 +219,9 @@ class _CategoriaPageState extends State<CategoriaPage> {
 enum _ValueDialog {
   editar,
   excluir,
+}
+
+_excluirNotificacao(int id_documento) async {
+  final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
+  await _notifyDbHelper.removerNotificacaoByIdDocumento(id_documento);
 }
