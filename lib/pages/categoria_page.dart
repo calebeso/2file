@@ -1,14 +1,16 @@
+import 'dart:io';
+
 import 'package:colorful_circular_progress_indicator/colorful_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:to_file/databases/NotificacaoDbHelper.dart';
-import 'package:to_file/pages/documentos/documento_page.dart';
 import 'package:to_file/pages/documentos/edit_documento_page.dart';
 import '../models/documento.dart';
 import 'package:intl/intl.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/pages/imagemViewPage.dart';
-
+import 'package:path/path.dart';
 import '../models/documento.dart';
 
 class CategoriaPage extends StatefulWidget {
@@ -169,12 +171,16 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                                 ));
                                                 _excluirNotificacao(
                                                     document.id!);
+                                                _deletarImagem(
+                                                    document.nome_imagem);
                                                 Navigator.pop(context);
                                               },
                                             ),
                                             MaterialButton(
                                               child: const Text('Não'),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
                                             )
                                           ],
                                         ),
@@ -224,4 +230,13 @@ enum _ValueDialog {
 _excluirNotificacao(int id_documento) async {
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
   await _notifyDbHelper.removerNotificacaoByIdDocumento(id_documento);
+}
+
+_deletarImagem(String nomeImagem) async {
+  final Directory directory = await getApplicationDocumentsDirectory();
+  final path = join(directory.path, nomeImagem);
+  bool isExist = await File(path).exists();
+  if (isExist) {
+    await File(path).delete();
+  }
 }
