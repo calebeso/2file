@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icon_picker/icon_picker.dart';
 import 'package:to_file/databases/categoriaDbHelper.dart';
+import 'package:to_file/mixins/validations_mixin.dart';
 import 'package:to_file/models/icones.dart';
 
 import '../models/categoria.dart';
@@ -15,7 +16,8 @@ class NewCategoriaPage extends StatefulWidget {
   State<NewCategoriaPage> createState() => _NewCategoriaPageState();
 }
 
-class _NewCategoriaPageState extends State<NewCategoriaPage> {
+class _NewCategoriaPageState extends State<NewCategoriaPage>
+    with ValidationsMixin {
   final TextEditingController nomeCategoriaController = TextEditingController();
 
   final TextEditingController iconeCategoriaController =
@@ -24,6 +26,8 @@ class _NewCategoriaPageState extends State<NewCategoriaPage> {
   final Map<String, IconData> myIconCollection = Icones.mIcons;
 
   CategoriaDbHelper categoriaCrud = CategoriaDbHelper();
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,63 +45,82 @@ class _NewCategoriaPageState extends State<NewCategoriaPage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextField(
-                controller: nomeCategoriaController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Nome da categoria',
-                  hintText: 'nome',
-                  filled: true,
-                  fillColor: Color(0xffDEF1EB),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextFormField(
+                  controller: nomeCategoriaController,
+                  maxLength: 35,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Nome da categoria',
+                    hintText: 'nome',
+                    filled: true,
+                    fillColor: Color(0xffDEF1EB),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
                 ),
-              ),
-              IconPicker(
-                // initialValue: 'favorite',
-                controller: iconeCategoriaController,
-                icon: const Icon(Icons.apps),
-                labelText: "Icone",
-                title: "Selecione um ícone",
-                cancelBtn: "CANCELAR",
-                enableSearch: true,
-                searchHint: 'Pesquisar icone',
-                iconCollection: myIconCollection,
-                onChanged: (val) => print(val),
-                onSaved: (val) => print(val),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    inserirCategoria();
-                    Navigator.pop(context);
-                  });
-                },
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(const Color(0xff30BA78)),
+                IconPicker(
+                  // initialValue: 'favorite',
+                  controller: iconeCategoriaController,
+                  icon: const Icon(Icons.apps),
+                  labelText: "Icone",
+                  title: "Selecione um ícone",
+                  cancelBtn: "CANCELAR",
+                  enableSearch: true,
+                  searchHint: 'Pesquisar icone',
+                  iconCollection: myIconCollection,
+                  onChanged: (val) => print(val),
+                  onSaved: (val) => print(val),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      widget.categoria == null ? "Adicionar" : "Atualizar",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      var form = formKey.currentState;
+                      if (form?.validate() ?? false) {
+                        inserirCategoria();
+                        Navigator.pop(context);
+                      }
+                    });
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(const Color(0xff30BA78)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.categoria == null ? "Adicionar" : "Atualizar",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    const Icon(
-                      Icons.add_box_outlined,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                  ],
+                      const Icon(
+                        Icons.add_box_outlined,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -113,11 +136,26 @@ class _NewCategoriaPageState extends State<NewCategoriaPage> {
           criadoEm: DateTime.now());
       // await DatabaseHelper.instance.addCategoria(categoria);
       await categoriaCrud.addCategoria(categoria);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Categoria cadastrada com sucesso!"),
+          duration: Duration(seconds: 2),
+          backgroundColor: Color(0xffFE7C3F),
+        ),
+      );
     } else {
       widget.categoria?.nome = nomeCategoriaController.text;
       widget.categoria?.nomeIcone = iconeCategoriaController.text;
       await categoriaCrud.updateCategoria(widget.categoria!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Categoria atualizada com sucesso!"),
+          duration: Duration(seconds: 2),
+          backgroundColor: Color(0xffFE7C3F),
+        ),
+      );
     }
+
     this.widget.atualizarListaCategorias();
     nomeCategoriaController.clear();
     iconeCategoriaController.clear();

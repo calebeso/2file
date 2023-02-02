@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
-import 'package:to_file/pages/imagemViewPage.dart';
 
 import '../models/categoria.dart';
 import '../models/documento.dart';
+import '../pages/documentos/edit_documento_page.dart';
+import '../pages/imagemViewPage.dart';
 
 class ElementListView extends StatefulWidget {
   const ElementListView({
@@ -32,80 +33,56 @@ class _ElementListViewState extends State<ElementListView> {
             element["value"] == widget.document.dataCompetencia?.month)
         .first['month'];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Container(
-        //color: Colors.lime,
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          //color: Colors.grey[200],
-          color: const Color(0xffDEF1EB),
+    return Card(
+      color: const Color(0xffDEF1EB),
+      child: ListTile(
+        contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+        leading: GestureDetector(
+            onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        ImagemViewPage(documento: widget.document),
+                  ),
+                ),
+            child: Image.asset('assets/images/icon_doc.png', height: 60)),
+        // NOME DOCUMENTO
+        title: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(widget.document.nome,
+              style:
+                  const TextStyle(fontWeight: FontWeight.w700, fontSize: 24)),
         ),
-        child: Row(
-          children: [
-            // Imagem do documento
-            GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      ImagemViewPage(documento: widget.document),
+        subtitle: Padding(
+          padding: const EdgeInsets.all(8),
+          child: RichText(
+            text: TextSpan(children: <TextSpan>[
+              // COMPETÊNCIA DOCUMENTO
+              const TextSpan(
+                text: 'Competência: ',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-              child: Image.asset('assets/images/icon_doc.png'),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // NOME
-                Row(
-                  children: [
-                    const Text(
-                      'Nome: ',
-                      style: TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    Text(widget.document.nome!),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // MÊS
-                Row(
-                  children: [
-                    const Text(
-                      'Competência: ',
-                      style: TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    Text('$month/'),
-                    Text('${widget.document.dataCompetencia?.year}'),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Text(
-                      'Categoria: ',
-                      style: TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    Text(widget.categoria.nome),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(width: 20),
-            // MENU EDIT E REMOVE
-            Expanded(
-              child: Column(
-                children: [
-                  //Text('Menu'),
-                  createPopupMenuButton(),
-                ],
+              TextSpan(
+                text: ('$month/${widget.document.dataCompetencia.year}'),
+                style: const TextStyle(color: Colors.black),
               ),
-            )
-          ],
+              // CATEGORIA
+              const TextSpan(
+                text: '\nCategoria: ',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              TextSpan(
+                text: (widget.categoria.nome),
+                style: const TextStyle(color: Colors.black),
+              ),
+            ]),
+          ),
         ),
+        trailing: createPopupMenuButton(),
       ),
     );
   }
@@ -130,7 +107,11 @@ class _ElementListViewState extends State<ElementListView> {
           //selectedMenu = item;
           switch (item) {
             case SampleItem.editar:
-              //chamar cadastrarDocumento passando o documento
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          EditDocumentoPage(documento: widget.document)));
               break;
             case SampleItem.excluir:
               showDialog(
@@ -144,6 +125,12 @@ class _ElementListViewState extends State<ElementListView> {
                       child: const Text("Sim"),
                       onPressed: () {
                         _documentoDbHelper.removeDocumento(widget.document.id!);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Documento removido com sucesso!"),
+                            duration: Duration(seconds: 5),
+                          ),
+                        );
                         Navigator.pop(context);
                       },
                     ),

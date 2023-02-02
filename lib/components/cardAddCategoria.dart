@@ -16,6 +16,7 @@ class CardAddCategoria extends StatelessWidget {
             MaterialPageRoute(
                 builder: (BuildContext context) => NewCategoriaPage(
                     atualizarListaCategorias: atualizarListaCategorias)));
+        FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Container(
         height: 100.0,
