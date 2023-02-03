@@ -99,6 +99,7 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
       body: Form(
           key: _formKey,
           child: ListView(padding: EdgeInsets.all(16), children: <Widget>[
+            const SizedBox(height: 40),
             TextFormField(
               controller: _controllerNome,
               decoration: const InputDecoration(
@@ -144,28 +145,52 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
             const SizedBox(height: 32),
             Image.file(arquivo!),
             const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: () => {
-                capturaImagemCamera(),
-              },
-              icon: const Icon(Icons.camera_alt),
-              label: const Padding(
-                padding: EdgeInsets.all(14.0),
-                child: Text('Tire uma foto'),
+            Row(children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => {
+                    capturaImagemCamera(),
+                  },
+                  icon: Icon(Icons.camera_alt),
+                  label: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Text('Camera'),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff0C322C),
+                      elevation: 0.0,
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                      )),
+                ),
               ),
-              style: ElevatedButton.styleFrom(
-                  elevation: 0.0,
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                  )),
-            ),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.attach_file),
-              label: const Text('Selecione um arquivo'),
-              onPressed: () => {pegaImagemGaleria()},
-            ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                      backgroundColor: const Color(0xff0C322C),
+                      primary: Colors.white,
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                      )),
+                  icon: Icon(Icons.attach_file),
+                  label: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Text('Galeria'),
+                  ),
+                  onPressed: () => {pegaImagemGaleria()},
+                ),
+              ),
+            ]),
+            const SizedBox(height: 32),
             ElevatedButton(
-                child: const Text('Salvar'),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: const Color(0xff30BA78),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [const Text('Atualizar'), Icon(Icons.add)],
+                ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     atualizaDocumento();
@@ -183,7 +208,7 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
                     if (arquivo == null) {
                       ScaffoldMessenger.of(context).showSnackBar(snack);
                     } else {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>

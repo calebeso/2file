@@ -73,6 +73,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
       body: Form(
           key: _formKey,
           child: ListView(padding: EdgeInsets.all(16), children: <Widget>[
+            const SizedBox(height: 40),
             TextFormField(
               controller: _controllerNome,
               decoration: const InputDecoration(
@@ -120,30 +121,67 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
               },
             ),
             const SizedBox(height: 32),
-            arquivo != null ? Image.file(arquivo!) : Container(),
+            arquivo != null
+                ? Image.file(arquivo!)
+                : Container(
+                    padding: EdgeInsets.all(20),
+                    height: 80,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Icon(
+                      Icons.image,
+                      color: Colors.grey,
+                      size: 35,
+                    ),
+                  ),
             const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: () => {
-                capturaImagemCamera(),
-              },
-              icon: Icon(Icons.camera_alt),
-              label: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Text('Tire uma foto'),
+            Row(children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => {
+                    capturaImagemCamera(),
+                  },
+                  icon: Icon(Icons.camera_alt),
+                  label: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Text('Camera'),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff0C322C),
+                      elevation: 0.0,
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                      )),
+                ),
               ),
-              style: ElevatedButton.styleFrom(
-                  elevation: 0.0,
-                  textStyle: TextStyle(
-                    fontSize: 18,
-                  )),
-            ),
-            OutlinedButton.icon(
-              icon: Icon(Icons.attach_file),
-              label: Text('Selecione um arquivo'),
-              onPressed: () => {pegaImagemGaleria()},
-            ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                      backgroundColor: const Color(0xff0C322C),
+                      primary: Colors.white,
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                      )),
+                  icon: Icon(Icons.attach_file),
+                  label: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Text('Galeria'),
+                  ),
+                  onPressed: () => {pegaImagemGaleria()},
+                ),
+              ),
+            ]),
+            const SizedBox(height: 32),
             ElevatedButton(
-                child: const Text('Salvar'),
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: const Color(0xff30BA78),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [const Text('Adicionar'), Icon(Icons.add)],
+                ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     salvaDocumento();
