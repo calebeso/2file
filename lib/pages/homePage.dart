@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
 
   int count = 0;
+  late FocusScope myFocusScope;
 
   CategoriaDbHelper categoriaCrud = CategoriaDbHelper();
 
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               setState(() {
                 pageSobre();
+                FocusScope.of(context).requestFocus(FocusNode());
               });
             },
             icon: const Icon(Icons.info, color: Color(0xffFE7C3F)),
@@ -89,6 +91,7 @@ class _HomePageState extends State<HomePage> {
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
                               NotificacaoPage()));
+                  FocusScope.of(context).requestFocus(FocusNode());
                 },
                 icon: const Icon(
                   Icons.notifications,
@@ -150,13 +153,6 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
-              // const SizedBox(width: 8),
-              //
-              // Visibility(
-              //   visible: !showGrid,
-              //   child: createReturnButton(),
-              // ),
-
               Visibility(
                 visible: showGrid,
                 child: criarGridViewCards(),
@@ -177,6 +173,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           setState(() {
             pageDocument();
+            FocusScope.of(context).requestFocus(FocusNode());
           });
         },
         backgroundColor: const Color(0xff30BA78),
@@ -223,22 +220,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  // createReturnButton() {
-  //   return ElevatedButton(
-  //       onPressed: (){
-  //         showGrid;
-  //       },
-  //       style: ElevatedButton.styleFrom(
-  //         backgroundColor: const Color(0xff30BA78),
-  //       ),
-  //       child:  const Icon(
-  //           Icons.keyboard_return,
-  //           size: 30,
-  //           color:  Colors.white,
-  //       ),
-  //   );
-  // }
 
   void pageSobre() {
     Navigator.push(

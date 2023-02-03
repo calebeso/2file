@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_file/components/elementListViewDocument.dart';
+import 'package:to_file/components/elementListView.dart';
 import 'package:to_file/databases/categoriaDbHelper.dart';
 
 import '../databases/documentoDbHelper.dart';
@@ -107,13 +107,6 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
               createDropdownCategory(),
             ],
           ),
-          // const SizedBox(height: 10),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     createSearchButton(),
-          //   ],
-          // ),
           const SizedBox(height: 20),
           createListViewDocument(),
         ],
@@ -122,102 +115,97 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
   }
 
   createDropdownMonth() {
-    return SizedBox(
-      width: 150,
-      child: DropdownButtonFormField<int>(
-        decoration: InputDecoration(
-          hintText: 'Mês',
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.calendar_month),
-            onPressed: () {
-              _dropDownValueMonth = null;
-              _keyDropdownMonth.currentState?.reset();
-            },
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: DropdownButtonFormField<int>(
+          decoration: InputDecoration(
+            hintText: 'Mês',
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.calendar_month),
+              onPressed: () {
+                _dropDownValueMonth = null;
+                _keyDropdownMonth.currentState?.reset();
+              },
+            ),
           ),
+          key: _keyDropdownMonth,
+          value: null,
+          isExpanded: true,
+          onChanged: (int? value) {
+            _dropDownValueMonth = value;
+          },
+          items: [
+            for (var month in dropdownMonthList) ...[
+              DropdownMenuItem(
+                value: month["value"],
+                child: Text(month["month"]),
+              )
+            ]
+          ],
         ),
-        key: _keyDropdownMonth,
-        value: null,
-        isExpanded: true,
-        onChanged: (int? value) {
-          _dropDownValueMonth = value;
-        },
-
-        items: [
-          // const DropdownMenuItem(
-          //   value: null,
-          //   child: Text('Mês'),
-          // ),
-          for (var month in dropdownMonthList) ...[
-            DropdownMenuItem(
-              value: month["value"],
-              child: Text(month["month"]),
-            )
-          ]
-        ],
-        // items: dropdownMonthList.map<DropdownMenuItem<int>>((element) {
-        //   return DropdownMenuItem(
-        //     value: element["value"],
-        //     child: Text(element["month"]),
-        //   );
-        // }).toList()),
       ),
     );
   }
 
   createDropdownYear() {
-    return SizedBox(
-      width: 150,
-      child: DropdownButtonFormField<int>(
-          decoration: InputDecoration(
-            hintText: 'Ano',
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.calendar_today),
-              onPressed: () {
-                _dropDownValueYear = null;
-                _keyDropdownYear.currentState?.reset();
-              },
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: DropdownButtonFormField<int>(
+            decoration: InputDecoration(
+              hintText: 'Ano',
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: () {
+                  _dropDownValueYear = null;
+                  _keyDropdownYear.currentState?.reset();
+                },
+              ),
             ),
-          ),
-          key: _keyDropdownYear,
-          value: _dropDownValueYear,
-          onChanged: (int? value) {
-            _dropDownValueYear = value;
-          },
-          isExpanded: true,
-          items: listYears.map<DropdownMenuItem<int>>((selectedValue) {
-            return DropdownMenuItem(
-              value: selectedValue,
-              child: Text('$selectedValue'),
-            );
-          }).toList()),
+            key: _keyDropdownYear,
+            value: _dropDownValueYear,
+            onChanged: (int? value) {
+              _dropDownValueYear = value;
+            },
+            isExpanded: true,
+            items: listYears.map<DropdownMenuItem<int>>((selectedValue) {
+              return DropdownMenuItem(
+                value: selectedValue,
+                child: Text('$selectedValue'),
+              );
+            }).toList()),
+      ),
     );
   }
 
   createDropdownCategory() {
-    return SizedBox(
-      width: 310,
-      child: DropdownButtonFormField<int>(
-          decoration: InputDecoration(
-            hintText: 'Categoria',
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.list),
-              onPressed: () {
-                _dropDownValueCategory = null;
-                _keyDropdownCategory.currentState?.reset();
-              },
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: DropdownButtonFormField<int>(
+            decoration: InputDecoration(
+              hintText: 'Categoria',
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.list),
+                onPressed: () {
+                  _dropDownValueCategory = null;
+                  _keyDropdownCategory.currentState?.reset();
+                },
+              ),
             ),
-          ),
-          value: _dropDownValueCategory,
-          onChanged: (int? value) {
-            _dropDownValueCategory = value;
-          },
-          isExpanded: true,
-          items: categories.map<DropdownMenuItem<int>>((category) {
-            return DropdownMenuItem(
-              value: category.id,
-              child: Text(category.nome),
-            );
-          }).toList()),
+            value: _dropDownValueCategory,
+            onChanged: (int? value) {
+              _dropDownValueCategory = value;
+            },
+            isExpanded: true,
+            items: categories.map<DropdownMenuItem<int>>((category) {
+              return DropdownMenuItem(
+                value: category.id,
+                child: Text(category.nome),
+              );
+            }).toList()),
+      ),
     );
   }
 

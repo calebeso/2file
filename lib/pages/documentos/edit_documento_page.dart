@@ -47,11 +47,12 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
 
   @override
   void initState() {
-    _loadCategorias();
+    _carregaCategorias();
+    _carregaDados();
     super.initState();
   }
 
-  _loadCategorias() async {
+  _carregaCategorias() async {
     var categorias = await DatabaseHelper.instance.todasCategorias();
     categorias.forEach((element) {
       if (this.mounted) {
@@ -65,20 +66,31 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
+  _carregaDados() async {
     if (widget.documento != null) {
-      recuperaDiretorioDeDocs();
+      await recuperaDiretorioDeDocs(); // recupera diretorio padrao do dispositivo
+
       String tempImage = widget.documento!.nome_imagem;
       _controllerNome.text = widget.documento!.nome;
+
+      //datas
       _controllerDataCompetencia.text =
           '${widget.documento!.dataCompetencia.day}/${widget.documento!.dataCompetencia.month}/${widget.documento!.dataCompetencia.year}';
+      dataCompetenciaTimeStamp = DateTime.fromMicrosecondsSinceEpoch(
+          widget.documento!.dataCompetencia.microsecondsSinceEpoch);
+
       _controllerDataValidade.text =
           '${widget.documento!.dataValidade.day}/${widget.documento!.dataValidade.month}/${widget.documento!.dataValidade.year}';
+      dataValidadeTimeStamp = DateTime.fromMicrosecondsSinceEpoch(
+          widget.documento!.dataValidade.microsecondsSinceEpoch);
+
       _selectedValue = widget.documento!.categoria_id;
       arquivo = File('$pastaArquivos/$tempImage');
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F5),
       appBar: AppBar(
@@ -113,8 +125,8 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
                 readOnly: true,
                 validator: (val) => combine([
                       () => isNotEmpty(val),
-                      () => isCompetenciaMenor(widget.documento!.dataValidade,
-                          widget.documento!.dataCompetencia),
+                      () => isCompetenciaMenor(
+                          dataValidadeTimeStamp, dataCompetenciaTimeStamp),
                     ]),
                 onTap: () {
                   _pickDateDialogValidade();
@@ -126,16 +138,11 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
               items: _categorias,
               value: _selectedValue,
               onChanged: (value) {
-                if (this.mounted) {
-                  setState(() {
-                    print(value);
-                    _selectedValue = value;
-                  });
-                }
+                _selectedValue = value;
               },
             ),
             const SizedBox(height: 32),
-            arquivo != null ? Image.file(arquivo!) : Container(),
+            Image.file(arquivo!),
             const SizedBox(height: 32),
             ElevatedButton.icon(
               onPressed: () => {
@@ -176,7 +183,7 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
                     if (arquivo == null) {
                       ScaffoldMessenger.of(context).showSnackBar(snack);
                     } else {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
@@ -197,7 +204,7 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2050),
       locale: const Locale("pt", "BR"),
     );
 
@@ -222,7 +229,7 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2050),
       locale: Locale("pt", "BR"),
     );
 
@@ -243,8 +250,8 @@ class _EditDocumentoPageState extends State<EditDocumentoPage>
         await imagePicker.getImage(source: ImageSource.gallery);
 
     if (imagemTemporaria != null) {
-      //recupera diretorio
-      final Directory directory = await getApplicationDocumentsDirectory();
+      final Directory directory =
+          await getApplicationDocumentsDirectory(); //recupera diretorio
       String path = directory.path;
 
       nomeArquivo = imagemTemporaria.path.split('/').last;
