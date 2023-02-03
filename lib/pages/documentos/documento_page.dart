@@ -183,7 +183,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2050),
       locale: const Locale("pt", "BR"),
     );
 
@@ -206,7 +206,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      lastDate: DateTime(2050),
       locale: Locale("pt", "BR"),
     );
 

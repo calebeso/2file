@@ -25,7 +25,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
 
   String nomeCategoria = '';
   Future<List<Documento>> getDocs() async {
-    Future.delayed(Duration(seconds: 1));
+    Future.delayed(Duration(seconds: 2));
     return await _documentoDbHelper
         .listDocumentosByCategoriaId(widget.categoria.id!);
   }
