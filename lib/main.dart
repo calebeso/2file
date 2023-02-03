@@ -1,6 +1,10 @@
+import 'package:cron/cron.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:to_file/pages/homePage.dart';
+
+import 'databases/database_config.dart';
+import 'services/notificacaoService.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
