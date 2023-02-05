@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'package:path/path.dart' as Path;
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
 
+import '../databases/NotificacaoDbHelper.dart';
 import '../models/categoria.dart';
 import '../models/documento.dart';
 import '../pages/documentos/edit_documento_page.dart';
@@ -36,16 +40,17 @@ class _ElementListViewState extends State<ElementListView> {
     return Card(
       color: const Color(0xffDEF1EB),
       child: ListTile(
+        onTap: (() {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  ImagemViewPage(id_documento: widget.document.id!),
+            ),
+          );
+        }),
         contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-        leading: GestureDetector(
-            onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        ImagemViewPage(id_documento: widget.document.id!),
-                  ),
-                ),
-            child: Image.asset('assets/images/icon_doc.png', height: 60)),
+        leading: Image.asset('assets/images/icon_doc.png', height: 60),
         // NOME DOCUMENTO
         title: Padding(
           padding: const EdgeInsets.all(8),
@@ -127,10 +132,13 @@ class _ElementListViewState extends State<ElementListView> {
                         _documentoDbHelper.removeDocumento(widget.document.id!);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text("Documento removido com sucesso!"),
-                            duration: Duration(seconds: 5),
+                            content: Text("Documento excluído com sucesso!"),
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Color(0xffFE7C3F),
                           ),
                         );
+                        _excluirNotificacao(widget.document.id!);
+                        _deletarImagem(widget.document.nome_imagem);
                         Navigator.pop(context);
                       },
                     ),
@@ -152,4 +160,18 @@ class _ElementListViewState extends State<ElementListView> {
 enum SampleItem {
   editar,
   excluir,
+}
+
+_excluirNotificacao(int id_documento) async {
+  final NotifyDbHelper _notifyDbHelper = NotifyDbHelper();
+  await _notifyDbHelper.removerNotificacaoByIdDocumento(id_documento);
+}
+
+_deletarImagem(String nomeImagem) async {
+  final Directory directory = await getApplicationDocumentsDirectory();
+  final path = Path.join(directory.path, nomeImagem);
+  bool isExist = await File(path).exists();
+  if (isExist) {
+    await File(path).delete();
+  }
 }

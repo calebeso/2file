@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:to_file/databases/categoriaDbHelper.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
 import 'package:to_file/models/icones.dart';
+import 'package:to_file/pages/categoria_page2.dart';
 
 import '../models/categoria.dart';
 import '../models/documento.dart';
-import '../pages/categoria_page.dart';
+// import '../pages/categoria_page.dart';
 import '../pages/newCategoriaPage.dart';
 
 class CardCategoria extends StatefulWidget {
@@ -33,7 +34,7 @@ class _CardCategoriaState extends State<CardCategoria> {
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    CategoriaPage(categoria: widget.categoria)));
+                    CategoriaPage2(categoria: widget.categoria)));
         FocusScope.of(context).requestFocus(FocusNode());
       },
       onLongPress: () {
