@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'package:path/path.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:to_file/databases/NotificacaoDbHelper.dart';
 import 'package:to_file/databases/documentoDbHelper.dart';
@@ -42,9 +43,7 @@ class _EstoqueState extends State<CategoriaPage2> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xff0C322C),
-          title: const Text(
-            'Estoque',
-          ),
+          title: Text(widget.categoria.nome),
         ),
         body: _documentosLista.isNotEmpty
             ? Container(
