@@ -144,7 +144,9 @@ class _ElementListViewState extends State<ElementListView> {
                     ),
                     MaterialButton(
                       child: const Text('Não'),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     )
                   ],
                 ),
