@@ -126,32 +126,47 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Container(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                margin: showGrid
+                    ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
+                    : const EdgeInsets.only(right: 20, top: 10, bottom: 10),
                 height: 50,
-                child: TextField(
-                  controller: nameDocumentController,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: 'Digite o nome do documento',
-                    hintText: 'Ex: Contrato',
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        nameDocumentController.clear();
-                      },
-                      icon: Icon(
-                        nameDocumentController.text == ''
-                            ? Icons.search
-                            : Icons.clear,
-                        size: 30,
+                child: Row(children: [
+                  Visibility(
+                    visible: !showGrid,
+                    child: IconButton(
+                        onPressed: () {
+                          showGrid = true;
+                        },
+                        icon: const Icon(Icons.arrow_back)),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: nameDocumentController,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        labelText: 'Digite o nome do documento',
+                        hintText: 'Ex: Contrato',
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            nameDocumentController.clear();
+                          },
+                          icon: Icon(
+                            nameDocumentController.text == ''
+                                ? Icons.search
+                                : Icons.clear,
+                            size: 30,
+                          ),
+                        ),
                       ),
+                      onTap: () {
+                        // ocultar gridView
+                        if (showGrid) {
+                          showGrid = false;
+                        }
+                      },
                     ),
                   ),
-                  onTap: () {
-                    // ocultar gridView
-                    showGrid = !showGrid;
-                  },
-                ),
+                ]),
               ),
               Visibility(
                 visible: showGrid,

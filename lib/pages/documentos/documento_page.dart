@@ -6,7 +6,8 @@ import 'package:to_file/mixins/validations_mixin.dart';
 import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacao.dart';
-import 'package:to_file/pages/categoria_page.dart';
+import 'package:to_file/pages/categoria_page2.dart';
+// import 'package:to_file/pages/categoria_page.dart';
 import 'package:to_file/pages/homePage.dart';
 import '../../databases/NotificacaoDbHelper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -206,7 +207,7 @@ class _DocumentoPageState extends State<DocumentoPage> with ValidationsMixin {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  CategoriaPage(categoria: cat)));
+                                  CategoriaPage2(categoria: cat)));
                     }
                   }
                 }),

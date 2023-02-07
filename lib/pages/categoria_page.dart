@@ -24,24 +24,32 @@ class CategoriaPage extends StatefulWidget {
 
 class _CategoriaPageState extends State<CategoriaPage> {
   final DocumentoDbHelper _documentoDbHelper = DocumentoDbHelper();
-
-  late Future<List<Documento>> documentos;
-
+  List<Documento> documentos = [];
   String nomeCategoria = '';
-  Future<List<Documento>> getDocs() async {
-    Future.delayed(Duration(seconds: 2));
-    return await _documentoDbHelper
-        .listDocumentosByCategoriaId(widget.categoria.id!);
-  }
+
+  // Future<List<Documento>> getDocs() async {
+  //   Future.delayed(Duration(seconds: 2));
+  //   return await _documentoDbHelper
+  //       .listDocumentosByCategoriaId(widget.categoria.id!);
+  // }
+
+  late Future<List<Documento>> _documentosLista;
 
   @override
   void initState() {
     super.initState();
-    atualizarNomeCategoria();
-    documentos = getDocs();
+    _atualizarNomeCategoria();
+    _atualizarListaDocumentos();
   }
 
-  atualizarNomeCategoria() {
+  _atualizarListaDocumentos() {
+    setState(() {
+      _documentosLista =
+          _documentoDbHelper.listDocumentosByCategoriaId(widget.categoria.id!);
+    });
+  }
+
+  _atualizarNomeCategoria() {
     setState(() {
       nomeCategoria = widget.categoria.nome;
     });
@@ -58,7 +66,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
       ),
       body: Center(
         child: FutureBuilder<List<Documento>>(
-          future: getDocs(),
+          future: _documentosLista,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView(
@@ -158,6 +166,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                                   _documentoDbHelper
                                                       .removeDocumento(
                                                           document.id!);
+                                                  _atualizarListaDocumentos();
                                                 });
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
