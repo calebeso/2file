@@ -82,7 +82,6 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.info, color: Color(0xffFE7C3F)),
           ),
           Stack(
-            // ignore: prefer_const_literals_to_create_immutables
             children: [
               IconButton(
                 onPressed: () {
@@ -117,8 +116,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-
-      // CONTEÚDO DA TELA
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Padding(
@@ -159,7 +156,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       onTap: () {
-                        // ocultar gridView
                         if (showGrid) {
                           showGrid = false;
                         }
@@ -181,9 +177,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-
-      // ADICIONAR DOCUMENTO
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -200,23 +193,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  // createReturnButton() {
-  //   return IconButton(
-  //     onPressed: () {
-  //       setState(() {
-  //         Visibility(
-  //           visible: showGrid,
-  //           child: criarGridViewCards(),
-  //         );
-  //       });
-  //     },
-  //     icon: const Icon(
-  //       Icons.keyboard_return,
-  //       size: 30,
-  //     ),
-  //   );
-  // }
 
   criarGridViewCards() {
     return Flexible(

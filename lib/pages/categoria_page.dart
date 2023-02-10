@@ -27,12 +27,6 @@ class _CategoriaPageState extends State<CategoriaPage> {
   List<Documento> documentos = [];
   String nomeCategoria = '';
 
-  // Future<List<Documento>> getDocs() async {
-  //   Future.delayed(Duration(seconds: 2));
-  //   return await _documentoDbHelper
-  //       .listDocumentosByCategoriaId(widget.categoria.id!);
-  // }
-
   late Future<List<Documento>> _documentosLista;
 
   @override
@@ -73,7 +67,6 @@ class _CategoriaPageState extends State<CategoriaPage> {
                 children: snapshot.data!.map((document) {
                   return Center(
                     child: GestureDetector(
-                      onTap: () => print('teste'),
                       child: Card(
                         color: const Color(0xffDEF1EB),
                         child: Column(

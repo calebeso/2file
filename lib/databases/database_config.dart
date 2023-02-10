@@ -10,10 +10,6 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await initDatabase();
 
   Future<Database> initDatabase() async {
-    // Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    // print(documentsDirectory.path);
-    // String path = documentsDirectory.path + '/' + 'twofile.db';
-
     var databasePath = await getDatabasesPath();
     String path = join(databasePath, 'twoFile.db');
 
@@ -97,7 +93,6 @@ class DatabaseHelper {
     Database db = await instance.database;
     var categorias =
         await db.query('categorias', where: 'id = ?', whereArgs: [id]);
-    //alterar o orderby para id_categoria
     List<Categoria> categoriaList = categorias.isNotEmpty
         ? categorias.map((e) => Categoria.fromMap(e)).toList()
         : [];
@@ -110,7 +105,6 @@ class DatabaseHelper {
     Categoria? cat;
     var categorias =
         await db.query('categorias', where: 'id = ?', whereArgs: [id]);
-    //alterar o orderby para id_categoria
     List<Categoria> categoriaList = categorias.isNotEmpty
         ? categorias.map((e) => Categoria.fromMap(e)).toList()
         : [];
@@ -129,7 +123,7 @@ class DatabaseHelper {
     return categorias;
   }
 
-  //Return Lista de dcategorias
+  //Retorna categoria por ID
   Future<List<Categoria>> listCategoriaById() async {
     Database db = await instance.database;
     List<Map<String, dynamic>> allRows = await db.query('categorias');
@@ -137,33 +131,4 @@ class DatabaseHelper {
         allRows.map((categoria) => Categoria.fromMap(categoria)).toList();
     return categorias;
   }
-
-  //Return Lista de dcategorias
-  // Future<List<Categoria>> listCategoriaById() async {
-  //   Database db = await instance.database;
-  //   var categorias = await db.query('categorias', orderBy: 'id');
-  //   List<Categoria> categoriaList = categorias.isNotEmpty
-  //       ? categorias.map((e) => Categoria.fromMap(e)).toList()
-  //       : [];
-  //   return categoriaList;
-  // }
-
-  //adicionar Categoria
-  // Future<int> addCategoria(Categoria categoria) async {
-  //   Database db = await instance.database;
-  //   return await db.insert('categorias', categoria.toMap());
-  // }
-
-  //remover categoria
-  // Future<int> removeCategoria(int id) async {
-  //   Database db = await instance.database;
-  //   return await db.delete('categorias', where: 'id = ?', whereArgs: [id]);
-  // }
-
-  //editar categoria
-  // Future<int> updateCategoria(Categoria categoria) async {
-  //   Database db = await instance.database;
-  //   return await db.update('categorias', categoria.toMap(),
-  //       where: 'id = ?', whereArgs: [categoria.id]);
-  // }
 }

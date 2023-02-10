@@ -68,7 +68,6 @@ class _NewCategoriaPageState extends State<NewCategoriaPage>
                   },
                 ),
                 IconPicker(
-                  // initialValue: 'favorite',
                   controller: iconeCategoriaController,
                   icon: const Icon(Icons.apps),
                   labelText: "Icone",
@@ -77,8 +76,6 @@ class _NewCategoriaPageState extends State<NewCategoriaPage>
                   enableSearch: true,
                   searchHint: 'Pesquisar icone',
                   iconCollection: myIconCollection,
-                  onChanged: (val) => print(val),
-                  onSaved: (val) => print(val),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Campo obrigatório';
@@ -127,14 +124,12 @@ class _NewCategoriaPageState extends State<NewCategoriaPage>
     );
   }
 
-  // salvar categoria no banco
   void inserirCategoria() async {
     if (widget.categoria == null) {
       Categoria categoria = Categoria(
           nome: nomeCategoriaController.text,
           nomeIcone: iconeCategoriaController.text,
           criadoEm: DateTime.now());
-      // await DatabaseHelper.instance.addCategoria(categoria);
       await categoriaCrud.addCategoria(categoria);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

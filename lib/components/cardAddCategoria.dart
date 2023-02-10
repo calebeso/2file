@@ -22,7 +22,6 @@ class CardAddCategoria extends StatelessWidget {
         height: 100.0,
         width: 100.0,
         padding: const EdgeInsets.all(8),
-        // color: const Color(0xffEAEBD9),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),

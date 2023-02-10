@@ -25,7 +25,6 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
   List<Map<String, dynamic>> dropdownMonthList = [];
   List<int> listYears = [];
 
-  // dropDownButtons
   int? _dropDownValueMonth;
   int? _dropDownValueYear;
   int? _dropDownValueCategory;
@@ -39,7 +38,6 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     }
   }
 
-  // buscar dados de documentos - BD
   getDocumentsDb() async {
     List<Documento> doc = await documentoDbHelper.listDocumentos();
     List<int> months = [];
@@ -209,30 +207,9 @@ class _DropdownButtonPesquisaState extends State<DropdownButtonPesquisa> {
     );
   }
 
-  // createSearchButton() {
-  //   return SizedBox(
-  //     width: 310,
-  //     child: ElevatedButton(
-  //       onPressed: () {
-  //         searchDocuments();
-  //       },
-  //       style: ElevatedButton.styleFrom(
-  //         backgroundColor: const Color(0xffDFDDC7),
-  //         //padding: const EdgeInsets.all(5),
-  //       ),
-  //       child: const Icon(
-  //         Icons.search,
-  //         size: 30,
-  //         color: Color(0xffFE7C3F),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   createListViewDocument() {
     return Expanded(
       child: ListView(
-        //shrinkWrap: true,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           for (Documento doc in documentsFiltered)

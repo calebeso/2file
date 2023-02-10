@@ -13,7 +13,6 @@ void main() {
   _notificationService.initializeNotifications();
   final cron = Cron();
   cron.schedule(
-    // Schedule.parse('* 12 * * *'),
     Schedule.parse('*/60 * * * * *'),
     () async => {
       await _notificationService.mostrarNotificacoes(),
@@ -27,17 +26,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        localizationsDelegates: [
-          GlobalWidgetsLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          Locale("pt", "BR")
-        ],
-        debugShowCheckedModeBanner: false,
-        home: HomePage() // tela inicial do App
+    return const MaterialApp(localizationsDelegates: [
+      GlobalWidgetsLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ], supportedLocales: [
+      Locale("pt", "BR")
+    ], debugShowCheckedModeBanner: false, home: HomePage() //
         );
   }
 }

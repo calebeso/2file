@@ -6,7 +6,6 @@ import 'package:to_file/pages/categoria_page2.dart';
 
 import '../models/categoria.dart';
 import '../models/documento.dart';
-// import '../pages/categoria_page.dart';
 import '../pages/newCategoriaPage.dart';
 
 class CardCategoria extends StatefulWidget {
@@ -44,7 +43,6 @@ class _CardCategoriaState extends State<CardCategoria> {
         height: 100.0,
         width: 100.0,
         padding: const EdgeInsets.all(8),
-        // color: const Color(0xffEAEBD9),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
@@ -56,7 +54,6 @@ class _CardCategoriaState extends State<CardCategoria> {
             ),
           ],
         ),
-
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -198,7 +195,7 @@ class _CardCategoriaState extends State<CardCategoria> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // fecha o diálogo
+              Navigator.of(context).pop();
             },
             child: const Text('Fechar'),
           ),

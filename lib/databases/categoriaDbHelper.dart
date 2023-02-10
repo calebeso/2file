@@ -10,14 +10,12 @@ class CategoriaDbHelper {
     Database db = await dbHelper.database;
     var categorias =
         await db.query('categorias', where: 'id = ?', whereArgs: [id]);
-    //alterar o orderby para id_categoria
     List<Categoria> categoriaList = categorias.isNotEmpty
         ? categorias.map((e) => Categoria.fromMap(e)).toList()
         : [];
     return categoriaList;
   }
 
-  //Return Lista de dcategorias
   Future<List<Categoria>> listCategoriaById() async {
     Database db = await dbHelper.database;
     var categorias = await db.query('categorias', orderBy: 'id');
@@ -27,26 +25,22 @@ class CategoriaDbHelper {
     return categoriaList;
   }
 
-  //adicionar Categoria
   Future<int> addCategoria(Categoria categoria) async {
     Database db = await dbHelper.database;
     return await db.insert('categorias', categoria.toMap());
   }
 
-  //remover categoria
   Future<int> removeCategoria(int id) async {
     Database db = await dbHelper.database;
     return await db.delete('categorias', where: 'id = ?', whereArgs: [id]);
   }
 
-  //editar categoria
   Future<int> updateCategoria(Categoria categoria) async {
     Database db = await dbHelper.database;
     return await db.update('categorias', categoria.toMap(),
         where: 'id = ?', whereArgs: [categoria.id]);
   }
 
-  // get categories by IDs
   Future<List<Categoria>> getCategoriesByListId(List<int> idList) async {
     Database db = await dbHelper.database;
     var categorias = await db.query('categorias',

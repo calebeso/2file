@@ -13,7 +13,6 @@ class NotifyDbHelper {
     Database db = await dbHelper.database;
     var notificacoes = await db.query('notificacoes',
         where: 'id_documento = ?', whereArgs: [id_documento]);
-    //alterar o orderby para id_categoria
     List<Notificacao> notificacaoList = notificacoes.isNotEmpty
         ? notificacoes.map((e) => Notificacao.fromMap(e)).toList()
         : [];

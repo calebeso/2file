@@ -51,7 +51,6 @@ class _ElementListViewState extends State<ElementListView> {
         }),
         contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
         leading: Image.asset('assets/images/icon_doc.png', height: 60),
-        // NOME DOCUMENTO
         title: Padding(
           padding: const EdgeInsets.all(8),
           child: Text(widget.document.nome,
@@ -62,7 +61,6 @@ class _ElementListViewState extends State<ElementListView> {
           padding: const EdgeInsets.all(8),
           child: RichText(
             text: TextSpan(children: <TextSpan>[
-              // COMPETÊNCIA DOCUMENTO
               const TextSpan(
                 text: 'Competência: ',
                 style: TextStyle(
@@ -74,7 +72,6 @@ class _ElementListViewState extends State<ElementListView> {
                 text: ('$month/${widget.document.dataCompetencia.year}'),
                 style: const TextStyle(color: Colors.black),
               ),
-              // CATEGORIA
               const TextSpan(
                 text: '\nCategoria: ',
                 style:
@@ -109,7 +106,6 @@ class _ElementListViewState extends State<ElementListView> {
       ],
       onSelected: (SampleItem item) {
         setState(() {
-          //selectedMenu = item;
           switch (item) {
             case SampleItem.editar:
               Navigator.push(

@@ -118,8 +118,6 @@ class NotificationService {
         );
       }
       documento = await _documentoDbHelper.getDocumentoById(doc.id!);
-      // notificacaoTexto =
-      //     "O documento ${doc.nome} venceu em ${DateFormat("dd/MM/yyyy").format(doc.dataValidade!)}.";
     }
   }
 

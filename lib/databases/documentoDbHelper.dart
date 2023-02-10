@@ -68,7 +68,6 @@ class DocumentoDbHelper {
     Database db = await dbHelper.database;
     var documentos = await db.query('documento',
         where: 'id_documento = ?', whereArgs: [id_documento]);
-    //alterar o orderby para id_categoria
     List<Documento> documentosList = documentos.isNotEmpty
         ? documentos.map((e) => Documento.fromMap(e)).toList()
         : [];
@@ -81,7 +80,6 @@ class DocumentoDbHelper {
     Database db = await dbHelper.database;
     var documentos = await db.query('documento',
         where: 'id_documento = ?', whereArgs: [id_documento]);
-    //alterar o orderby para id_categoria
     List<Documento> documentosList = documentos.isNotEmpty
         ? documentos.map((e) => Documento.fromMap(e)).toList()
         : [];
@@ -93,21 +91,4 @@ class DocumentoDbHelper {
 
     return textoNotificacao!;
   }
-
-  // Future<List<Documento>> getDocumentoByIdNotificacao(int id_documento) async {
-  //   Database db = await dbHelper.database;
-  //   var documentos = await db.rawQuery(''',
-  //   SELECT *
-  //   FROM documentos
-  //   WHERE documentos.id = notificacoes.$id_documento
-  //   ''');
-  //   List<Documento> documentosList = documentos.isNotEmpty
-  //       ? documentos.map((e) => Documento.fromMap(e)).toList()
-  //       : [];
-  //   Documento? documento;
-  //   for (Documento doc in documentosList) {
-  //     documento = doc;
-  //   }
-  //   return documento!;
-  // }
 }

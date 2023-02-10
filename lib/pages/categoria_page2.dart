@@ -142,6 +142,12 @@ class _EstoqueState extends State<CategoriaPage2> {
                                                     .removeDocumento(
                                                         _documentosLista[index]
                                                             .id!);
+                                                _excluirNotificacao(
+                                                    _documentosLista[index]
+                                                        .id!);
+                                                _deletarImagem(
+                                                    _documentosLista[index]
+                                                        .nome_imagem);
                                                 _atualizarListaDocumentos();
                                               });
                                               ScaffoldMessenger.of(context)
@@ -155,12 +161,7 @@ class _EstoqueState extends State<CategoriaPage2> {
                                                       Color(0xffFE7C3F),
                                                 ),
                                               );
-                                              _excluirNotificacao(
-                                                  _documentosLista[index].id!);
-                                              _deletarImagem(
-                                                  _atualizarListaDocumentos()[
-                                                          index]
-                                                      .nome_imagem);
+
                                               Navigator.pop(context);
                                             },
                                           ),

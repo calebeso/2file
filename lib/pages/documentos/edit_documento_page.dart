@@ -7,7 +7,6 @@ import 'package:to_file/models/categoria.dart';
 import 'package:to_file/models/documento.dart';
 import 'package:to_file/models/notificacao.dart';
 import 'package:to_file/pages/categoria_page2.dart';
-// import 'package:to_file/pages/categoria_page.dart';
 import 'package:to_file/pages/homePage.dart';
 import '../../databases/NotificacaoDbHelper.dart';
 import 'package:image_picker/image_picker.dart';

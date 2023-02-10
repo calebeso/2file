@@ -51,7 +51,6 @@ class _ImagemState extends State<ImagemViewPage> {
         : null;
     String imagem =
         documento != null ? '$pastaArquivos/${documento!.nome_imagem}' : '';
-    // print(caminhoImagem + nomeArquivo);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff0C322C),
